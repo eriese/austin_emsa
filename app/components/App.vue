@@ -1,7 +1,7 @@
 <template>
 	<Page>
-		<ScrollView>
-			<StackLayout>
+		<ScrollView class="emsa-root">
+			<StackLayout class="emsa-inner">
 				<ShiftForm />
 			</StackLayout>
 		</ScrollView>
@@ -23,4 +23,7 @@ export default {
 </script>
 
 <style>
+.emsa-root {
+	padding: 10;
+}
 </style>

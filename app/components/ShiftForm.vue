@@ -1,18 +1,19 @@
 <template>
 	<StackLayout class="home-panel">
 		<RadDataForm :source="shift"
-			@propertyCommitted="announce" @editorUpdate="fixDateFormat">
-			<TKEntityProperty v-for="note in annotations"
+			@propertyCommitted="announce" @editorUpdate="applyFormats">
+			<TKEntityProperty v-for="note in annotations" :key="note.entity.name"
 				v-tkDataFormProperty
 				v-bind="note.entity">
-				<TKPropertyEditor v-if="note.editor" v-tkEntityPropertyEditor :type="note.editor"></TKPropertyEditor>
+				<TKPropertyEditor v-if="note.editor" v-tkEntityPropertyEditor :type="note.editor" :class="`emsa-${note.editor}`"></TKPropertyEditor>
 			</TKEntityProperty>
 		</RadDataForm>
 	</StackLayout>
 </template>
 
+
 <script>
-	import { ios } from "tns-core-modules/application";
+	import formatFixes from './formatFixes';
 
 	const segmented = 'SegmentedEditor';
 
@@ -123,31 +124,12 @@
 			announce(args) {
 				console.log(JSON.stringify(this.shift));
 			},
-			fixDateFormat(args) {
-				if(args.propertyName == 'shiftDate') {
-					const editor = args.editor;
-					if (ios) {
-						const dateFormatter = NSDateFormatter.alloc().init();
-						dateFormatter.dateFormat = "MM/dd/yyyy";
-						editor.dateFormatter = dateFormatter;
-					} else {
-							const simpleDateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy", java.util.Locale.US);
-							editor.setDateFormat(simpleDateFormat);
-					}
-				}
+			applyFormats(args) {
+				formatFixes(args);
 			}
 		}
 	};
 </script>
 
 <style scoped>
-	.home-panel {
-		vertical-align: center;
-		font-size: 20;
-		margin: 15;
-	}
-
-	.description-label {
-		margin-bottom: 15;
-	}
 </style>

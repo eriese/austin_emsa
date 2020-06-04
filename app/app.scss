@@ -1,9 +1,46 @@
 // NativeScript core theme
 // @see https://docs.nativescript.org/ui/theme
 @import '~@nativescript/theme/core';
-@import '~@nativescript/theme/default';
+@import '~@nativescript/theme/blue';
 
 // Override variables here
 
 // Global SCSS styling
 // @see https://docs.nativescript.org/ui/styling
+Page {
+	--emsa-blue: #0e4c97;
+	--emsa-yellow: #e0d239;
+	--emsa-white: #e2e2e2;
+	--emsa-black: #1d1d1d;
+}
+
+.ns-light {
+	--color: var(--emsa-black);
+	--border-color: var(--emsa-blue);
+}
+
+.ns-dark {
+	--color: var(--emsa-white);
+	--border-color: var(--emsa-yellow);
+}
+
+
+.emsa-root {
+	color: var(--color);
+
+
+	.emsa-inner {
+		padding: 10;
+		> * {
+			border-width: 5;
+			border-color: var(--border-color);
+			padding-top: 10;
+		}
+	}
+
+	DataFormEditorLabel {
+		font-size: 16;
+		font-weight: bold;
+		color: var(--color);
+	}
+}
