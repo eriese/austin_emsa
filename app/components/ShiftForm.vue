@@ -14,6 +14,8 @@
 
 <script>
 	import formatFixes from './formatFixes';
+	import Shift from './Shift';
+	import ShiftViewModel from './ShiftViewModel';
 
 	const segmented = 'SegmentedEditor';
 
@@ -40,84 +42,16 @@
 
 	export default {
 		data() {
+			const shift = new Shift();
 			return {
-				shift: {
-					isField: true,
-					position: 0,
-					isOffering: true,
-					shiftDate: new Date(),
-					isOCP: false,
-					tradePreference: -1,
-					shiftStart: new Date(),
-					shiftEnd: new Date(),
-					tradeDates: "",
-					notes: ""
-				},
+				shift,
+				viewModel: new ShiftViewModel(shift),
 				values
 			};
 		},
 		computed: {
 			annotations() {
-				return [{
-					entity: {
-							name: 'isField',
-							displayName: 'Is this shift Comm or Field?',
-							valuesProvider: this.values.isField,
-						},
-					editor: segmented
-				}, {
-					entity: {
-						name: 'position',
-						displayName: 'What\'s your position?',
-						valuesProvider: this.values.position,
-					},
-					editor: segmented
-				}, {
-					entity: {
-						name: 'isOffering',
-						displayName: 'Are you offering a shift or picking up a shift?',
-						valuesProvider: this.values.isOffering
-					},
-					editor: segmented
-				}, {
-					entity: {
-						name: 'shiftDate',
-						displayName: this.shift.isOffering ? 'What date is the shift you\'re offering?' : 'What date are you looking for a shift on?',
-					},
-					editor: 'DatePicker'
-				}, {
-					entity: {
-						name: 'isOCP',
-						displayName: 'What type of shift are you offering?',
-						hidden: !this.shift.isOffering,
-						valuesProvider: this.values.isOCP
-					},
-					editor: segmented
-				}, {
-					entity: {
-						name: 'tradePreference',
-						displayName: 'Do you want a trade for this shift?',
-						valuesProvider: this.values.tradePreference,
-					},
-					editor: segmented
-				}, {
-					entity: {
-						name: 'shiftStart',
-						displayName: 'When does the shift start?',
-					},
-					editor: 'TimePicker'
-				}, {
-					entity: {
-						name: 'shiftEnd',
-						displayName: 'When does the shift end?',
-					},
-					editor: 'TimePicker',
-				}, {
-					entity: {
-						name: 'notes'
-					},
-					editor: 'MultilineText'
-				}];
+				return this.viewModel.annotatedFields.map((f) => this.viewModel.getFieldAnnotation(f));
 			},
 		},
 		methods: {
