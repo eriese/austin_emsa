@@ -9,7 +9,7 @@ export class BooleanValueConverter implements PropertyConverter {
 		this.falseValue = values[1];
 	}
 
-	convertFrom(bool: boolean) {
+	convertFrom(bool: any) {
 		return bool ? this.trueValue : this.falseValue;
 	}
 
@@ -21,7 +21,7 @@ export class BooleanValueConverter implements PropertyConverter {
 export class IndexValueConverter implements PropertyConverter {
 	constructor(private values: Array<string>, private offset: number = 0) { }
 
-	convertFrom(num: number) {
+	convertFrom(num: any) {
 		return this.values[num - this.offset];
 	}
 

@@ -9,6 +9,7 @@ export interface IShift {
 	shiftEnd: Date;
 	tradeDates?: string;
 	notes?: string;
+	id?: string;
 }
 
 export default class Shift implements IShift {

@@ -1,29 +1,27 @@
 <template>
-	<Page>
-		<ScrollView class="emsa-root">
-			<StackLayout class="emsa-inner">
-				<ShiftForm />
-			</StackLayout>
-		</ScrollView>
+	<Page class="emsa-root">
+		<ActionBar title="EMSA Shift Swap"></ActionBar>
+		<ShiftForm class="emsa-page" v-if="currentPage == 0"/>
+		<ShiftList class="emsa-page" v-if="currentPage == 1"/>
 	</Page>
 </template>
 
 <script>
 import ShiftForm from './ShiftForm';
+import ShiftList from './ShiftList';
 
 export default {
 	components: {
-		ShiftForm
+		ShiftForm,
+		ShiftList,
 	},
 	data() {
 		return {
+			currentPage: 1
 		};
 	}
 }
 </script>
 
 <style>
-.emsa-root {
-	padding: 10;
-}
 </style>

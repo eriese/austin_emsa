@@ -1,7 +1,7 @@
 // NativeScript core theme
 // @see https://docs.nativescript.org/ui/theme
 @import '~@nativescript/theme/core';
-@import '~@nativescript/theme/blue';
+@import '~@nativescript/theme/default';
 
 // Override variables here
 
@@ -24,23 +24,13 @@ Page {
 	--border-color: var(--emsa-yellow);
 }
 
-
-.emsa-root {
+.emsa-page {
+	padding: 10;
 	color: var(--color);
+}
 
-
-	.emsa-inner {
-		padding: 10;
-		> * {
-			border-width: 5;
-			border-color: var(--border-color);
-			padding-top: 10;
-		}
-	}
-
-	DataFormEditorLabel {
-		font-size: 16;
-		font-weight: bold;
-		color: var(--color);
-	}
+DataFormEditorLabel {
+	font-size: 16;
+	font-weight: bold;
+	color: var(--color);
 }

@@ -1,6 +1,6 @@
 import { ios } from "tns-core-modules/application";
 import {EntityProperty} from "nativescript-ui-dataform";
-const preferredDateFormat: string = "MM/dd/yyyy";
+export const preferredDateFormat: string = "MM/dd/yyyy";
 
 class Fixer {
 	fixFunctions: object;

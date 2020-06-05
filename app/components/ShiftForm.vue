@@ -1,14 +1,16 @@
 <template>
-	<StackLayout class="home-panel">
-		<RadDataForm :source="shift"
-			@propertyCommitted="announce" @editorUpdate="applyFormats">
-			<TKEntityProperty v-for="note in annotations" :key="note.entity.name"
-				v-tkDataFormProperty
-				v-bind="note.entity">
-				<TKPropertyEditor v-if="note.editor" v-tkEntityPropertyEditor :type="note.editor" :class="`emsa-${note.editor}`"></TKPropertyEditor>
-			</TKEntityProperty>
-		</RadDataForm>
-	</StackLayout>
+	<ScrollView>
+		<StackLayout class="home-panel">
+			<RadDataForm :source="shift"
+				@propertyCommitted="announce" @editorUpdate="applyFormats">
+				<TKEntityProperty v-for="note in annotations" :key="note.entity.name"
+					v-tkDataFormProperty
+					v-bind="note.entity">
+					<TKPropertyEditor v-if="note.editor" v-tkEntityPropertyEditor :type="note.editor" :class="`emsa-${note.editor}`"></TKPropertyEditor>
+				</TKEntityProperty>
+			</RadDataForm>
+		</StackLayout>
+	</ScrollView>
 </template>
 
 

@@ -102,6 +102,11 @@ export default class ShiftViewModel{
 		}
 	}
 
+	getFieldValueName(field: string) {
+		const fieldVal = this.shift[field];
+		return this.getFieldValueConverter(field).convertFrom(fieldVal);
+	}
+
 	getFieldAnnotation(field: string) {
 		return {
 			entity: {
