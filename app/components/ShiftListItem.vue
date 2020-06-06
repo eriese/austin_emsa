@@ -20,7 +20,7 @@
 				position: model.getFieldValueName('position'),
 				isOCP: model.getFieldValueName('isOCP'),
 				isField: model.getFieldValueName('isField'),
-				tradePreference: tradeLabels[shift.tradePreference + 1],
+				tradePreference: model.getFieldValueName('tradePreference', true)
 			}
 
 			return <GridLayout iosOverflowSafeArea="false" class={`shift-item shift-item--is-${labels.isOffering.toLowerCase()}`} columns="75,*,*" rows="auto, auto, auto">

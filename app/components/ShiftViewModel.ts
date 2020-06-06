@@ -54,7 +54,7 @@ export default class ShiftViewModel{
 		return label;
 	}
 
-	getFieldValueLabels(field: string) {
+	getFieldValueLabels(field: string, forList: boolean = false) {
 		switch (field) {
 			case 'isField':
 				return ['Field', 'Comm'];
@@ -66,12 +66,12 @@ export default class ShiftViewModel{
 			case 'isOCP':
 				return ['OCP', 'Shift'];
 			case 'tradePreference':
-				return ['No Thanks', "I'm Open", 'Trade Required'];
+				return forList ? ['No Trade', 'Open to Trade', 'Trade Only'] : ['No Thanks', "I'm Open", 'Trade Required'];
 		}
 	}
 
-	getFieldValueConverter(field: string) {
-		const fieldValues = this.getFieldValueLabels(field);
+	getFieldValueConverter(field: string, forList: boolean = false) {
+		const fieldValues = this.getFieldValueLabels(field, forList);
 		switch (field) {
 			case 'isField':
 			case 'isOffering':
@@ -102,9 +102,9 @@ export default class ShiftViewModel{
 		}
 	}
 
-	getFieldValueName(field: string) {
+	getFieldValueName(field: string, forList: boolean = false) {
 		const fieldVal = this.shift[field];
-		return this.getFieldValueConverter(field).convertFrom(fieldVal);
+		return this.getFieldValueConverter(field, forList).convertFrom(fieldVal);
 	}
 
 	getFieldAnnotation(field: string) {
@@ -117,5 +117,24 @@ export default class ShiftViewModel{
 			},
 			editor: this.getFieldEditorType(field)
 		};
+	}
+
+	getFieldFilters(field: string) {
+
+	}
+
+	getFieldFilterName(field: string) {
+		switch (field) {
+			case 'isOffering':
+				return 'Post Type';
+			case 'isField':
+				return 'Comm or Field';
+			case 'position':
+				return 'Position';
+			case 'isOCP':
+				return 'Shift Type';
+			case 'tradePreference':
+				return 'Trade Preference';
+		}
 	}
 }

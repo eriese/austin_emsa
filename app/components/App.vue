@@ -1,6 +1,5 @@
 <template>
-	<Page class="emsa-root">
-		<ActionBar title="EMSA Shift Swap"></ActionBar>
+	<Page class="emsa-root" actionBarHidden="true">
 		<ShiftForm class="emsa-page" v-if="currentPage == 0"/>
 		<ShiftList class="emsa-page" v-if="currentPage == 1"/>
 	</Page>

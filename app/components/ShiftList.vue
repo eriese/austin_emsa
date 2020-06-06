@@ -1,18 +1,18 @@
 <template>
-	<RadListView ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="onPullToRefresh" class="home-panel">
-		<v-template name="header">
-			<Label text="Filters will go here" />
-		</v-template>
-		<v-template>
-			<ShiftListItem :shift="shift" :key="$index"></ShiftListItem>
-		</v-template>
-	</RadListView>
+		<RadListView ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="onPullToRefresh" class="home-panel">
+			<v-template name="header">
+				<Button text="Filters" @tap="showFiltersModal"/>
+			</v-template>
+			<v-template>
+				<ShiftListItem :shift="shift" :key="$index"></ShiftListItem>
+			</v-template>
+		</RadListView>
 </template>
 
 <script>
 	import Shift from './Shift';
 	import ShiftListItem from './ShiftListItem';
-	import { Frame } from "tns-core-modules/ui/frame";
+	import ShiftFilterModal from './ShiftFilterModal';
 
 	function randBool() {
 		const num = Math.random();
@@ -41,12 +41,20 @@
 		}, data() {
 			return {
 				shifts: [],
-				filters: {}
+				filters: {
+					isOffering: [],
+					isField: [],
+					position: [],
+					isOCP: [],
+					tradePreference: [],
+				}
 			}
 		}, methods: {
 			getShifts() {
 				return new Promise((resolve) => {
-					resolve(getDummyInfo());
+					setTimeout(() => {
+						resolve(getDummyInfo());
+					}, 100)
 				})
 			},
 			onPullToRefresh({object}) {
@@ -56,11 +64,25 @@
 						object.notifyPullToRefreshFinished();
 					})
 				})
+			},
+			showFiltersModal() {
+				const options = {
+					props: {
+						filters: this.filters
+					}
+				}
+
+				this.$showModal(ShiftFilterModal, options);
 			}
 		}, created() {
 			this.getShifts().then((shifts) => {
 				this.shifts = shifts;
 			});
+		},
+		mounted() {
+			setTimeout(() => {
+				this.showFiltersModal();
+			}, 500)
 		}
 	}
 </script>

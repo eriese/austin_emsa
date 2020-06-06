@@ -7,7 +7,7 @@
 
 // Global SCSS styling
 // @see https://docs.nativescript.org/ui/styling
-Page {
+Page, .ns-modal {
 	--emsa-blue: #0e4c97;
 	--emsa-yellow: #e0d239;
 	--emsa-white: #e2e2e2;
@@ -16,21 +16,38 @@ Page {
 
 .ns-light {
 	--color: var(--emsa-black);
-	--border-color: var(--emsa-blue);
+	--border-color: var(--emsa-yellow);
 }
 
 .ns-dark {
 	--color: var(--emsa-white);
-	--border-color: var(--emsa-yellow);
+	--border-color: var(--emsa-blue);
+}
+
+.ns-modal {
+	border-radius: 5;
+	&__close-button {
+		width: 40;
+		height: 40;
+		border-radius: 50%;
+		margin-right: 0;
+	}
 }
 
 .emsa-page {
 	padding: 10;
 	color: var(--color);
-}
 
-DataFormEditorLabel {
-	font-size: 16;
-	font-weight: bold;
-	color: var(--color);
+	DataFormEditorLabel {
+		font-size: 16;
+		font-weight: bold;
+		color: var(--color);
+	}
+
+	Button {
+		background-color: var(--emsa-blue);
+		color: var(--emsa-yellow);
+		font-weight: bold;
+		font-size: 16;
+	}
 }

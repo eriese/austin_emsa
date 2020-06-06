@@ -1,8 +1,8 @@
 <template>
 	<ScrollView>
 		<StackLayout class="home-panel">
-			<RadDataForm :source="shift"
-				@propertyCommitted="announce" @editorUpdate="applyFormats">
+			<Label text="List a Shift" class="h1 text-center"/>
+			<RadDataForm :source="shift" @editorUpdate="fixEditorFormat">
 				<TKEntityProperty v-for="note in annotations" :key="note.entity.name"
 					v-tkDataFormProperty
 					v-bind="note.entity">
@@ -15,40 +15,17 @@
 
 
 <script>
-	import formatFixes from './formatFixes';
+	import formComponent from '../mixins/formComponent';
 	import Shift from './Shift';
 	import ShiftViewModel from './ShiftViewModel';
 
-	const segmented = 'SegmentedEditor';
-
-	function booleanValues(trueName, falseName) {
-		return new Map([[true, trueName], [false, falseName]]);
-	}
-
-	const values = {
-		isField: booleanValues('Field', 'Comm'),
-		position: new Map([
-			[0,'Medic'],
-			[1, 'CS'],
-			[2, 'Captain'],
-			[3, 'Commander'],
-		]),
-		isOffering: booleanValues('Offering', 'Picking Up'),
-		isOCP: booleanValues('OCP', 'Shift'),
-		tradePreference: new Map([
-			[-1, 'No Thanks'],
-			[0, 'I\'m Open'],
-			[1, 'Trade Required']
-		])
-	};
-
 	export default {
+		mixins: [formComponent],
 		data() {
 			const shift = new Shift();
 			return {
 				shift,
 				viewModel: new ShiftViewModel(shift),
-				values
 			};
 		},
 		computed: {
@@ -59,9 +36,6 @@
 		methods: {
 			announce(args) {
 				console.log(JSON.stringify(this.shift));
-			},
-			applyFormats(args) {
-				formatFixes(args);
 			}
 		}
 	};
