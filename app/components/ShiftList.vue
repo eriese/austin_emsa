@@ -1,12 +1,17 @@
 <template>
-		<RadListView ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="onPullToRefresh" class="home-panel">
-			<v-template name="header">
-				<Button text="Filters" @tap="showFiltersModal"/>
-			</v-template>
-			<v-template>
-				<ShiftListItem :shift="shift" :key="$index"></ShiftListItem>
-			</v-template>
-		</RadListView>
+		<GridLayout columns="*" rows="*">
+			<RadListView ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="onPullToRefresh" class="home-panel" width="100%" height="100%" row="0">
+				<v-template name="header">
+					<Button text="Filters" @tap="showFiltersModal"/>
+				</v-template>
+				<v-template>
+					<ShiftListItem :shift="shift" :key="$index"></ShiftListItem>
+				</v-template>
+			</RadListView>
+			<StackLayout class="indicator-background" row="0" verticalAlignment="top" v-if="dataIsLoading">
+				<ActivityIndicator busy="true" verticalAlignment="center"/>
+			</StackLayout>
+		</GridLayout>
 </template>
 
 <script>
@@ -19,16 +24,24 @@
 		return num > 0.5
 	}
 
-	function getDummyInfo() {
+	const randInt = (lessThan) => Math.floor(Math.random() * lessThan);
+	const randMember = (ary) => ary[randInt(ary.length)];
+
+	function getDummyInfo(filters) {
 		const dummyInfo = []	;
 		for (var i = 0; i < 20; i++) {
+			let isField = filters.isField.length ? randMember(filters.isField) : randBool();
+			let position = filters.position.length ? randMember(filters.position) : randInt(4);
+			let isOffering = filters.isOffering.length ? randMember(filters.isOffering) : randBool();
+			let isOCP = filters.isOCP.length ? randMember(filters.isOCP) : randBool();
+			let tradePreference = filters.tradePreference.length ? randMember(filters.tradePreference) : (randInt(3) - 1);
 
 			dummyInfo.push(new Shift({
-				isField: randBool(),
-				position: Math.floor(Math.random() * 4),
-				isOffering: randBool(),
-				isOCP: randBool(),
-				tradePreference: Math.floor(Math.random() * 3) - 1
+				isField,
+				position,
+				isOffering,
+				isOCP,
+				tradePreference
 			}));
 		}
 
@@ -41,6 +54,7 @@
 		}, data() {
 			return {
 				shifts: [],
+				dataIsLoading: false,
 				filters: {
 					isOffering: [],
 					isField: [],
@@ -50,42 +64,62 @@
 				}
 			}
 		}, methods: {
-			getShifts() {
+			getShifts(showLoader=true, callback) {
+				this.dataIsLoading = showLoader;
 				return new Promise((resolve) => {
 					setTimeout(() => {
-						resolve(getDummyInfo());
-					}, 100)
+						console.log('getting new shifts with filters:', JSON.stringify(this.filters))
+						this.shifts = getDummyInfo(this.filters);
+						this.dataIsLoading = false;
+						if (typeof callback == 'function') {
+							callback();
+						}
+						resolve();
+					}, 300)
 				})
 			},
 			onPullToRefresh({object}) {
 				this.$nextTick(() => {
-					this.getShifts().then((newShifts) => {
-						this.shifts = newShifts;
-						object.notifyPullToRefreshFinished();
-					})
+					this.getShifts(false, () => object.notifyPullToRefreshFinished());
 				})
 			},
-			showFiltersModal() {
+			showFiltersModal: async function() {
+				const oldFilterState = JSON.stringify(this.filters);
 				const options = {
 					props: {
 						filters: this.filters
 					}
-				}
+				};
 
-				this.$showModal(ShiftFilterModal, options);
+				await this.$showModal(ShiftFilterModal, options);
+
+				this.$nextTick(() => {
+					const newFilterState = JSON.stringify(this.filters);
+					console.log(oldFilterState, newFilterState);
+					if (newFilterState != oldFilterState) {
+						this.getShifts();
+					}
+				})
 			}
 		}, created() {
-			this.getShifts().then((shifts) => {
-				this.shifts = shifts;
-			});
-		},
-		mounted() {
-			setTimeout(() => {
-				this.showFiltersModal();
-			}, 500)
+			this.getShifts();
 		}
 	}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.indicator-background {
+	margin-top: 25;
+	background-color: white;
+	height: 40;
+	width: 40;
+	border-radius: 50%;
+	padding: 5;
+	z-index: 1;
+	android-elevation: 4;
+
+	ActivityIndicator {
+		color: black;
+	}
+}
 </style>

@@ -47,7 +47,7 @@
 					modelCopy.splice(currentIndex, 1);
 				}
 
-				this.$emit('input', modelCopy);
+				this.$emit('input', modelCopy.sort());
 			}
 		}
 	}
