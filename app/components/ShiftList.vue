@@ -2,7 +2,10 @@
 		<GridLayout columns="*" rows="*">
 			<RadListView ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="onPullToRefresh" class="home-panel" width="100%" height="100%" row="0">
 				<v-template name="header">
-					<Button text="Filters" @tap="showFiltersModal"/>
+					<StackLayout>
+						<Button text="Filters" @tap="showFiltersModal"/>
+						<Label textWrap="true" class="body" v-if="shifts.length == 0" text="There are currently no posts that match your search criteria. Please check back again soon, or make your own post seeking a swap"/>
+					</StackLayout>
 				</v-template>
 				<v-template>
 					<ShiftListItem :shift="shift" :key="$index"></ShiftListItem>
@@ -75,7 +78,7 @@
 							callback();
 						}
 						resolve();
-					}, 300)
+					}, 1000)
 				})
 			},
 			onPullToRefresh({object}) {
