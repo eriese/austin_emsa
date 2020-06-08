@@ -1,12 +1,13 @@
 <template>
 	<ScrollView>
 		<StackLayout>
-			<Button text="Back" android.systemIcon="ic_menu_back" @tap="goBack"></Button>
+			<BackButtonListener @backPressed="goBack" />
+			<Button text="Back" @tap="goBack"></Button>
 			<Label :text="`${this.valueLabels.isOffering} Shift`" class="h1 text-center"/>
 			<Label :text="this.valueLabels.dates" class="h2 text-center"/>
 			<GridLayout columns="*,auto" :rows="rowSpec">
-				<Label v-for="(field, $index) in listedFields" :text="fieldLabels[field]" :row="$index" col="0" />
-				<Label v-for="(field, $index) in listedFields" :text="valueLabels[field]" :row="$index" col="1"/>
+				<Label v-for="(field, $index) in listedFields" :text="fieldLabels[field]" :row="$index" col="0" :key="`field_${field}`"/>
+				<Label v-for="(field, $index) in listedFields" :text="valueLabels[field]" :row="$index" col="1" :key="`value_${field}`"/>
 			</GridLayout>
 		</StackLayout>
 	</ScrollView>
@@ -47,10 +48,7 @@ export default {
 	methods: {
 		goBack() {
 			this.$emit('back');
-		}
-	},
-	mounted() {
-		console.log('here', this.shift);
+		},
 	}
 }
 </script>

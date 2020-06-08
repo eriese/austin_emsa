@@ -5,6 +5,7 @@ import RadDataForm from 'nativescript-ui-dataform/vue';
 import RadListView from 'nativescript-ui-listview/vue';
 import { ModalStack, overrideModalViewMethod, VueWindowedModal } from 'nativescript-windowed-modal';
 import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
+import BackButtonListener from './components/BackButtonListener';
 
 Vue.use(VueDevtools, {host: '192.168.1.9'})
 
@@ -21,6 +22,8 @@ Vue.registerElement('CheckBox', () => require('@nstudio/nativescript-checkbox').
 overrideModalViewMethod();
 Vue.registerElement('ModalStack', () => ModalStack);
 Vue.use(VueWindowedModal);
+
+Vue.component('BackButtonListener', BackButtonListener);
 
 if(TNS_ENV !== 'production') {
 	Vue.use(VueDevtools)

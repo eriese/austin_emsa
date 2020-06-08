@@ -39,7 +39,7 @@ export default {
 		return {
 			currentPage: ShiftList,
 			selectedShift: getDummyShift(),
-			selectedIndex: -1,
+			selectedIndex: 0,
 			currentList,
 			currentFilters
 		};
@@ -50,7 +50,8 @@ export default {
 				case ShiftList:
 					return {
 						shifts: this.currentList,
-						filters: this.currentFilters
+						filters: this.currentFilters,
+						scrollIndex: this.selectedIndex
 					};
 				case ShiftView:
 					return {
