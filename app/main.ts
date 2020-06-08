@@ -6,6 +6,8 @@ import RadListView from 'nativescript-ui-listview/vue';
 import { ModalStack, overrideModalViewMethod, VueWindowedModal } from 'nativescript-windowed-modal';
 import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
 
+Vue.use(VueDevtools, {host: '192.168.1.9'})
+
 Vue.use(RadDataForm);
 Vue.use(RadListView);
 Vue.use(VueFilterDateFormat);
@@ -25,8 +27,8 @@ if(TNS_ENV !== 'production') {
 }
 
 // Prints Vue logs when --env.production is *NOT* set while building
-// Vue.config.silent = (TNS_ENV === 'production')
-Vue.config.silent = true;
+Vue.config.silent = (TNS_ENV === 'production')
+// Vue.config.silent = true;
 
 new Vue({
 	render: h => h('frame', [h(App)])

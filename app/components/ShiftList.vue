@@ -1,9 +1,9 @@
 <template>
 		<GridLayout columns="*" rows="*">
-			<RadListView ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="onPullToRefresh" class="home-panel" width="100%" height="100%" row="0">
+			<RadListView ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="onPullToRefresh" @itemTap="showShift" class="home-panel" width="100%" height="100%" row="0">
 				<v-template name="header">
 					<StackLayout>
-						<Button text="Filters" @tap="showFiltersModal"/>
+						<Button text="Filters" @tap="showFiltersModal({index: 1})"/>
 						<Label textWrap="true" class="body" v-if="shifts.length == 0" text="There are currently no posts that match your search criteria. Please check back again soon, or make your own post seeking a swap"/>
 					</StackLayout>
 				</v-template>
@@ -22,90 +22,60 @@
 	import ShiftListItem from './ShiftListItem';
 	import ShiftFilterModal from './ShiftFilterModal';
 
-	function randBool() {
-		const num = Math.random();
-		return num > 0.5
-	}
-
-	const randInt = (lessThan) => Math.floor(Math.random() * lessThan);
-	const randMember = (ary) => ary[randInt(ary.length)];
-
-	function getDummyInfo(filters) {
-		const dummyInfo = []	;
-		for (var i = 0; i < 20; i++) {
-			let isField = filters.isField.length ? randMember(filters.isField) : randBool();
-			let position = filters.position.length ? randMember(filters.position) : randInt(4);
-			let isOffering = filters.isOffering.length ? randMember(filters.isOffering) : randBool();
-			let isOCP = filters.isOCP.length ? randMember(filters.isOCP) : randBool();
-			let tradePreference = filters.tradePreference.length ? randMember(filters.tradePreference) : (randInt(3) - 1);
-
-			dummyInfo.push(new Shift({
-				isField,
-				position,
-				isOffering,
-				isOCP,
-				tradePreference
-			}));
-		}
-
-		return dummyInfo;
-	}
-
 	export default {
 		components: {
 			ShiftListItem
-		}, data() {
-			return {
-				shifts: [],
-				dataIsLoading: false,
-				filters: {
-					isOffering: [],
-					isField: [],
-					position: [],
-					isOCP: [],
-					tradePreference: [],
-				}
+		},
+		props: {
+			shifts: {
+				type: Array,
+				default: () => []
+			},
+			filters: {
+				type: Object,
+				default: () => ({})
 			}
-		}, methods: {
-			getShifts(showLoader=true, callback) {
+		},
+		data() {
+			return {
+				dataIsLoading: false,
+			}
+		},
+		methods: {
+			getShifts(filters, showLoader=true, callback) {
 				this.dataIsLoading = showLoader;
-				return new Promise((resolve) => {
-					setTimeout(() => {
-						console.log('getting new shifts with filters:', JSON.stringify(this.filters))
-						this.shifts = getDummyInfo(this.filters);
-						this.dataIsLoading = false;
-						if (typeof callback == 'function') {
-							callback();
-						}
-						resolve();
-					}, 1000)
+				this.$emit('listRequested', filters, () => {
+					this.dataIsLoading = false;
+
+					if (typeof callback == 'function') {
+						callback();
+					}
 				})
 			},
 			onPullToRefresh({object}) {
 				this.$nextTick(() => {
-					this.getShifts(false, () => object.notifyPullToRefreshFinished());
+					this.getShifts(this.filters, false, () => object.notifyPullToRefreshFinished());
 				})
 			},
 			showFiltersModal: async function() {
 				const oldFilterState = JSON.stringify(this.filters);
+				const newFilters = JSON.parse(oldFilterState)
 				const options = {
 					props: {
-						filters: this.filters
+						filters: newFilters
 					}
 				};
 
 				await this.$showModal(ShiftFilterModal, options);
 
-				this.$nextTick(() => {
-					const newFilterState = JSON.stringify(this.filters);
-					console.log(oldFilterState, newFilterState);
-					if (newFilterState != oldFilterState) {
-						this.getShifts();
-					}
-				})
+				const newFilterState = JSON.stringify(newFilters);
+				if (newFilterState != oldFilterState) {
+					this.getShifts(newFilters);
+				}
+			},
+			showShift({index, object}) {
+				this.$emit('shiftSelected', index);
 			}
-		}, created() {
-			this.getShifts();
 		}
 	}
 </script>

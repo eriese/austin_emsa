@@ -62,7 +62,7 @@ export default class ShiftViewModel{
 			case 'position':
 				return ['Medic', 'CS', 'Captain', 'Commander'];
 			case 'isOffering':
-				return ['Offering', 'Picking Up'];
+				return forList ? ['Offering', 'Seeking'] : ['Offering', 'Picking Up'];
 			case 'isOCP':
 				return ['OCP', 'Shift'];
 			case 'tradePreference':
@@ -104,7 +104,8 @@ export default class ShiftViewModel{
 
 	getFieldValueName(field: string, forList: boolean = false) {
 		const fieldVal = this.shift[field];
-		return this.getFieldValueConverter(field, forList).convertFrom(fieldVal);
+		const converter = this.getFieldValueConverter(field, forList);
+		return converter ? converter.convertFrom(fieldVal) : fieldVal;
 	}
 
 	getFieldAnnotation(field: string) {
@@ -117,10 +118,6 @@ export default class ShiftViewModel{
 			},
 			editor: this.getFieldEditorType(field)
 		};
-	}
-
-	getFieldFilters(field: string) {
-
 	}
 
 	getFieldFilterName(field: string) {
@@ -136,5 +133,7 @@ export default class ShiftViewModel{
 			case 'tradePreference':
 				return 'Trade Preference';
 		}
+
+		return field;
 	}
 }
