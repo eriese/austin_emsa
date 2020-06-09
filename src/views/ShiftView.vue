@@ -1,4 +1,4 @@
-<template>
+<template native>
 	<ScrollView>
 		<StackLayout>
 			<BackButtonListener @backPressed="goBack" />
@@ -15,9 +15,9 @@
 
 <script>
 import shiftDisplay from '../mixins/shiftDisplay';
-import Shift from './Shift';
+import Shift from '../components/Shift';
 
-const excludedFields = 'id|shiftDate|shiftStart|shiftEnd'
+// const excludedFields = 'id|shiftDate|shiftStart|shiftEnd'
 const displayFields = Object.getOwnPropertyNames(new Shift()).filter((p) => p != 'id' && p != 'shiftDate');
 
 export default {

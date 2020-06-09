@@ -1,4 +1,4 @@
-<template>
+<template native>
 	<Page class="emsa-root" actionBarHidden="true">
 		<component :is="currentPage" v-bind="currentPageProps" @shiftSelected="onShiftSelected" @back="backToList" @listRequested="loadList" class="emsa-page" />
 	</Page>
@@ -8,7 +8,7 @@
 import ShiftForm from './ShiftForm';
 import ShiftList from './ShiftList';
 import ShiftView from './ShiftView';
-import {getDummyShift} from './Shift';
+import {getDummyShift} from '../components/Shift';
 
 function getDummyInfo(filters) {
 	const dummyInfo = []	;
@@ -58,6 +58,7 @@ export default {
 						shift: this.currentList[this.selectedIndex]
 					}
 			}
+			return {};
 		}
 	},
 	methods: {
@@ -82,5 +83,5 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 </style>

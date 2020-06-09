@@ -1,4 +1,4 @@
-<template>
+<template native>
 		<GridLayout columns="*" rows="auto,*">
 			<StackLayout row="0">
 				<Button text="Filters" @tap="showFiltersModal"/>
@@ -16,9 +16,8 @@
 </template>
 
 <script>
-	import Shift from './Shift';
-	import ShiftListItem from './ShiftListItem';
-	import ShiftFilterModal from './ShiftFilterModal';
+	import ShiftListItem from '../components/ShiftListItem';
+	import ShiftFilterModal from '../components/ShiftFilterModal';
 
 	export default {
 		components: {
@@ -72,7 +71,7 @@
 					this.getShifts(newFilters);
 				}
 			},
-			showShift({index, object}) {
+			showShift({index}) {
 				this.$emit('shiftSelected', index);
 			}
 		},

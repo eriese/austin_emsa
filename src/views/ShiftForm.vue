@@ -1,4 +1,4 @@
-<template>
+<template native>
 	<ScrollView>
 		<StackLayout class="home-panel">
 			<Label text="List a Shift" class="h1 text-center"/>
@@ -16,8 +16,8 @@
 
 <script>
 	import formComponent from '../mixins/formComponent';
-	import Shift from './Shift';
-	import ShiftViewModel from './ShiftViewModel';
+	import Shift from '../components/Shift';
+	import ShiftViewModel from '../components/ShiftViewModel';
 
 	export default {
 		mixins: [formComponent],
@@ -34,7 +34,7 @@
 			},
 		},
 		methods: {
-			announce(args) {
+			announce() {
 				console.log(JSON.stringify(this.shift));
 			}
 		}
