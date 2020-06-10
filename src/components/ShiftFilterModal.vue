@@ -1,4 +1,4 @@
-<template>
+<template native>
 	<ModalStack dismissEnabled="true">
 		<GridLayout width="90%" height="75%" columns="*, auto" rows="auto, *, auto, auto" class="ns-modal emsa-page filter-form">
 			<Label text="Filter Shift Results" class="filter-form__header text-center" col="0" row="0"/>

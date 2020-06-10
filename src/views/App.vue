@@ -3,9 +3,12 @@
 		<component :is="currentPage" v-bind="currentPageProps" @shiftSelected="onShiftSelected" @back="backToList" @listRequested="loadList" class="emsa-page" />
 	</Page>
 </template>
+<template web>
+	<component :is="currentPage" v-bind="currentPageProps" @shiftSelected="onShiftSelected" @back="backToList" @listRequested="loadList" class="emsa-page" />
+</template>
 
 <script>
-import ShiftForm from './ShiftForm';
+// import ShiftForm from './ShiftForm';
 import ShiftList from './ShiftList';
 import ShiftView from './ShiftView';
 import {getDummyShift} from '../components/Shift';
@@ -21,7 +24,7 @@ function getDummyInfo(filters) {
 
 export default {
 	components: {
-		ShiftForm,
+		// ShiftForm,
 		ShiftList,
 		ShiftView,
 	},

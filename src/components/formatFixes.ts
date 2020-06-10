@@ -1,23 +1,25 @@
 import { ios } from "tns-core-modules/application";
 import {EntityProperty} from "nativescript-ui-dataform";
 export const preferredDateFormat: string = "MM/dd/yyyy";
-
+interface FixFunctions {
+	DatePicker: Function
+	[key: string]: Function
+}
 class Fixer {
-	fixFunctions: object;
+	fixFunctions: FixFunctions;
 
-	constructor(fixFunctions: object) {
+	constructor(fixFunctions: FixFunctions) {
 		this.fixFunctions = fixFunctions
 	}
-	fixEditor(editorType, editor) {
+	fixEditor(editorType: string, editor: any) {
 		this.fixFunctions[editorType] && this.fixFunctions[editorType](editor);
 	}
 }
 
+declare var NSDateFormatter:any;
+declare var java:any;
 const iosFixer = new Fixer({
-	SegmentedEditor(editor) {
-
-	},
-	DatePicker(editor) {
+	DatePicker(editor: any) {
 		const dateFormatter = NSDateFormatter.alloc().init();
 		dateFormatter.dateFormat = preferredDateFormat;
 		editor.dateFormatter = dateFormatter;
@@ -25,16 +27,13 @@ const iosFixer = new Fixer({
 })
 
 const androidFixer = new Fixer({
-	SegmentedEditor(editor) {
-
-	},
-	DatePicker(editor) {
+	DatePicker(editor: any) {
 		const simpleDateFormat = new java.text.SimpleDateFormat(preferredDateFormat, java.util.Locale.US);
 		editor.setDateFormat(simpleDateFormat);
 	}
 })
 
-export default function formatFixes(args) {
+export default function formatFixes(args: any) {
 	const entityProperty: EntityProperty = args.object.getPropertyByName(args.propertyName);
 
 	if (entityProperty.editor === undefined) {

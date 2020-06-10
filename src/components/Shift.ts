@@ -13,6 +13,29 @@ export interface IShift {
 	email?: string;
 }
 
+export interface ShiftLabelSet {
+	isField?: string,
+	position?: string,
+	isOffering?: string,
+	shiftDate?: string,
+	isOCP?: string,
+	tradePreference?: string,
+	shiftStart?: string,
+	shiftEnd?: string,
+	tradeDates?: string,
+	notes?: string,
+	dates?: string,
+	[key: string]: string | undefined;
+}
+
+export interface ShiftFilterSet {
+	isField: boolean[],
+	position: number[],
+	isOffering: boolean[],
+	isOCP: boolean[],
+	tradePreference: number[]
+}
+
 export default class Shift implements IShift {
 	isField = true;
 	position = 0;

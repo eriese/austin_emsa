@@ -6,7 +6,7 @@
 		"jsx": "preserve",
 		"importHelpers": true,
 		"moduleResolution": "node",
-		"allowJs": true,
+		"allowJs": false,
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"sourceMap": true,
@@ -30,12 +30,12 @@
 	"include": [
 		"src/**/*.ts",
 		"src/**/*.tsx",
-		"src/**/*.vue",
+		// "src/**/*.vue",
 		"tests/**/*.ts",
-		"tests/**/*.tsx"
+		"tests/**/*.tsx",
 	],
 	"exclude": [
-		"node_modules",
-		"platforms"
+		"node_modules/**",
+		"platforms/**"
 	]
 }

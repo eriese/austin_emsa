@@ -1,6 +1,8 @@
 import ShiftViewModel from '../components/ShiftViewModel';
+import {ShiftLabelSet} from '../components/Shift';
+import Vue from 'vue';
 
-export default {
+export default Vue.extend({
 	props: {
 		shift: Object
 	},
@@ -19,21 +21,23 @@ export default {
 		}
 	},
 	computed: {
-		dateString() {
-			const dateFormat = this.$options.filters.dateFormat;
+		dateString() : string {
+			const dateFormat: Function | undefined = this.$options.filters && this.$options.filters.dateFormat;
 
-			return `${dateFormat(this.shift.shiftDate, "MM/DD/YY")} ${dateFormat(this.shift.shiftStart, 'h:mm a')}-${dateFormat(this.shift.shiftEnd, 'h:mm a')}`;
+			return dateFormat !== undefined ? `${dateFormat(this.shift.shiftDate, "MM/DD/YY")} ${dateFormat(this.shift.shiftStart, 'h:mm a')}-${dateFormat(this.shift.shiftEnd, 'h:mm a')}` : '';
 		},
 		valueLabels() {
-			let labels = {
+			let labels: ShiftLabelSet = {
 				dates: this.dateString
 			}
 
-			this.displayFields.forEach((f) => {
-				labels[f] = this.viewModel.getFieldValueName(f, this.forList);
+			const vm = this;
+
+			(<string[]>vm.displayFields).forEach((f: string) => {
+				labels[f] = (<ShiftViewModel> vm.viewModel).getFieldValueName(f, <boolean> vm.forList);
 			});
 
 			return labels;
 		},
 	}
-}
+});

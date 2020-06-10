@@ -3,7 +3,7 @@
 
 	export default {
 		mixins: [shiftDisplay],
-		render(h) {
+		render() {
 			return <GridLayout iosOverflowSafeArea="false" class={`shift-item shift-item--is-${this.valueLabels.isOffering.toLowerCase()}`} columns="75,*,*" rows="auto, auto, auto">
 					<Label text={this.valueLabels.isOffering} row="0" col="0" class="shift-item__is-offering"/>
 					<Label text={this.valueLabels.position} row="0" col="2" class="shift-item__position text-right"/>

@@ -33,6 +33,7 @@
 		"setup-webpack-config": "node ./node_modules/vue-cli-plugin-nativescript-vue/lib/scripts/webpack-maintenance pre"
 	},
 	"dependencies": {
+		"@nativescript/core": "^6.5.4",
 		"@nativescript/theme": "^2.2.1",
 		"@nstudio/nativescript-checkbox": "^1.0.0",
 		"@vuejs-community/vue-filter-date-format": "^1.3.2",
@@ -44,14 +45,14 @@
 		"nativescript-vue": "^2.6.1",
 		"nativescript-vue-web": "^0.9.4",
 		"nativescript-windowed-modal": "^6.2.1",
-		"tns-core-modules": "^6.5.2",
+		"tns-core-modules": "^6.5.4",
 		"vue": "^2.6.11"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.5.5",
 		"@babel/preset-env": "^7.5.5",
 		"@babel/traverse": "^7.5.5",
-		"@types/node": "^13.13.5",
+		"@types/node": "^13.13.12",
 		"@typescript-eslint/eslint-plugin": "^2.33.0",
 		"@typescript-eslint/parser": "^2.33.0",
 		"@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
@@ -73,8 +74,8 @@
 		"node-sass": "^4.14.1",
 		"rimraf": "^2.6.3",
 		"string-replace-loader": "^2.2.0",
-		"tns-platform-declarations": "^6.5.1",
-		"typescript": "~3.9.3",
+		"tns-platform-declarations": "^6.5.4",
+		"typescript": "^3.9.5",
 		"vue-cli-plugin-nativescript-vue": "~0.3.1",
 		"vue-template-compiler": "^2.6.11"
 	},
