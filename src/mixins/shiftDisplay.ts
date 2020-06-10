@@ -1,10 +1,10 @@
 import ShiftViewModel from '../components/ShiftViewModel';
-import {ShiftLabelSet} from '../components/Shift';
+import Shift, {ShiftLabelSet} from '../components/Shift';
 import Vue from 'vue';
 
 export default Vue.extend({
 	props: {
-		shift: Object
+		shift: Shift
 	},
 	data() {
 		return {

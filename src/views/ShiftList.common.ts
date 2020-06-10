@@ -1,11 +1,11 @@
 import Vue from 'vue';
-import {ShiftFilterSet} from '../components/Shift';
+import Shift, {ShiftFilterSet} from '../components/Shift';
 
 export default Vue.extend({
 	props: {
 		shifts: {
 			type: Array,
-			default: () => []
+			default: (): Shift[] => []
 		},
 		filters: Object,
 		scrollIndex: Number

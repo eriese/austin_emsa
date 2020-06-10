@@ -48,6 +48,7 @@ export default class Shift implements IShift {
 	tradeDates = '';
 	notes = '';
 	email = '';
+	[key: string]: any;
 
 	constructor(shiftProps: IShift) {
 		Object.assign(this, shiftProps);
@@ -59,8 +60,8 @@ function randBool() {
 	return num > 0.5
 }
 
-const randInt = (lessThan) => Math.floor(Math.random() * lessThan);
-const randMember = (ary) => ary[randInt(ary.length)];
+const randInt = (lessThan: number) => Math.floor(Math.random() * lessThan);
+const randMember = (ary: Array<any>) => ary[randInt(ary.length)];
 
 export function getDummyShift(filters: any = {}) {
 	let isField = filters.isField && filters.isField.length ? randMember(filters.isField) : randBool();

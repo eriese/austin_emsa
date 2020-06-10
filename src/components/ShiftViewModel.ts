@@ -71,7 +71,8 @@ export default class ShiftViewModel{
 	}
 
 	getFieldValueConverter(field: string, forList: boolean = false) {
-		const fieldValues = this.getFieldValueLabels(field, forList);
+		const fieldValues: string[] | undefined = this.getFieldValueLabels(field, forList);
+		if (!fieldValues) { return; }
 		switch (field) {
 			case 'isField':
 			case 'isOffering':
@@ -103,7 +104,7 @@ export default class ShiftViewModel{
 	}
 
 	getFieldValueName(field: string, forList: boolean = false) {
-		const fieldVal = this.shift[field];
+		const fieldVal: any = this.shift[field];
 		const converter = this.getFieldValueConverter(field, forList);
 		return converter ? converter.convertFrom(fieldVal) : fieldVal;
 	}

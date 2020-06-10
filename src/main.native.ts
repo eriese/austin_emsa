@@ -1,13 +1,13 @@
-import Vue from 'nativescript-vue'
-import App from './views/App.vue'
-import VueDevtools from 'nativescript-vue-devtools'
+import Vue from 'nativescript-vue';
+import App from './views/App.vue';
 import RadDataForm from 'nativescript-ui-dataform/vue';
 import RadListView from 'nativescript-ui-listview/vue';
 import { ModalStack, overrideModalViewMethod, VueWindowedModal } from 'nativescript-windowed-modal';
 import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
 import BackButtonListener from './components/BackButtonListener';
 
-Vue.use(VueDevtools, {host: '192.168.1.9'})
+import VueDevtools from 'nativescript-vue-devtools';
+
 
 Vue.use(RadDataForm);
 Vue.use(RadListView);
@@ -25,13 +25,13 @@ Vue.use(VueWindowedModal);
 
 Vue.component('BackButtonListener', BackButtonListener);
 
-if(process.NODE_ENV !== 'production') {
-	Vue.use(VueDevtools)
-}
-
+const isProduction = process.env.NODE_ENV == 'production';
 // Prints Vue logs when --env.production is *NOT* set while building
-Vue.config.silent = (process.NODE_ENV === 'production')
+Vue.config.silent = isProduction;
 // Vue.config.silent = true;
+if(!isProduction) {
+	Vue.use(VueDevtools, {host: '192.168.1.9'});
+}
 
 new Vue({
 	render: h => h('frame', [h(App)])

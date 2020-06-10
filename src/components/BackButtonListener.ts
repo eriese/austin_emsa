@@ -1,7 +1,8 @@
 import { android, AndroidApplication } from 'tns-core-modules/application'
 import { isAndroid } from 'tns-core-modules/platform'
+import Vue from 'vue';
 
-export default {
+export default Vue.extend({
 	props: {
 		preventDefault: {
 			type: Boolean,
@@ -9,7 +10,7 @@ export default {
 		}
 	},
 	methods: {
-		onBackPressed(data) {
+		onBackPressed(data: any) {
 			if (this.preventDefault) {
 				data.cancel = true // prevents default back button behavior
 			}
@@ -24,5 +25,5 @@ export default {
 		if (!isAndroid) { return }
 		android.off(AndroidApplication.activityBackPressedEvent, this.onBackPressed);
 	},
-	render: (h) => h('Label')
-}
+	render: (h: Function) => h('Label')
+});

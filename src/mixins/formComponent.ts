@@ -1,9 +1,10 @@
 import formatFixes from '../components/formatFixes';
+import Vue from 'vue';
 
-export default {
+export default Vue.extend({
 	methods: {
-		fixEditorFormat(editorArgs) {
+		fixEditorFormat(editorArgs: any) {
 			formatFixes(editorArgs);
 		}
 	}
-}
+})

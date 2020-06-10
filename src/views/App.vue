@@ -12,15 +12,16 @@
 import ShiftList from './ShiftList';
 import ShiftView from './ShiftView';
 import {getDummyShift} from '../components/Shift';
+import axios from 'axios';
 
-function getDummyInfo(filters) {
-	const dummyInfo = []	;
-	for (var i = 0; i < 20; i++) {
-		dummyInfo.push(getDummyShift(filters));
-	}
+// function getDummyInfo(filters) {
+// 	const dummyInfo = []	;
+// 	for (var i = 0; i < 20; i++) {
+// 		dummyInfo.push(getDummyShift(filters));
+// 	}
 
-	return dummyInfo;
-}
+// 	return dummyInfo;
+// }
 
 export default {
 	components: {
@@ -74,13 +75,22 @@ export default {
 		},
 		loadList(newFilters, callback) {
 			this.currentFilters = newFilters;
-			setTimeout(() => {
-				this.currentList = getDummyInfo(this.currentFilters);
+			axios.get('https://serene-hollows-85526.herokuapp.com/shifts').then((response) => {
+				this.currentList = response.data;
 
 				if (typeof callback == 'function') {
 					callback();
 				}
-			}, 1000)
+			}, (error) => {
+				console.log(error)
+			})
+			// setTimeout(() => {
+			// 	this.currentList = getDummyInfo(this.currentFilters);
+
+			// 	if (typeof callback == 'function') {
+			// 		callback();
+			// 	}
+			// }, 1000)
 		}
 	},
 }
