@@ -7,14 +7,14 @@
 
 // Global SCSS styling
 // @see https://docs.nativescript.org/ui/styling
-Page, .ns-modal {
+Page, .ns-modal, html {
 	--emsa-blue: #0e4c97;
 	--emsa-yellow: #e0d239;
 	--emsa-white: #e2e2e2;
 	--emsa-black: #1d1d1d;
 }
 
-.ns-light {
+.ns-light, body {
 	--color: var(--emsa-black);
 	--border-color: var(--emsa-yellow);
 }

@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue from './main.common';
 import App from './views/App.vue';
 
 new Vue({

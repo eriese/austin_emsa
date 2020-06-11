@@ -1,18 +1,19 @@
-<template native>
+<template>
 	<Page class="emsa-root" actionBarHidden="true">
-		<component :is="currentPage" v-bind="currentPageProps" @shiftSelected="onShiftSelected" @back="backToList" @listRequested="loadList" class="emsa-page" />
+		<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" />
 	</Page>
 </template>
 <template web>
-	<component :is="currentPage" v-bind="currentPageProps" @shiftSelected="onShiftSelected" @back="backToList" @listRequested="loadList" class="emsa-page" />
+	<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" />
 </template>
 
 <script>
 // import ShiftForm from './ShiftForm';
 import ShiftList from './ShiftList';
 import ShiftView from './ShiftView';
+import Login from './Login';
 import {getDummyShift} from '../components/Shift';
-import axios from 'axios';
+import ApiService from '../components/ApiService';
 
 // function getDummyInfo(filters) {
 // 	const dummyInfo = []	;
@@ -28,24 +29,26 @@ export default {
 		// ShiftForm,
 		ShiftList,
 		ShiftView,
+		Login
 	},
 	data() {
 		const currentFilters = {
-			isOffering: [],
+			isOffering: [false],
 			isField: [],
 			position: [],
 			isOCP: [],
-			tradePreference: [],
+			tradePreference: [0, 1],
 		};
 
-		const currentList = this.loadList(currentFilters);
+		let currentPage = Login;
+		const currentList = this.loadList(currentFilters, this.backToList);
 
 		return {
-			currentPage: ShiftList,
+			currentPage,
 			selectedShift: getDummyShift(),
 			selectedIndex: 0,
 			currentList,
-			currentFilters
+			currentFilters,
 		};
 	},
 	computed: {
@@ -63,6 +66,27 @@ export default {
 					}
 			}
 			return {};
+		},
+		currentPageListeners() {
+			switch(this.currentPage) {
+				case ShiftList:
+					return {
+						shiftSelected: this.onShiftSelected,
+						listRequested: this.loadList,
+					};
+				case ShiftView:
+					return {
+						back: this.backToList,
+					};
+				case Login:
+					return {
+						authSuccess: () => {
+							this.loadList(this.currentFilters, this.backToList);
+						}
+					};
+			}
+
+			return {};
 		}
 	},
 	methods: {
@@ -73,17 +97,24 @@ export default {
 		backToList() {
 			this.currentPage = ShiftList;
 		},
-		loadList(newFilters, callback) {
+		loadList(newFilters, callback, onError) {
 			this.currentFilters = newFilters;
-			axios.get('https://serene-hollows-85526.herokuapp.com/shifts').then((response) => {
-				this.currentList = response.data;
+
+			return ApiService.getShifts(this.currentFilters, (newList) => {
+				this.currentList = newList.sort((a, b) => {
+					let diff = new Date(a.shiftDate) - new Date(b.shiftDate);
+					if (diff == 0) {
+						diff = new Date(a.shiftState) - new Date(b.shiftStart);
+					}
+
+					return diff;
+				});
 
 				if (typeof callback == 'function') {
 					callback();
 				}
-			}, (error) => {
-				console.log(error)
-			})
+			}, onError);
+
 			// setTimeout(() => {
 			// 	this.currentList = getDummyInfo(this.currentFilters);
 
@@ -97,4 +128,6 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../app.scss';
+
 </style>

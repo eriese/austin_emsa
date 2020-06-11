@@ -4,7 +4,7 @@ import Vue from 'vue';
 
 export default Vue.extend({
 	props: {
-		shift: Shift
+		shift: Object
 	},
 	data() {
 		return {
@@ -24,7 +24,12 @@ export default Vue.extend({
 		dateString() : string {
 			const dateFormat: Function | undefined = this.$options.filters && this.$options.filters.dateFormat;
 
-			return dateFormat !== undefined ? `${dateFormat(this.shift.shiftDate, "MM/DD/YY")} ${dateFormat(this.shift.shiftStart, 'h:mm a')}-${dateFormat(this.shift.shiftEnd, 'h:mm a')}` : '';
+			if (dateFormat === undefined) { return ''; }
+
+			const dayString = dateFormat(new Date(this.shift.shiftDate), "MM/DD/YY");
+			const startString = dateFormat(new Date(this.shift.shiftStart), 'h:mm a');
+			const endString = dateFormat(new Date(this.shift.shiftEnd), 'h:mm a');
+			return `${dayString} ${startString}-${endString}` ;
 		},
 		valueLabels() {
 			let labels: ShiftLabelSet = {

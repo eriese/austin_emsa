@@ -1,7 +1,11 @@
 import Vue from 'vue';
 import Shift, {ShiftFilterSet} from '../components/Shift';
+import ShiftListItem from '../components/ShiftListItem.vue';
 
 export default Vue.extend({
+	components: {
+		ShiftListItem
+	},
 	props: {
 		shifts: {
 			type: Array,

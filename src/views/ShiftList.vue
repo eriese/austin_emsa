@@ -1,7 +1,7 @@
 <template web>
 	<div>
 		<ul>
-			<li v-for="(shift, $index) in shifts" :key="$index">{{shift}}</li>
+			<ShiftListItem v-for="(shift, $index) in shifts" :key="$index" :shift="shift" />
 		</ul>
 	</div>
 </template>

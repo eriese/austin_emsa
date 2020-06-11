@@ -17,13 +17,9 @@
 
 <script>
 import ShiftList from './ShiftList.common';
-import ShiftListItem from '../components/ShiftListItem';
 import ShiftFilterModal from '../components/ShiftFilterModal';
 
 export default ShiftList.extend({
-	components: {
-		ShiftListItem
-	},
 	methods: {
 		onShiftTap({index}) {
 			console.log('tapped')
