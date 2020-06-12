@@ -1,11 +1,6 @@
 <template>
 	<Page class="emsa-root" actionBarHidden="true">
-		<StackLayout>
-			<StackLayout class="indicator-background" row="1" verticalAlignment="center" v-if="pageIsLoading">
-					<ActivityIndicator busy="true" verticalAlignment="center"/>
-			</StackLayout>
-			<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" />
-		</StackLayout>
+		<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" ref="page" width="100%"/>
 	</Page>
 </template>
 <template web>
@@ -19,6 +14,7 @@ import ShiftView from './ShiftView';
 import Login from './Login';
 import ApiService from '../components/ApiService';
 import AuthChecker from '../components/authChecker';
+import gsap from 'gsap';
 
 export default {
 	components: {
@@ -29,11 +25,11 @@ export default {
 	},
 	data() {
 		const currentFilters = {
-			isOffering: [false],
+			isOffering: [],
 			isField: [],
 			position: [],
 			isOcp: [],
-			tradePreference: [0, 1],
+			tradePreference: [],
 		};
 
 		let currentPage = Login;
@@ -46,6 +42,7 @@ export default {
 			currentList,
 			currentFilters,
 			pageIsLoading: true,
+			prevPage: null
 		};
 	},
 	computed: {
@@ -106,8 +103,24 @@ export default {
 	},
 	methods: {
 		setCurrentPage(page) {
-			this.pageIsLoading = true;
-			this.currentPage = page;
+			return new Promise((resolve) => {
+				if (page === this.currentPage) {
+					resolve();
+					return;
+				}
+
+				this.pageIsLoading = true;
+				this.prevPage = this.currentPage;
+				const leaving = this.$refs.page.$el.nativeView;
+				const direction = this.prevPage === Login || this.prevPage === ShiftList ? 'marginLeft' : 'marginRight';
+				gsap.to(leaving, 0.2, {
+					[direction]: '200%',
+					onComplete: () => {
+						this.currentPage = page;
+						resolve();
+					}
+				})
+			})
 		},
 		onShiftSelected(listIndex) {
 			this.selectedIndex = listIndex;
@@ -115,8 +128,9 @@ export default {
 			this.setCurrentPage(ShiftView);
 		},
 		backToList() {
-			this.selectedShift = undefined;
-			this.setCurrentPage(ShiftList);
+			this.setCurrentPage(ShiftList).then(() => {
+				this.selectedShift = undefined;
+			});
 		},
 		loadList(newFilters, callback) {
 			this.currentFilters = newFilters;
@@ -144,30 +158,4 @@ export default {
 
 <style lang="scss">
 @import '../app.scss';
-
-.fade-enter-active {
-	animation-name: fade;
-	animation-delay: 0.3s;
-	animation-duration: 0.3s;
-	animation-timing-function: ease-in-out;
-	// animation-fill-mode: backwards;
-}
-
-.fade-leave-active {
-	animation-name: fade;
-	animation-duration: 0.3s;
-	animation-timing-function: ease-in-out;
-	animation-direction: reverse;
-	animation-fill-mode: forwards;
-}
-
-@keyframes fade {
-	0% {
-		opacity: 0;
-	}
-
-	100% {
-		opacity: 1;
-	}
-}
 </style>

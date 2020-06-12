@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {JsonSnakeToCamel, JsonCamelToSnake} from '../utils';
-import {ShiftFilterSet} from './Shift';
+import Shift, {ShiftFilterSet} from './Shift';
 import AuthChecker from './authChecker';
 
 const baseURL = 'http://back.austin_emsa.org:3000';
@@ -44,7 +44,7 @@ export default {
 			onError && onError();
 		})
 	},
-	submitShift(shift) {
+	submitShift(shift: Shift) {
 		return api.post('/shifts', {
 			shift: JsonCamelToSnake(shift),
 		}, {
