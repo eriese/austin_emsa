@@ -11,7 +11,7 @@
 					<Label text={this.valueLabels.position} row="0" col="2" class="shift-item__position text-right"/>
 					<Label text={this.valueLabels.dates} row="1" col="0" colSpan="3" class="shift-item__dates text-center"/>
 					<Label text={this.valueLabels.isField} row="2" col="0" class="shift-item__is-field"/>
-					<Label text={this.valueLabels.isOCP} row="2" col="1" class="shift-item__is-ocp text-center"/>
+					<Label text={this.valueLabels.isOcp} row="2" col="1" class="shift-item__is-ocp text-center"/>
 					<Label text={this.valueLabels.tradePreference} row="2" col="2" class="shift-item__trade-preference text-right"/>
 				</GridLayout>
 			}
@@ -22,7 +22,7 @@
 				<div class="shift-item__dates">{this.valueLabels.dates}</div>
 				<div class="shift-item__bottom-row">
 					<span class="shift-item__is-field">{this.valueLabels.isField}</span>
-					<span class="shift-item__is-ocp">{this.valueLabels.isOCP}</span>
+					<span class="shift-item__is-ocp">{this.valueLabels.isOcp}</span>
 					<span class="shift-item__trade-preference">{this.valueLabels.tradePreference}</span>
 				</div>
 			</li>

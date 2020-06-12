@@ -12,9 +12,15 @@ const api = axios.create({
 let access_token: string;
 let refresh_token: string;
 
+function getAuthHeaders(token?: string) {
+	return {
+		Authorization: `Bearer ${token || AuthChecker.getAuthToken()}`
+	};
+}
+
 export default {
 	login(user : {email: string, password: string}, callback?: Function) {
-		return api.post('/login', {
+		return api.post('/oauth/token', {
 			...user,
 			grant_type: 'password'
 		}).then(response => {
@@ -29,15 +35,20 @@ export default {
 	getShifts(filters: ShiftFilterSet, callback?: Function, onError?: Function) {
 		return api.get('/shifts', {
 			params: JsonCamelToSnake(filters),
-			headers: {
-				Authorization: `Bearer ${AuthChecker.getAuthToken()}`
-			}
+			headers: getAuthHeaders(),
 		}).then((response) => {
 			const convertedList = JsonSnakeToCamel(response.data);
 			callback && callback(convertedList);
 		}).catch(error => {
 			console.log(error);
 			onError && onError();
+		})
+	},
+	submitShift(shift) {
+		return api.post('/shifts', {
+			shift: JsonCamelToSnake(shift),
+		}, {
+			headers: getAuthHeaders()
 		})
 	}
 };

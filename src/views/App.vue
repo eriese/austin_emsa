@@ -1,6 +1,11 @@
 <template>
 	<Page class="emsa-root" actionBarHidden="true">
-		<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" />
+		<StackLayout>
+			<StackLayout class="indicator-background" row="1" verticalAlignment="center" v-if="pageIsLoading">
+					<ActivityIndicator busy="true" verticalAlignment="center"/>
+			</StackLayout>
+			<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" />
+		</StackLayout>
 	</Page>
 </template>
 <template web>
@@ -8,25 +13,16 @@
 </template>
 
 <script>
-// import ShiftForm from './ShiftForm';
+import ShiftForm from './ShiftForm';
 import ShiftList from './ShiftList';
 import ShiftView from './ShiftView';
 import Login from './Login';
-import {getDummyShift} from '../components/Shift';
 import ApiService from '../components/ApiService';
-
-// function getDummyInfo(filters) {
-// 	const dummyInfo = []	;
-// 	for (var i = 0; i < 20; i++) {
-// 		dummyInfo.push(getDummyShift(filters));
-// 	}
-
-// 	return dummyInfo;
-// }
+import AuthChecker from '../components/authChecker';
 
 export default {
 	components: {
-		// ShiftForm,
+		ShiftForm,
 		ShiftList,
 		ShiftView,
 		Login
@@ -36,7 +32,7 @@ export default {
 			isOffering: [false],
 			isField: [],
 			position: [],
-			isOCP: [],
+			isOcp: [],
 			tradePreference: [0, 1],
 		};
 
@@ -45,10 +41,11 @@ export default {
 
 		return {
 			currentPage,
-			selectedShift: getDummyShift(),
+			selectedShift: {},
 			selectedIndex: 0,
 			currentList,
 			currentFilters,
+			pageIsLoading: true,
 		};
 	},
 	computed: {
@@ -62,42 +59,66 @@ export default {
 					};
 				case ShiftView:
 					return {
-						shift: this.currentList[this.selectedIndex]
+						shift: this.selectedShift
 					}
 			}
 			return {};
 		},
 		currentPageListeners() {
+			let listeners = {}
 			switch(this.currentPage) {
 				case ShiftList:
-					return {
+					listeners = {
 						shiftSelected: this.onShiftSelected,
 						listRequested: this.loadList,
-					};
-				case ShiftView:
-					return {
-						back: this.backToList,
-					};
-				case Login:
-					return {
-						authSuccess: () => {
-							this.loadList(this.currentFilters, this.backToList);
+						logout: () => {
+							AuthChecker.clearAuthToken();
+							this.setCurrentPage(Login);
+						},
+						addPost: () => {
+							this.setCurrentPage(ShiftForm);
 						}
 					};
+					break;
+				case ShiftView:
+				case ShiftForm:
+					listeners = {
+						back: this.backToList,
+					};
+					break;
+				case Login:
+					listeners = {
+						authSuccess: () => {
+							this.backToList();
+							this.loadList(this.currentFilters);
+						}
+					};
+					break;
 			}
 
-			return {};
+			return {
+				...listeners,
+				pageMounted: () => {
+					this.pageIsLoading = false;
+				}
+			};
 		}
 	},
 	methods: {
+		setCurrentPage(page) {
+			this.pageIsLoading = true;
+			this.currentPage = page;
+		},
 		onShiftSelected(listIndex) {
 			this.selectedIndex = listIndex;
-			this.currentPage = ShiftView;
+			this.selectedShift = this.currentList[listIndex]
+			this.setCurrentPage(ShiftView);
 		},
 		backToList() {
-			this.currentPage = ShiftList;
+			this.selectedShift = undefined;
+			this.setCurrentPage(ShiftList);
 		},
-		loadList(newFilters, callback, onError) {
+		loadList(newFilters, callback) {
 			this.currentFilters = newFilters;
 
 			return ApiService.getShifts(this.currentFilters, (newList) => {
@@ -113,15 +134,9 @@ export default {
 				if (typeof callback == 'function') {
 					callback();
 				}
-			}, onError);
-
-			// setTimeout(() => {
-			// 	this.currentList = getDummyInfo(this.currentFilters);
-
-			// 	if (typeof callback == 'function') {
-			// 		callback();
-			// 	}
-			// }, 1000)
+			}, () => {
+				this.setCurrentPage(Login);
+			});
 		}
 	},
 }
@@ -130,4 +145,29 @@ export default {
 <style lang="scss">
 @import '../app.scss';
 
+.fade-enter-active {
+	animation-name: fade;
+	animation-delay: 0.3s;
+	animation-duration: 0.3s;
+	animation-timing-function: ease-in-out;
+	// animation-fill-mode: backwards;
+}
+
+.fade-leave-active {
+	animation-name: fade;
+	animation-duration: 0.3s;
+	animation-timing-function: ease-in-out;
+	animation-direction: reverse;
+	animation-fill-mode: forwards;
+}
+
+@keyframes fade {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
 </style>

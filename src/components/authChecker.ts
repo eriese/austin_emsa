@@ -2,7 +2,8 @@ import AuthChecker from './authChecker.common';
 
 const checker: AuthChecker = {
 	saveAuthToken() {},
-	getAuthToken() {}
+	getAuthToken() {},
+	clearAuthToken() {}
 }
 
 export default checker;

@@ -16,7 +16,7 @@ Page, .ns-modal, html {
 
 .ns-light, body {
 	--color: var(--emsa-black);
-	--border-color: var(--emsa-yellow);
+	--border-color: var(--emsa-blue);
 }
 
 .ns-dark {
@@ -38,16 +38,44 @@ Page, .ns-modal, html {
 	padding: 10;
 	color: var(--color);
 
-	DataFormEditorLabel {
-		font-size: 16;
-		font-weight: bold;
-		color: var(--color);
-	}
-
 	Button {
 		background-color: var(--emsa-blue);
 		color: var(--emsa-yellow);
 		font-weight: bold;
 		font-size: 16;
+	}
+
+	.indicator-background {
+		margin-top: 25;
+		background-color: white;
+		height: 40;
+		width: 40;
+		border-radius: 50%;
+		padding: 5;
+		z-index: 1;
+		android-elevation: 4;
+
+		ActivityIndicator {
+			color: black;
+		}
+	}
+}
+
+.form-field {
+	padding: 10;
+
+	&__label {
+		font-size: 16;
+		font-weight: bold;
+		color: var(--color);
+	}
+
+	&__input {
+		color: var(--color);
+		font-size: 12;
+
+		Label {
+			font-size: inherit;
+		}
 	}
 }

@@ -19,8 +19,10 @@
 
 <script>
 import ApiService from '../components/ApiService';
+import emsaPage from '../mixins/emsaPage';
 
 export default {
+	mixins: [emsaPage],
 	data() {
 		return {
 			user: {

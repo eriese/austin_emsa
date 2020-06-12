@@ -3,7 +3,7 @@ export interface IShift {
 	position?: number;
 	isOffering?: boolean;
 	shiftDate?: Date;
-	isOCP?: boolean;
+	isOcp?: boolean;
 	tradePreference?: number;
 	shiftStart?: Date;
 	shiftEnd?: Date;
@@ -18,7 +18,7 @@ export interface ShiftLabelSet {
 	position?: string,
 	isOffering?: string,
 	shiftDate?: string,
-	isOCP?: string,
+	isOcp?: string,
 	tradePreference?: string,
 	shiftStart?: string,
 	shiftEnd?: string,
@@ -32,7 +32,7 @@ export interface ShiftFilterSet {
 	isField: boolean[],
 	position: number[],
 	isOffering: boolean[],
-	isOCP: boolean[],
+	isOcp: boolean[],
 	tradePreference: number[]
 }
 
@@ -41,7 +41,7 @@ export default class Shift implements IShift {
 	position = 0;
 	isOffering = true;
 	shiftDate = new Date();
-	isOCP = false;
+	isOcp = false;
 	tradePreference = 0;
 	shiftStart = new Date();
 	shiftEnd = new Date();
@@ -67,14 +67,14 @@ export function getDummyShift(filters: any = {}) {
 	let isField = filters.isField && filters.isField.length ? randMember(filters.isField) : randBool();
 	let position = filters.position && filters.position.length ? randMember(filters.position) : randInt(4);
 	let isOffering = filters.isOffering && filters.isOffering.length ? randMember(filters.isOffering) : randBool();
-	let isOCP = filters.isOCP && filters.isOCP.length ? randMember(filters.isOCP) : randBool();
+	let isOcp = filters.isOcp && filters.isOcp.length ? randMember(filters.isOcp) : randBool();
 	let tradePreference = filters.tradePreference &&filters.tradePreference.length ? randMember(filters.tradePreference) : (randInt(3) - 1);
 
 	return new Shift({
 		isField,
 		position,
 		isOffering,
-		isOCP,
+		isOcp,
 		tradePreference
 	})
 }

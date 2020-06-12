@@ -12,6 +12,7 @@ class Fixer {
 		this.fixFunctions = fixFunctions
 	}
 	fixEditor(editorType: string, editor: any) {
+		console.log ('fixing editor: ', editor);
 		this.fixFunctions[editorType] && this.fixFunctions[editorType](editor);
 	}
 }

@@ -13,7 +13,7 @@ export default Vue.extend({
 			displayFields: [
 				'isOffering',
 				'position',
-				'isOCP',
+				'isOcp',
 				'isOffering',
 				'isField',
 				'tradePreference',

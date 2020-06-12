@@ -8,10 +8,13 @@ storage.clearAllOnFirstRunSync();
 
 const checker: AuthChecker = {
 	saveAuthToken(token: string) {
-		storage.set({key: authTokenName, value: token});
+		return storage.set({key: authTokenName, value: token});
 	},
 	getAuthToken() {
 		return storage.getSync({key: authTokenName});
+	},
+	clearAuthToken() {
+		return storage.remove({key: authTokenName});
 	}
 }
 

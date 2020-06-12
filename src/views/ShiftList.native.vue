@@ -1,6 +1,10 @@
 <template>
 		<GridLayout columns="*" rows="auto,*">
 			<StackLayout row="0">
+				<Stacklayout orientation="horizontal">
+					<Button text="Add a Post" @tap="$emit('addPost')" />
+					<Button text="Log Out" @tap="$emit('logout')" horizontalAlignment="right"/>
+				</Stacklayout>
 				<Button text="Filters" @tap="showFiltersModal"/>
 				<Label textWrap="true" class="body" v-if="shifts.length == 0" text="There are currently no posts that match your search criteria. Please check back again soon, or make your own post seeking a swap"/>
 			</StackLayout>
@@ -39,19 +43,5 @@ export default ShiftList.extend({
 </script>
 
 <style scoped lang="scss">
-.indicator-background {
-	margin-top: 25;
-	background-color: white;
-	height: 40;
-	width: 40;
-	border-radius: 50%;
-	padding: 5;
-	z-index: 1;
-	android-elevation: 4;
-
-	ActivityIndicator {
-		color: black;
-	}
-}
 </style>
 

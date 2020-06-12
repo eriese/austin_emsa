@@ -7,14 +7,35 @@ export default class ShiftViewModel{
 		'position',
 		'isOffering',
 		'shiftDate',
-		'isOCP',
+		'isOcp',
 		'tradePreference',
 		'shiftStart',
 		'shiftEnd',
+		'tradeDates',
 		'notes'
 	]
 
 	constructor(public shift: Shift) {}
+
+	getFieldInputType(field: string) {
+		switch (field) {
+			case 'isField':
+			case 'position':
+			case 'isOffering':
+			case 'isOcp':
+			case 'tradePreference':
+				return 'radio';
+			case 'shiftDate':
+				return 'date';
+			case 'shiftStart':
+			case 'shiftEnd':
+				return 'time';
+			case 'notes':
+				return 'textarea';
+			default:
+				return 'text';
+		}
+	}
 
 	getFieldLabel(field: string) {
 		let label = '';
@@ -31,7 +52,7 @@ export default class ShiftViewModel{
 			case 'shiftDate':
 				label = this.shift.isOffering ? 'What date is the shift you\'re offering?' : 'What date are you looking for a shift on?';
 				break;
-			case 'isOCP':
+			case 'isOcp':
 				label = 'What type of shift are you offering?';
 				break;
 			case 'tradePreference':
@@ -63,7 +84,7 @@ export default class ShiftViewModel{
 				return ['Medic', 'CS', 'Captain', 'Commander'];
 			case 'isOffering':
 				return forList ? ['Offering', 'Seeking'] : ['Offering', 'Picking Up'];
-			case 'isOCP':
+			case 'isOcp':
 				return ['OCP', 'Shift'];
 			case 'tradePreference':
 				return forList ? ['No Trade', 'Open to Trade', 'Trade Only'] : ['No Thanks', "I'm Open", 'Trade Required'];
@@ -76,7 +97,7 @@ export default class ShiftViewModel{
 		switch (field) {
 			case 'isField':
 			case 'isOffering':
-			case 'isOCP':
+			case 'isOcp':
 				return new BooleanValueConverter(fieldValues);
 			case 'position':
 				return new IndexValueConverter(fieldValues);
@@ -85,40 +106,10 @@ export default class ShiftViewModel{
 		}
 	}
 
-	getFieldEditorType(field: string) {
-		switch (field) {
-			case 'isField':
-			case 'position':
-			case 'isOffering':
-			case 'isOCP':
-			case 'tradePreference':
-				return 'SegmentedEditor';
-			case 'shiftDate':
-				return 'DatePicker';
-			case 'shiftStart':
-			case 'shiftEnd':
-				return 'TimePicker';
-			case 'notes':
-				return 'MultilineText';
-		}
-	}
-
 	getFieldValueName(field: string, forList: boolean = false) {
 		const fieldVal: any = this.shift[field];
 		const converter = this.getFieldValueConverter(field, forList);
 		return converter ? converter.convertFrom(fieldVal) : fieldVal;
-	}
-
-	getFieldAnnotation(field: string) {
-		return {
-			entity: {
-				name: field,
-				displayName: this.getFieldLabel(field),
-				valuesProvider: this.getFieldValueLabels(field),
-				converter: this.getFieldValueConverter(field)
-			},
-			editor: this.getFieldEditorType(field)
-		};
 	}
 
 	getFieldFilterName(field: string) {
@@ -129,10 +120,14 @@ export default class ShiftViewModel{
 				return 'Comm or Field';
 			case 'position':
 				return 'Position';
-			case 'isOCP':
+			case 'isOcp':
 				return 'Shift Type';
 			case 'tradePreference':
 				return 'Trade Preference';
+			case 'tradeDates':
+				return 'Trade Dates';
+			case 'notes':
+				return 'Notes';
 		}
 
 		return field;

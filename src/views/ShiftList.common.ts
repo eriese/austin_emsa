@@ -1,8 +1,10 @@
 import Vue from 'vue';
 import Shift, {ShiftFilterSet} from '../components/Shift';
 import ShiftListItem from '../components/ShiftListItem.vue';
+import emsaPage from '../mixins/emsaPage';
 
 export default Vue.extend({
+	mixins: [emsaPage],
 	components: {
 		ShiftListItem
 	},
