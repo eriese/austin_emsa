@@ -32,7 +32,9 @@ export default {
 			tradePreference: [],
 		};
 
-		let currentPage = Login;
+		let currentPage = {
+			template: '<Label/>'
+		};
 		const currentList = this.loadList(currentFilters, this.backToList);
 
 		return {

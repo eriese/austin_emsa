@@ -8,12 +8,18 @@
 	</form>
 </template>
 <template native>
-	<StackLayout>
-		<Label text="Email"/>
-		<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email"/>
-		<Label text="Password"/>
-		<TextField v-model="user.password" secure="true" returnKeyType="go" autoCapitalizationType="none"/>
-		<Button text="submit" @tap="onSubmit"/>
+	<StackLayout verticalAlignment="center" class="form">
+		<Image src="~/assets/images/logo.png" width="50%"/>
+		<Label text="Austin EMSA Shift Swap" textWrap="true" class="h1 text-center"/>
+		<StackLayout class="form-field">
+			<Label text="Email" class="form-field__label"/>
+			<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input"/>
+		</StackLayout>
+		<StackLayout class="form-field">
+			<Label text="Password" class="form-field__label"/>
+			<TextField v-model="user.password" secure="true" returnKeyType="go" autoCapitalizationType="none" class="form-field__input"/>
+		</StackLayout>
+		<Button text="Submit" @tap="onSubmit"/>
 	</StackLayout>
 </template>
 

@@ -16,21 +16,21 @@ Page, .ns-modal, html {
 
 .ns-light, body {
 	--color: var(--emsa-black);
+	--highlight: var(--emsa-blue);
 	--border-color: var(--emsa-blue);
 }
 
 .ns-dark {
 	--color: var(--emsa-white);
+	--highlight: var(--emsa-yellow);
 	--border-color: var(--emsa-blue);
 }
 
 .ns-modal {
 	border-radius: 5;
 	&__close-button {
-		width: 40;
-		height: 40;
-		border-radius: 50%;
 		margin-right: 0;
+		padding: 0;
 	}
 }
 
@@ -38,32 +38,54 @@ Page, .ns-modal, html {
 	padding: 10;
 	color: var(--color);
 
-	Button {
-		background-color: var(--emsa-blue);
-		color: var(--emsa-yellow);
-		font-weight: bold;
-		font-size: 16;
-	}
+}
 
-	.indicator-background {
-		margin-top: 25;
-		background-color: white;
-		height: 40;
-		width: 40;
-		border-radius: 50%;
-		padding: 5;
-		z-index: 1;
-		android-elevation: 4;
+.h1 {
+	color: var(--highlight);
+	margin-bottom: 15;
+}
 
-		ActivityIndicator {
-			color: black;
-		}
+Button {
+	background-color: var(--emsa-blue);
+	color: var(--emsa-yellow);
+	font-weight: bold;
+	font-size: 16;
+	padding: 5 20;
+}
+
+.indicator-background {
+	margin-top: 25;
+	background-color: white;
+	height: 40;
+	width: 40;
+	border-radius: 50%;
+	padding: 5;
+	z-index: 1;
+	android-elevation: 4;
+
+	ActivityIndicator {
+		color: black;
 	}
 }
 
-.form-field {
-	padding: 10;
+.cta {
+	width: auto;
+	height: auto;
+	padding: 20 30;
+	border-radius: 15;
 
+	&--is-round {
+		width: 40;
+		height: 40;
+		border-radius: 50%
+	}
+}
+
+.form {
+	padding: 0 20;
+}
+
+.form-field {
 	&__label {
 		font-size: 16;
 		font-weight: bold;
@@ -73,6 +95,7 @@ Page, .ns-modal, html {
 	&__input {
 		color: var(--color);
 		font-size: 12;
+		margin-bottom: 10;
 
 		Label {
 			font-size: inherit;

@@ -2,7 +2,7 @@
 	<ModalStack dismissEnabled="true">
 		<GridLayout width="90%" height="75%" columns="*, auto" rows="auto, *, auto, auto" class="ns-modal emsa-page filter-form">
 			<Label text="Filter Shift Results" class="filter-form__header text-center" col="0" row="0"/>
-			<Button text="X" @tap="$modal.close" class="pull-right ns-modal__close-button" col="1" row="0"/>
+			<Button text="X" @tap="$modal.close" class="pull-right ns-modal__close-button cta--is-round" col="1" row="0"/>
 			<ScrollView col="0" row="1" colSpan="2">
 				<StackLayout>
 					<ShiftFilterGroup v-for="(filterValues, filterKey) in filters" :key="filterKey" v-model="filters[filterKey]" :filter-key="filterKey"></ShiftFilterGroup>

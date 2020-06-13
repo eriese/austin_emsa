@@ -1,23 +1,19 @@
 <template native>
 	<ScrollView>
-		<StackLayout class="home-panel">
+		<StackLayout class="form">
 			<BackButtonListener @backPressed="$emit('back')" />
-			<Button text="Back" @tap="$emit('back')"></Button>
+			<Button text="Back" @tap="$emit('back')" class="cta--is-round pull-left"></Button>
 			<Label text="List a Shift" class="h1 text-center"/>
 			<Stacklayout v-for="f in viewModel.annotatedFields" :key="f" class="form-field">
 				<Label :text="fieldLabels[f] || f" class="form-field__label" textWrap="true"/>
-				<TextField v-if="valueManager[f] === undefined || valueManager[f].inputType == 'text'" v-model="shift[f]"  class="form-field__input"/>
+				<TextField v-if="valueManager[f] === undefined || valueManager[f].inputType == 'text' || valueManager[f].inputType == 'textarea'" v-model="shift[f]"  class="form-field__input"/>
 				<WrapLayout v-else-if="valueManager[f].inputType == 'radio'" :columns="valueManager[f].colSpec" class="form-field__input">
 					<StackLayout orientation="horizontal" v-for="(v, i) in valueManager[f].values" :title="v" :key="v" :class="[i == formValues[f] ? 'form-field__input--is-selected' : 'form-field__input--is-unselected']" >
 						<check-box boxType="circle" :checked="i == formValues[f]" @checkedChange="onSelectedIndexChange($event, f, i)" fillColor="#0e4c97"/>
 						<Label :text="v" @tap="onSelectedIndexChange({value: true}, f, i)" verticalAlignment="center"/>
 					</StackLayout>
 				</WrapLayout>
-				<StackLayout v-else-if="valueManager[f].inputType == 'date' || valueManager[f].inputType == 'time'">
-					<component :is="valueManager[f].inputType == 'date' ? DatePicker : TimePicker" v-show="currentFocus == f" v-model="shift[f]" class="form-field__input"/>
-					<TextField :text="shift[f] | dateFormat(valueManager[f].inputType == 'date'? 'MM/DD/YY' : 'h:mm a')" @focus="focusField(f)"/>
-				</StackLayout>
-				<TextView v-else-if="valueManager[f].inputType == 'textarea'" v-model="shift[f]" class="form-field__input"/>
+				<TextField v-else-if="valueManager[f].inputType == 'date' || valueManager[f].inputType == 'time'" :text="shift[f] | dateFormat(valueManager[f].inputType == 'date'? 'MM/DD/YY' : 'h:mm a')" @tap="focusPickerField(f)" @focus="focusPickerField(f)"/>
 			</Stacklayout>
 			<Button text="Save" @tap="submitForm"/>
 		</StackLayout>
@@ -31,6 +27,7 @@
 	import ShiftViewModel from '../components/ShiftViewModel';
 	import ApiService from '../components/ApiService';
 	import emsaPage from '../mixins/emsaPage';
+	import PickerModal from '../components/PickerModal';
 
 	export default {
 		mixins: [formComponent, emsaPage],
@@ -50,7 +47,7 @@
 				valueManager,
 				viewModel,
 				boxColor: '',
-				currentFocus: undefined
+				pickerShowing: false
 			};
 		},
 		computed: {
@@ -78,8 +75,23 @@
 			announce() {
 				console.log(JSON.stringify(this.shift));
 			},
-			focusField(field, isFocused) {
-				this.currentFocus = isFocused ? field : undefined;
+			focusPickerField: async function(field) {
+				if (this.pickerShowing) {return;}
+				this.pickerShowing = true;
+				const fieldManager = this.valueManager[field]
+				const response = await this.$showModal(PickerModal, {
+					props: {
+						dateObject: this.shift[field],
+						pickerType: fieldManager.inputType,
+						fieldName: this.fieldLabels[field],
+					}
+				});
+
+				if (new Date(response) != 'Invalid Date') {
+					this.shift[field] = response;
+				}
+
+				this.pickerShowing = false;
 			},
 			onSelectedIndexChange({value}, field, index) {
 				if (!value) { return; }

@@ -1,10 +1,10 @@
 <template>
 		<GridLayout columns="*" rows="auto,*">
 			<StackLayout row="0">
-				<Stacklayout orientation="horizontal">
-					<Button text="Add a Post" @tap="$emit('addPost')" />
-					<Button text="Log Out" @tap="$emit('logout')" horizontalAlignment="right"/>
-				</Stacklayout>
+				<DockLayout stretchLastChild="false">
+					<Button text="Add a Post" @tap="$emit('addPost')" dock="left"/>
+					<Button text="Log Out" @tap="$emit('logout')" dock="right"/>
+				</DockLayout>
 				<Button text="Filters" @tap="showFiltersModal"/>
 				<Label textWrap="true" class="body" v-if="shifts.length == 0" text="There are currently no posts that match your search criteria. Please check back again soon, or make your own post seeking a swap"/>
 			</StackLayout>
