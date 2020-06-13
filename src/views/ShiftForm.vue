@@ -30,6 +30,7 @@
 	import PickerModal from '../components/PickerModal';
 
 	export default {
+		name: 'ShiftForm',
 		mixins: [formComponent, emsaPage],
 		data() {
 			const shift = new Shift();

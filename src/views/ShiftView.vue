@@ -24,6 +24,7 @@ const excludedFields = /(id|shiftDate|shiftStart|shiftEnd|email)/
 const displayFields = Object.getOwnPropertyNames(new Shift()).filter((p) => !p.match(excludedFields));
 
 export default {
+	name: 'ShiftView',
 	mixins: [shiftDisplay, emsaPage],
 	data() {
 		const listedFields = displayFields.filter((f) => f != 'isOffering');

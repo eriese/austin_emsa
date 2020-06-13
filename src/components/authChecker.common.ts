@@ -4,5 +4,7 @@ import {AxiosResponse} from 'axios';
 export default interface AuthChecker {
 	saveAuthToken: Function,
 	getAuthToken: Function,
-	clearAuthToken: Function
+	clearAuthToken: Function,
+	saveState: Function,
+	getState: Function
 }

@@ -15,6 +15,13 @@ const checker: AuthChecker = {
 	},
 	clearAuthToken() {
 		return storage.remove({key: authTokenName});
+	},
+	saveState(state: any) {
+		console.log("prev state:", this.getState());
+		return storage.set({key: 'state', value: JSON.stringify(state)});
+	},
+	getState() {
+		return JSON.parse(storage.getSync({key: 'state'}) || '{"noState": true}');
 	}
 }
 

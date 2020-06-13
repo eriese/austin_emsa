@@ -3,6 +3,7 @@
 		<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" ref="page" width="100%"/>
 	</Page>
 </template>
+
 <template web>
 	<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" />
 </template>
@@ -32,16 +33,11 @@ export default {
 			tradePreference: [],
 		};
 
-		let currentPage = {
-			template: '<Label/>'
-		};
-		const currentList = this.loadList(currentFilters, this.backToList);
-
 		return {
-			currentPage,
+			currentPage: null,
 			selectedShift: {},
 			selectedIndex: 0,
-			currentList,
+			currentList: [],
 			currentFilters,
 			pageIsLoading: true,
 			prevPage: null
@@ -104,6 +100,15 @@ export default {
 		}
 	},
 	methods: {
+		saveState() {
+			AuthChecker.saveState({
+				currentPage: this.currentPage.name,
+				selectedShift: this.selectedShift,
+				currentList: this.currentList,
+				currentFilters: this.currentFilters,
+				prevPage: this.prevPage.name
+			})
+		},
 		setCurrentPage(page) {
 			return new Promise((resolve) => {
 				if (page === this.currentPage) {
@@ -119,6 +124,7 @@ export default {
 					[direction]: '200%',
 					onComplete: () => {
 						this.currentPage = page;
+						this.saveState();
 						resolve();
 					}
 				})
@@ -147,6 +153,7 @@ export default {
 					return diff;
 				});
 
+				this.saveState();
 				if (typeof callback == 'function') {
 					callback();
 				}
@@ -155,6 +162,23 @@ export default {
 			});
 		}
 	},
+	created() {
+		const state = AuthChecker.getState();
+		Object.assign(this, state);
+
+		if (state.currentPage == 'ShiftForm') {
+			this.currentPage = ShiftForm;
+		} else if (state.selectedShift) {
+			this.currentPage = ShiftView;
+		} else if (state.currentList) {
+			this.currentPage = ShiftList;
+		} else {
+			this.currentPage = {
+				template: '<Label/>'
+			};
+			this.loadList(this.currentFilters, this.backToList);
+		}
+	}
 }
 </script>
 

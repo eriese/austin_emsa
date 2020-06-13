@@ -4,6 +4,7 @@ import ShiftListItem from '../components/ShiftListItem.vue';
 import emsaPage from '../mixins/emsaPage';
 
 export default Vue.extend({
+	name: 'ShiftList',
 	mixins: [emsaPage],
 	components: {
 		ShiftListItem

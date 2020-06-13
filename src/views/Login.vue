@@ -28,6 +28,7 @@ import ApiService from '../components/ApiService';
 import emsaPage from '../mixins/emsaPage';
 
 export default {
+	name: 'Login',
 	mixins: [emsaPage],
 	data() {
 		return {
