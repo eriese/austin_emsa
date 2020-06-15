@@ -3,14 +3,14 @@ import Shift, {IShift} from './Shift';
 
 export default class ShiftViewModel{
 	readonly annotatedFields = [
+		'isOffering',
 		'isField',
 		'position',
-		'isOffering',
-		'shiftDate',
 		'isOcp',
-		'tradePreference',
+		'shiftDate',
 		'shiftStart',
 		'shiftEnd',
+		'tradePreference',
 		'tradeDates',
 		'notes'
 	]
@@ -39,30 +39,31 @@ export default class ShiftViewModel{
 
 	getFieldLabel(field: string) {
 		let label = '';
+		const isOffering = this.shift.isOffering;
 		switch (field) {
 			case 'isField':
 				label = 'Is this shift Comm or Field?';
 				break;
 			case 'position':
-				label = "What's your position?";
+				label = isOffering ? 'What position is the shift for?' : 'What\'s your position?';
 				break;
 			case 'isOffering':
 				label = 'Are you offering a shift or picking up a shift?';
 				break;
 			case 'shiftDate':
-				label = this.shift.isOffering ? 'What date is the shift you\'re offering?' : 'What date are you looking for a shift on?';
+				label = isOffering ? 'What date is the shift you\'re offering?' : 'What date are you looking for a shift on?';
 				break;
 			case 'isOcp':
-				label = 'What type of shift are you offering?';
+				label = isOffering ? 'What type of shift are you offering?' : 'What type of shift are you looking for?';
 				break;
 			case 'tradePreference':
 				label = 'Do you want a trade for this shift?';
 				break;
 			case 'shiftStart':
-				label = 'When does the shift start?';
+				label = isOffering ? 'When does the shift start?' : 'When should the shift start?';
 				break;
 			case 'shiftEnd':
-				label = 'When does the shift end?';
+				label = isOffering ? 'When does the shift end?' : 'When should the shift start?';
 				break;
 			case 'tradeDates':
 				label = 'What dates would you be open to trading for?';
@@ -125,7 +126,7 @@ export default class ShiftViewModel{
 			case 'tradePreference':
 				return 'Trade Preference';
 			case 'tradeDates':
-				return 'Trade Dates';
+				return this.shift.tradePreference < 0 ? undefined : 'Trade Dates';
 			case 'notes':
 				return 'Notes';
 		}

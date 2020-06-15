@@ -1,12 +1,12 @@
 export interface IShift {
+	isOffering?: boolean;
 	isField?: boolean;
 	position?: number;
-	isOffering?: boolean;
-	shiftDate?: Date;
 	isOcp?: boolean;
-	tradePreference?: number;
+	shiftDate?: Date;
 	shiftStart?: Date;
 	shiftEnd?: Date;
+	tradePreference?: number;
 	tradeDates?: string;
 	notes?: string;
 	id?: string;
@@ -37,14 +37,14 @@ export interface ShiftFilterSet {
 }
 
 export default class Shift implements IShift {
+	isOffering = true;
 	isField = true;
 	position = 0;
-	isOffering = true;
-	shiftDate = new Date();
 	isOcp = false;
-	tradePreference = 0;
+	shiftDate = new Date();
 	shiftStart = new Date();
 	shiftEnd = new Date();
+	tradePreference = 0;
 	tradeDates = '';
 	notes = '';
 	email = '';

@@ -27,26 +27,11 @@ export default {
 	name: 'ShiftView',
 	mixins: [shiftDisplay, emsaPage],
 	data() {
-		const listedFields = displayFields.filter((f) => f != 'isOffering');
-
-		let rowSpec = [];
-		for (var i = 0; i < listedFields.length; i++) {
-			rowSpec.push('auto');
-		}
 		return {
 			displayFields,
-			listedFields,
-			rowSpec: rowSpec.join(','),
-		}
-	},
-	computed: {
-		fieldLabels() {
-			let labels = {};
-			this.displayFields.forEach((f) => {
-				labels[f] = this.viewModel.getFieldFilterName(f);
-			})
-
-			return labels;
+			listedFields: [],
+			rowSpec: [],
+			fieldLabels: {}
 		}
 	},
 	methods: {
@@ -55,6 +40,19 @@ export default {
 		},
 		openEmail() {
 			openUrl(`mailto:${this.shift.email}`);
+		}
+	},
+	created() {
+		for (var i = 0; i < displayFields.length; i++) {
+			let field = displayFields[i];
+			if (field == 'isOffering') { continue; }
+
+			let fieldLabel = this.viewModel.getFieldFilterName(field);
+			if (!fieldLabel) {continue;}
+
+			this.listedFields.push(field);
+			this.fieldLabels[field] = fieldLabel;
+			this.rowSpec.push('auto');
 		}
 	}
 }

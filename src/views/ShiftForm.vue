@@ -4,16 +4,16 @@
 			<BackButtonListener @backPressed="$emit('back')" />
 			<Button text="Back" @tap="$emit('back')" class="cta--is-round pull-left"></Button>
 			<Label text="List a Shift" class="h1 text-center"/>
-			<Stacklayout v-for="f in viewModel.annotatedFields" :key="f" class="form-field">
-				<Label :text="fieldLabels[f] || f" class="form-field__label" textWrap="true"/>
-				<TextField v-if="valueManager[f] === undefined || valueManager[f].inputType == 'text' || valueManager[f].inputType == 'textarea'" v-model="shift[f]"  class="form-field__input"/>
-				<WrapLayout v-else-if="valueManager[f].inputType == 'radio'" :columns="valueManager[f].colSpec" class="form-field__input">
-					<StackLayout orientation="horizontal" v-for="(v, i) in valueManager[f].values" :title="v" :key="v" :class="[i == formValues[f] ? 'form-field__input--is-selected' : 'form-field__input--is-unselected']" >
-						<check-box boxType="circle" :checked="i == formValues[f]" @checkedChange="onSelectedIndexChange($event, f, i)" fillColor="#0e4c97"/>
-						<Label :text="v" @tap="onSelectedIndexChange({value: true}, f, i)" verticalAlignment="center"/>
+			<Stacklayout v-for="f in fields" :key="f.fieldName" class="form-field">
+				<Label :text="f.label" class="form-field__label" textWrap="true"/>
+				<TextField v-if="f.inputType == 'text' || f.inputType == 'textarea'" v-model="shift[f.fieldName]"  class="form-field__input"/>
+				<WrapLayout v-else-if="f.inputType == 'radio'" class="form-field__input">
+					<StackLayout orientation="horizontal" v-for="(v, i) in f.values" :title="v" :key="v" :class="[i == f.value ? 'form-field__input--is-selected' : 'form-field__input--is-unselected']" >
+						<check-box boxType="circle" :checked="i == f.value" @checkedChange="onSelectedIndexChange($event, f.fieldName, i)" fillColor="#0e4c97"/>
+						<Label :text="v" @tap="onSelectedIndexChange({value: true}, f.fieldName, i)" verticalAlignment="center"/>
 					</StackLayout>
 				</WrapLayout>
-				<TextField v-else-if="valueManager[f].inputType == 'date' || valueManager[f].inputType == 'time'" :text="shift[f] | dateFormat(valueManager[f].inputType == 'date'? 'MM/DD/YY' : 'h:mm a')" @tap="focusPickerField(f)" @focus="focusPickerField(f)"/>
+				<TextField v-else-if="f.inputType == 'date' || f.inputType == 'time'" :text="shift[f.fieldName] | dateFormat(f.inputType == 'date'? 'MM/DD/YY' : 'h:mm a')" @tap="focusPickerField(f.fieldName)" @focus="focusPickerField(f.fieldName)"/>
 			</Stacklayout>
 			<Button text="Save" @tap="submitForm"/>
 		</StackLayout>
@@ -52,6 +52,45 @@
 			};
 		},
 		computed: {
+			fields() {
+				const fields = []
+				for (var f in this.shift) {
+					let fieldManager = this.valueManager[f];
+					let label =  this.viewModel.getFieldLabel(f);
+					let shouldShow = label;
+					switch(f) {
+						case 'tradeDates' :
+							shouldShow = this.shift.tradePreference <= 0;
+							break;
+					}
+
+					if (!shouldShow) { continue; }
+
+					let value;
+					let inputType = 'text';
+					let values;
+					if (fieldManager) {
+						inputType = fieldManager.inputType
+						values = fieldManager.values
+
+						if (fieldManager.converter) {
+						let valueName = fieldManager.converter.convertFrom(this.shift[f]);
+						value = fieldManager.values.indexOf(valueName);
+						}
+					} else {
+						value = this.shift[f];
+					}
+
+					fields.push({
+						label,
+						value,
+						inputType,
+						values,
+						fieldName: f,
+					});
+				}
+				return fields;
+			},
 			fieldLabels() {
 				const values = {}
 				this.viewModel.annotatedFields.forEach((f) => values[f] = this.viewModel.getFieldLabel(f));
@@ -70,7 +109,7 @@
 				}
 
 				return values;
-			}
+			},
 		},
 		methods: {
 			announce() {
