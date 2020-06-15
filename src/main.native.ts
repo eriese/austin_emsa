@@ -1,6 +1,5 @@
 import Vue from 'nativescript-vue';
 import App from './views/App.vue';
-import RadDataForm from 'nativescript-ui-dataform/vue';
 import RadListView from 'nativescript-ui-listview/vue';
 import { ModalStack, overrideModalViewMethod, VueWindowedModal } from 'nativescript-windowed-modal';
 import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
@@ -8,8 +7,6 @@ import BackButtonListener from './components/BackButtonListener';
 
 import VueDevtools from 'nativescript-vue-devtools';
 
-
-Vue.use(RadDataForm);
 Vue.use(RadListView);
 Vue.use(VueFilterDateFormat);
 Vue.registerElement('CheckBox', () => require('@nstudio/nativescript-checkbox').CheckBox, {
@@ -27,8 +24,8 @@ Vue.component('BackButtonListener', BackButtonListener);
 
 const isProduction = process.env.NODE_ENV == 'production';
 // Prints Vue logs when --env.production is *NOT* set while building
-Vue.config.silent = isProduction;
-// Vue.config.silent = true;
+// Vue.config.silent = isProduction;
+Vue.config.silent = true;
 if(!isProduction) {
 	Vue.use(VueDevtools, {host: '192.168.1.9'});
 }

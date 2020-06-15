@@ -37,7 +37,15 @@ export default {
 			params: JsonCamelToSnake(filters),
 			headers: getAuthHeaders(),
 		}).then((response) => {
-			const convertedList = JsonSnakeToCamel(response.data);
+			const convertedList = JsonSnakeToCamel(response.data).sort((a: Shift, b: Shift) => {
+				let diff: number = new Date(a.shiftDate).getTime() - new Date(b.shiftDate).getTime();
+				if (diff == 0) {
+					diff = new Date(a.shiftStart).getTime() - new Date(b.shiftStart).getTime();
+				}
+
+				return diff;
+			});
+
 			callback && callback(convertedList);
 		}).catch(error => {
 			console.log(error);
@@ -48,6 +56,11 @@ export default {
 		return api.post('/shifts', {
 			shift: JsonCamelToSnake(shift),
 		}, {
+			headers: getAuthHeaders()
+		})
+	},
+	deleteShift(shift: Shift) {
+		return api.delete(`/shifts/${shift.id}`, {
 			headers: getAuthHeaders()
 		})
 	}

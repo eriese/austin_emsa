@@ -9,7 +9,9 @@
 <script>
 	import ShiftList from './ShiftList.common';
 
-	export default ShiftList.extend({});
+	export default ShiftList.extend({
+		name: 'ShiftList'
+	});
 
 </script>
 

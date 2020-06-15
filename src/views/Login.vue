@@ -13,11 +13,11 @@
 		<Label text="Austin EMSA Shift Swap" textWrap="true" class="h1 text-center"/>
 		<StackLayout class="form-field">
 			<Label text="Email" class="form-field__label"/>
-			<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input"/>
+			<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input" @returnPress="focudPassword"/>
 		</StackLayout>
 		<StackLayout class="form-field">
 			<Label text="Password" class="form-field__label"/>
-			<TextField v-model="user.password" secure="true" returnKeyType="go" autoCapitalizationType="none" class="form-field__input"/>
+			<TextField v-model="user.password" secure="true" returnKeyType="go" autoCapitalizationType="none" class="form-field__input" @returnPress="onSubmit" ref="password"/>
 		</StackLayout>
 		<Button text="Submit" @tap="onSubmit"/>
 	</StackLayout>
@@ -33,8 +33,8 @@ export default {
 	data() {
 		return {
 			user: {
-				email: 'enoch.riese@gmail.com',
-				password: 'password'
+				email: '',
+				password: ''
 			}
 		}
 	},
@@ -44,9 +44,11 @@ export default {
 				e.preventDefault();
 			}
 			ApiService.login(this.user, () => {
-				// this.setAuthTokenFromRequest(response);
 				this.$emit('authSuccess');
 			})
+		},
+		focusPassword() {
+			this.$refs.password.nativeView.focus();
 		}
 	}
 }

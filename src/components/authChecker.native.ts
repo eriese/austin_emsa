@@ -17,7 +17,7 @@ const checker: AuthChecker = {
 		return storage.remove({key: authTokenName});
 	},
 	saveState(state: any) {
-		console.log("prev state:", this.getState());
+		console.log("saving state: prev page", state.prevPage, 'current page:', state.currentPage);
 		return storage.set({key: 'state', value: JSON.stringify(state)});
 	},
 	getState() {

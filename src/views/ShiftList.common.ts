@@ -4,7 +4,6 @@ import ShiftListItem from '../components/ShiftListItem.vue';
 import emsaPage from '../mixins/emsaPage';
 
 export default Vue.extend({
-	name: 'ShiftList',
 	mixins: [emsaPage],
 	components: {
 		ShiftListItem
@@ -15,7 +14,8 @@ export default Vue.extend({
 			default: (): Shift[] => []
 		},
 		filters: Object,
-		scrollIndex: Number
+		scrollIndex: Number,
+		useFilters: Boolean,
 	},
 	data() {
 		return {

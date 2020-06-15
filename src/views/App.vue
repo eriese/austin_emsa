@@ -1,6 +1,13 @@
 <template>
-	<Page class="emsa-root" actionBarHidden="true">
-		<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" ref="page" width="100%"/>
+	<Page class="emsa-root" :actionBarHidden="currentPage == Login">
+		<GridLayout rows="*, auto">
+			<component row="0" :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" ref="page" width="100%"/>
+			<SegmentedBar row="1" v-if="isAuthed" :selectedIndex="selectedTab" @selectedIndexChange="tabSelect" class="emsa-menu">
+				<SegmentedBarItem title="Post a Shift" class="emsa-menu__item" />
+				<SegmentedBarItem title="Find a Shift" class="emsa-menu__item" />
+				<SegmentedBarItem title="My Posts" class="emsa-menu__item" />
+			</SegmentedBar>
+		</GridLayout>
 	</Page>
 </template>
 
@@ -13,16 +20,20 @@ import ShiftForm from './ShiftForm';
 import ShiftList from './ShiftList';
 import ShiftView from './ShiftView';
 import Login from './Login';
+import UserView from './UserView';
 import ApiService from '../components/ApiService';
 import AuthChecker from '../components/authChecker';
 import gsap from 'gsap';
+
+const tabOrder = [ShiftForm, ShiftList, UserView];
 
 export default {
 	components: {
 		ShiftForm,
 		ShiftList,
 		ShiftView,
-		Login
+		Login,
+		UserView
 	},
 	data() {
 		const currentFilters = {
@@ -35,26 +46,31 @@ export default {
 
 		return {
 			currentPage: null,
-			selectedShift: {},
+			selectedShift: null,
 			selectedIndex: 0,
 			currentList: [],
 			currentFilters,
 			pageIsLoading: true,
-			prevPage: null
+			prevPage: null,
+			selectedTab: 1,
 		};
 	},
 	computed: {
+		isAuthed() {
+			return this.currentPage != Login;
+		},
 		currentPageProps() {
 			switch(this.currentPage) {
 				case ShiftList:
 					return {
 						shifts: this.currentList,
 						filters: this.currentFilters,
-						scrollIndex: this.selectedIndex
+						scrollIndex: this.selectedIndex,
+						useFilters: true,
 					};
 				case ShiftView:
 					return {
-						shift: this.selectedShift
+						shift: this.selectedShift,
 					}
 			}
 			return {};
@@ -66,20 +82,13 @@ export default {
 					listeners = {
 						shiftSelected: this.onShiftSelected,
 						listRequested: this.loadList,
-						logout: () => {
-							AuthChecker.clearAuthToken();
-							this.setCurrentPage(Login);
-						},
-						addPost: () => {
-							this.setCurrentPage(ShiftForm);
-						}
 					};
 					break;
-				case ShiftView:
-				case ShiftForm:
+				case UserView:
 					listeners = {
-						back: this.backToList,
-					};
+						shiftSelected: this.onShiftSelected,
+						back: this.backToList
+					}
 					break;
 				case Login:
 					listeners = {
@@ -87,6 +96,16 @@ export default {
 							this.backToList();
 							this.loadList(this.currentFilters);
 						}
+					};
+					break;
+				case ShiftView:
+					listeners = {
+						back: !this.selectedShift.isUser ? this.backToList : () => this.setCurrentPage(UserView),
+					}
+					break;
+				default:
+					listeners = {
+						back: this.backToList,
 					};
 					break;
 			}
@@ -101,17 +120,45 @@ export default {
 	},
 	methods: {
 		saveState() {
+			if (!this.currentPage) {return;}
+
 			AuthChecker.saveState({
 				currentPage: this.currentPage.name,
 				selectedShift: this.selectedShift,
-				currentList: this.currentList,
+				prevPage: this.prevPage && this.prevPage.name,
 				currentFilters: this.currentFilters,
-				prevPage: this.prevPage.name
-			})
+				currentList: this.currentList,
+			});
+		},
+		tabSelect(event) {
+			const {value, oldValue} = event;
+			if (oldValue < 0) {
+				return;
+			}
+
+			const page = tabOrder[value];
+			this.setCurrentPage(page);
+		},
+		getTabIndex() {
+			if (this.currentPage === Login) {
+				return;
+			}
+
+			let checkPage = this.currentPage;
+			if (checkPage === ShiftView) {
+				checkPage = this.selectedShift.isUser ? UserView : ShiftList;
+			}
+
+			console.log('checking tab order of ', checkPage.name);
+			let tabIndex = tabOrder.indexOf(checkPage);
+
+			if (tabIndex >= 0) {
+				this.selectedTab = tabIndex;
+			}
 		},
 		setCurrentPage(page) {
 			return new Promise((resolve) => {
-				if (page === this.currentPage) {
+				if (!this.currentPage || page === this.currentPage) {
 					resolve();
 					return;
 				}
@@ -124,20 +171,26 @@ export default {
 					[direction]: '200%',
 					onComplete: () => {
 						this.currentPage = page;
+						this.getTabIndex();
 						this.saveState();
 						resolve();
 					}
 				})
 			})
 		},
-		onShiftSelected(listIndex) {
-			this.selectedIndex = listIndex;
-			this.selectedShift = this.currentList[listIndex]
+		onShiftSelected(indexOrShift, isUser = false) {
+			if (isUser) {
+				this.selectedShift = indexOrShift;
+			} else {
+				this.selectedIndex = indexOrShift;
+				this.selectedShift = this.currentList[indexOrShift]
+			}
 			this.setCurrentPage(ShiftView);
 		},
 		backToList() {
 			this.setCurrentPage(ShiftList).then(() => {
 				this.selectedShift = undefined;
+				this.saveState();
 			});
 		},
 		loadList(newFilters, callback) {
@@ -166,18 +219,31 @@ export default {
 		const state = AuthChecker.getState();
 		Object.assign(this, state);
 
-		if (state.currentPage == 'ShiftForm') {
-			this.currentPage = ShiftForm;
-		} else if (state.selectedShift) {
-			this.currentPage = ShiftView;
-		} else if (state.currentList) {
-			this.currentPage = ShiftList;
-		} else {
-			this.currentPage = {
-				template: '<Label/>'
-			};
-			this.loadList(this.currentFilters, this.backToList);
+		let currentPage;
+		switch(state.currentPage) {
+			case 'Login':
+				currentPage = Login;
+				break;
+			case 'ShiftForm':
+				currentPage = ShiftForm;
+				break;
+			case 'UserView':
+				currentPage = UserView;
+				break;
+			default:
+				if (state.selectedShift) {
+					currentPage = ShiftView;
+				} else {
+					currentPage = state.currentList ? ShiftList : {
+						template: '<Label/>'
+					};
+
+					this.loadList(this.currentFilters, this.backToList);
+				}
 		}
+
+		this.currentPage = currentPage;
+		this.getTabIndex();
 	}
 }
 </script>

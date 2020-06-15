@@ -9,7 +9,8 @@
 				<Label v-for="(field, $index) in listedFields" :text="fieldLabels[field]" :row="$index" col="0" :key="`field_${field}`" class="shift-view__label"/>
 				<Label v-for="(field, $index) in listedFields" :text="valueLabels[field]" :row="$index" col="1" :key="`value_${field}`" class="shift-view__value"/>
 			</GridLayout>
-			<Button text="Email this poster" @tap="openEmail" class="cta" horizontalAlignment="center"/>
+			<Button v-if="shift.isUser" text="Delete This Post" @tap="deletePost" class="cta" horizontalAlignment="center" />
+			<Button v-else text="Email This Poster" @tap="openEmail" class="cta" horizontalAlignment="center"/>
 		</StackLayout>
 	</ScrollView>
 </template>
@@ -19,6 +20,7 @@ import shiftDisplay from '../mixins/shiftDisplay';
 import Shift from '../components/Shift';
 import {openUrl} from 'tns-core-modules/utils/utils';
 import emsaPage from '../mixins/emsaPage';
+import ApiService from '../components/ApiService';
 
 const excludedFields = /(id|shiftDate|shiftStart|shiftEnd|email)/
 const displayFields = Object.getOwnPropertyNames(new Shift()).filter((p) => !p.match(excludedFields));
@@ -40,6 +42,15 @@ export default {
 		},
 		openEmail() {
 			openUrl(`mailto:${this.shift.email}`);
+		},
+		deletePost() {
+			ApiService.deleteShift(this.shift).then(() => {
+				alert('Successfully submitted!').then(() => {
+					this.$emit('back');
+				});
+			}).catch((error) => {
+				console.log(error);
+			})
 		}
 	},
 	created() {

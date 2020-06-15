@@ -142,7 +142,7 @@
 			},
 			submitForm() {
 				ApiService.submitShift(this.shift).then(() => {
-					alert('Successfully submitted!').then(() => {
+					alert('Successfully deleted!').then(() => {
 						this.$emit('back');
 					})
 				}).catch((error) => {
