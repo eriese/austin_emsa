@@ -9,11 +9,11 @@
 </template>
 <template native>
 	<StackLayout verticalAlignment="center" class="form">
-		<Image src="~/assets/images/logo.png" width="50%"/>
+		<Image src="~/assets/images/logo.png" height="125"/>
 		<Label text="Austin EMSA Shift Swap" textWrap="true" class="h1 text-center"/>
 		<StackLayout class="form-field">
 			<Label text="Email" class="form-field__label"/>
-			<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input" @returnPress="focudPassword"/>
+			<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input"/>
 		</StackLayout>
 		<StackLayout class="form-field">
 			<Label text="Password" class="form-field__label"/>

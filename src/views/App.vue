@@ -1,5 +1,5 @@
 <template>
-	<Page class="emsa-root" :actionBarHidden="currentPage == Login">
+	<Page class="emsa-root" actionBarHidden="true">
 		<GridLayout rows="*, auto">
 			<component row="0" :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" ref="page" width="100%"/>
 			<SegmentedBar row="1" v-if="isAuthed" :selectedIndex="selectedTab" @selectedIndexChange="tabSelect" class="emsa-menu">
