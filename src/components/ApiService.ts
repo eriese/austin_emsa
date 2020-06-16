@@ -3,7 +3,9 @@ import {JsonSnakeToCamel, JsonCamelToSnake} from '../utils';
 import Shift, {ShiftFilterSet} from './Shift';
 import AuthChecker from './authChecker';
 
-const baseURL = 'http://back.austin_emsa.org:3000';
+// const baseURL = 'http://back.austin_emsa.org:3000';
+const baseURL = ' https://cryptic-brook-18592.herokuapp.com';
+
 const api = axios.create({
 	baseURL,
 	withCredentials: true,
@@ -18,18 +20,35 @@ function getAuthHeaders(token?: string) {
 	};
 }
 
-export default {
+const ApiService = {
+	signup(user: {email: string, password: string, password_confirmation: string}, callback?: Function) {
+		return new Promise((resolve, reject) => {
+			api.post('/signup', {
+				user
+			}).then(() => {
+				ApiService.login(user, () => {
+					callback && callback();
+					resolve();
+				}).catch((error) => reject(error));
+			}).catch(error => reject(error))
+		})
+		return
+	},
 	login(user : {email: string, password: string}, callback?: Function) {
-		return api.post('/oauth/token', {
-			...user,
-			grant_type: 'password'
-		}).then(response => {
-			access_token = response.data.access_token;
-			refresh_token = response.data.refresh_token;
-			AuthChecker.saveAuthToken(access_token);
-			callback && callback();
-		}).catch(error => {
-			console.log(error);
+		return new Promise((resolve, reject) => {
+			api.post('/oauth/token', {
+				...user,
+				grant_type: 'password'
+			}).then(response => {
+				access_token = response.data.access_token;
+				refresh_token = response.data.refresh_token;
+				AuthChecker.saveAuthToken(access_token);
+				callback && callback();
+				resolve();
+			}).catch(error => {
+				console.log(error);
+				reject(error);
+			})
 		})
 	},
 	getShifts(filters: ShiftFilterSet, callback?: Function, onError?: Function) {
@@ -65,3 +84,5 @@ export default {
 		})
 	}
 };
+
+export default ApiService;

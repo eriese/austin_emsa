@@ -4,7 +4,7 @@
 				<Button text="Filters" @tap="showFiltersModal"/>
 				<Label textWrap="true" class="body" v-if="shifts.length == 0" text="There are currently no posts that match your search criteria. Please check back again soon, or make your own post seeking a swap"/>
 			</StackLayout>
-			<RadListView ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="onPullToRefresh" @itemTap="showShift($event.index)" width="100%" height="100%" row="1">
+			<RadListView v-if="shifts && shifts.length" ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="onPullToRefresh" @itemTap="showShift($event.index)" width="100%" height="100%" row="1">
 				<v-template>
 					<ShiftListItem :shift="shift" :key="$index"></ShiftListItem>
 				</v-template>

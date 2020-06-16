@@ -3,7 +3,7 @@
 		<BackButtonListener @backPressed="$emit('back')"/>
 		<Label text="My Posts" row="0" class="h1 text-center"/>
 		<Label textWrap="true" class="body" v-if="shifts.length == 0" row="1" text="You don't have any open shift posts"/>
-		<RadListView ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="getShifts" @itemTap="showShift($event.index)" row="1">
+		<RadListView v-else ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="getShifts" @itemTap="showShift($event.index)" row="1">
 			<v-template>
 				<ShiftListItem :shift="shift" :key="$index"></ShiftListItem>
 			</v-template>

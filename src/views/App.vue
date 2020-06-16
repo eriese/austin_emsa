@@ -1,13 +1,14 @@
 <template>
 	<Page class="emsa-root" actionBarHidden="true">
-		<GridLayout rows="*, auto">
+		<GridLayout rows="*, auto" v-if="isAuthed">
 			<component row="0" :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" ref="page" width="100%"/>
-			<SegmentedBar row="1" v-if="isAuthed" :selectedIndex="selectedTab" @selectedIndexChange="tabSelect" class="emsa-menu">
+			<SegmentedBar row="1" :selectedIndex="selectedTab" @selectedIndexChange="tabSelect" class="emsa-menu">
 				<SegmentedBarItem title="Post a Shift" class="emsa-menu__item" />
 				<SegmentedBarItem title="Find a Shift" class="emsa-menu__item" />
 				<SegmentedBarItem title="My Posts" class="emsa-menu__item" />
 			</SegmentedBar>
 		</GridLayout>
+		<Login v-else v-on="currentPageListeners" ref="page" />
 	</Page>
 </template>
 
@@ -87,8 +88,12 @@ export default {
 				case UserView:
 					listeners = {
 						shiftSelected: this.onShiftSelected,
-						back: this.backToList
-					}
+						back: this.backToList,
+						logout: () => {
+							AuthChecker.clearAuthToken();
+							this.setCurrentPage(Login);
+						},
+					};
 					break;
 				case Login:
 					listeners = {
