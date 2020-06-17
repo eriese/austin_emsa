@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
+
 import {JsonSnakeToCamel, JsonCamelToSnake} from '../utils';
 import Shift, {ShiftFilterSet} from './Shift';
 import AuthChecker from './authChecker';
@@ -20,6 +21,14 @@ function getAuthHeaders(token?: string) {
 	};
 }
 
+function handleError(rejector?: Function) {
+	return (error: AxiosError) => {
+		console.log(error);
+		if (typeof rejector == 'function') {
+			rejector(error)
+		}
+	}
+}
 const ApiService = {
 	signup(user: {email: string, password: string, password_confirmation: string}, callback?: Function) {
 		return new Promise((resolve, reject) => {
@@ -29,10 +38,9 @@ const ApiService = {
 				ApiService.login(user, () => {
 					callback && callback();
 					resolve();
-				}).catch((error) => reject(error));
-			}).catch(error => reject(error))
+				}).catch(handleError(reject));
+			}).catch(handleError(reject))
 		})
-		return
 	},
 	login(user : {email: string, password: string}, callback?: Function) {
 		return new Promise((resolve, reject) => {
@@ -45,10 +53,7 @@ const ApiService = {
 				AuthChecker.saveAuthToken(access_token);
 				callback && callback();
 				resolve();
-			}).catch(error => {
-				console.log(error);
-				reject(error);
-			})
+			}).catch(handleError(reject))
 		})
 	},
 	getShifts(filters: ShiftFilterSet, callback?: Function, onError?: Function) {

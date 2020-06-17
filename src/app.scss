@@ -12,6 +12,7 @@ Page, .ns-modal, html {
 	--emsa-yellow: #e0d239;
 	--emsa-white: #e2e2e2;
 	--emsa-black: #1d1d1d;
+	--emsa-red: #ff5443;
 }
 
 .ns-light, body {
@@ -92,6 +93,10 @@ Page, .ns-modal, html {
 
 .form {
 	padding: 0 20;
+
+	&__error {
+		color: var(--emsa-red);
+	}
 }
 
 .form-field {
@@ -109,5 +114,9 @@ Page, .ns-modal, html {
 		Label {
 			font-size: inherit;
 		}
+	}
+
+	&__error {
+		color: var(--emsa-red);
 	}
 }
