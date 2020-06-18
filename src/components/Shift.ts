@@ -28,12 +28,21 @@ export interface ShiftLabelSet {
 	[key: string]: string | undefined;
 }
 
-export interface ShiftFilterSet {
-	isField: boolean[],
-	position: number[],
-	isOffering: boolean[],
-	isOcp: boolean[],
-	tradePreference: number[]
+export class ShiftFilterSet {
+	isField: boolean[] = [];
+	position: number[] = [];
+	isOffering: boolean[] = [];
+	isOcp: boolean[] = [];
+	tradePreference: number[] = [];
+
+	constructor(fromfilters?: ShiftFilterSet) {
+		if (!fromfilters) { return; }
+		this.isField = fromfilters.isField.slice();
+		this.position = fromfilters.position.slice();
+		this.isOffering = fromfilters.isOffering.slice();
+		this.isOcp = fromfilters.isOcp.slice();
+		this.tradePreference = fromfilters.tradePreference.slice();
+	}
 }
 
 export default class Shift implements IShift {

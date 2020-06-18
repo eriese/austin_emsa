@@ -1,8 +1,7 @@
 <template native>
 	<ScrollView>
 		<StackLayout class="form">
-			<BackButtonListener @backPressed="$emit('back')" />
-			<Button text="Back" @tap="$emit('back')" class="cta--is-round pull-left"></Button>
+			<BackButton @backPressed="$emit('back')" />
 			<Label text="List a Shift" class="h1 text-center"/>
 			<Stacklayout v-for="f in fields" :key="f.fieldName" class="form-field">
 				<Label :text="f.label" class="form-field__label" textWrap="true"/>
@@ -57,14 +56,8 @@
 				for (var f in this.shift) {
 					let fieldManager = this.valueManager[f];
 					let label =  this.viewModel.getFieldLabel(f);
-					let shouldShow = label;
-					switch(f) {
-						case 'tradeDates' :
-							shouldShow = this.shift.tradePreference <= 0;
-							break;
-					}
 
-					if (!shouldShow) { continue; }
+					if (!label) { continue; }
 
 					let value;
 					let inputType = 'text';
@@ -142,7 +135,7 @@
 			},
 			submitForm() {
 				ApiService.submitShift(this.shift).then(() => {
-					alert('Successfully deleted!').then(() => {
+					alert('Successfully saved!').then(() => {
 						this.$emit('back');
 					})
 				}).catch((error) => {

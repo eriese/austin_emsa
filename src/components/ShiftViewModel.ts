@@ -38,7 +38,7 @@ export default class ShiftViewModel{
 	}
 
 	getFieldLabel(field: string) {
-		let label = '';
+		let label : string | undefined = undefined;
 		const isOffering = this.shift.isOffering;
 		switch (field) {
 			case 'isField':
@@ -66,7 +66,7 @@ export default class ShiftViewModel{
 				label = isOffering ? 'When does the shift end?' : 'When should the shift start?';
 				break;
 			case 'tradeDates':
-				label = 'What dates would you be open to trading for?';
+				label = this.shift.tradePreference < 0 ? undefined : 'What dates would you be open to trading for?';
 				break;
 			case 'notes':
 				label = 'Any notes about the shift?'

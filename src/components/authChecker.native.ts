@@ -22,6 +22,9 @@ const checker: AuthChecker = {
 	},
 	getState() {
 		return JSON.parse(storage.getSync({key: 'state'}) || '{"noState": true}');
+	},
+	logout() {
+		return checker.clearAuthToken();
 	}
 }
 

@@ -13,28 +13,31 @@
 			<SegmentedBarItem class="emsa-menu__item" title="Returning User" />
 			<SegmentedBarItem class="emsa-menu__item" title="New User" />
 		</SegmentedBar>
-		<StackLayout verticalAlignment="center" class="form emsa-page" row="0">
-			<Image src="~/assets/images/logo.png" height="125"/>
-			<Label text="Austin EMSA Shift Swap" textWrap="true" class="h1 text-center"/>
-			<Label :text="formError" textWrap="true" class="text-center form__error"/>
-			<StackLayout class="form-field">
-				<Label text="Email" class="form-field__label"/>
-				<Label class="form-field__error" :text="fieldErrors.email" />
-				<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input"/>
+		<ScrollView row="0" class="emsa-page">
+			<StackLayout verticalAlignment="center" class="form">
+				<Image src="~/assets/images/logo.png" height="125"/>
+				<Label text="Austin EMSA Shift Swap" textWrap="true" class="h1 text-center"/>
+				<Label :text="formError" textWrap="true" class="text-center form__error"/>
+				<StackLayout class="form-field">
+					<Label text="Email" class="form-field__label"/>
+					<Label class="form-field__error" :text="fieldErrors.email" />
+					<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input"/>
+				</StackLayout>
+				<StackLayout class="form-field">
+					<Label text="Password" class="form-field__label"/>
+					<Label class="form-field__error" :text="fieldErrors.password" />
+					<TextField v-model="user.password" :secure="!showPassword" :returnKeyType="isLogin ? 'go' : 'next'" autoCapitalizationType="none" class="form-field__input" @returnPress="passwordReturnPress" ref="password"/>
+				</StackLayout>
+				<StackLayout class="form-field" v-if="!isLogin">
+					<Label text="Confirm Password" class="form-field__label"/>
+					<Label class="form-field__error" :text="fieldErrors.password_confirmation" />
+					<TextField v-model="user.password_confirmation" :secure="!showPassword" returnKeyType="go" autoCapitalizationType="none" class="form-field__input" @returnPress="onSubmit" ref="password_confirmation"/>
+				</StackLayout>
+				<Button horizontalAlignment="right" :text="showPassword ? 'Hide Password' : 'Show Password'" @tap="showPassword = !showPassword"/>
+				<Button :text="isLogin ? 'Log In' : 'Sign Up'" @tap="onSubmit"/>
+				<ActivityIndicator :busy="isSubmitting" />
 			</StackLayout>
-			<StackLayout class="form-field">
-				<Label text="Password" class="form-field__label"/>
-				<Label class="form-field__error" :text="fieldErrors.password" />
-				<TextField v-model="user.password" secure="true" :returnKeyType="isLogin ? 'go' : 'next'" autoCapitalizationType="none" class="form-field__input" @returnPress="passwordReturnPress" ref="password"/>
-			</StackLayout>
-			<StackLayout class="form-field" v-if="!isLogin">
-				<Label text="Confirm Password" class="form-field__label"/>
-				<Label class="form-field__error" :text="fieldErrors.password_confirmation" />
-				<TextField v-model="user.password_confirmation" secure="true" returnKeyType="go" autoCapitalizationType="none" class="form-field__input" @returnPress="onSubmit" ref="password_confirmation"/>
-			</StackLayout>
-			<Button :text="isLogin ? 'Log In' : 'Sign Up'" @tap="onSubmit"/>
-			<ActivityIndicator :busy="isSubmitting" />
-		</StackLayout>
+		</ScrollView>
 	</GridLayout>
 </template>
 
@@ -57,7 +60,8 @@ export default {
 				email: '',
 				password: '',
 				password_confirmation: ''
-			}
+			},
+			showPassword: false
 		}
 	},
 	computed: {

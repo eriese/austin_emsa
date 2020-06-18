@@ -29,6 +29,7 @@
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "gsap": "^3.3.1",
+    "nativescript-fonticon": "^2.0.0",
     "nativescript-secure-storage": "^2.6.0",
     "nativescript-socketio": "^3.3.1",
     "nativescript-toasty": "^3.0.0-alpha.2",

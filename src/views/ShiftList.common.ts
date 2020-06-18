@@ -40,24 +40,24 @@ export default Vue.extend({
 		},
 		showFiltersModal: async function() {
 			const oldFilterState: string = JSON.stringify(this.filters);
-			const newFilters: ShiftFilterSet = JSON.parse(oldFilterState);
 			const options = {
 				props: {
-					filters: newFilters
+					filters: this.filters
 				}
 			};
 
-			await this.showModal(options);
+			const filterResults = await this.showModal(options);
+			if (!filterResults) { return; }
 
-			const newFilterState = JSON.stringify(newFilters);
+			const newFilterState = JSON.stringify(filterResults);
 			if (newFilterState != oldFilterState) {
-				this.getShifts(newFilters);
+				this.getShifts(filterResults);
 			}
 		},
 		showShift(index: number) {
 			this.$emit('shiftSelected', index);
 		},
-		showModal(options: { props: any}): Promise<void> {
+		showModal(options: { props: any}): Promise<ShiftFilterSet | undefined> {
 			return new Promise((resolve) => resolve());
 		},
 		notifyPullToRefreshFinished(eventObject: any) {

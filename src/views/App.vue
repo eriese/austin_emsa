@@ -25,6 +25,7 @@ import UserView from './UserView';
 import ApiService from '../components/ApiService';
 import AuthChecker from '../components/authChecker';
 import gsap from 'gsap';
+import {ShiftFilterSet} from '../components/Shift';
 
 const tabOrder = [ShiftForm, ShiftList, UserView];
 
@@ -37,20 +38,12 @@ export default {
 		UserView
 	},
 	data() {
-		const currentFilters = {
-			isOffering: [],
-			isField: [],
-			position: [],
-			isOcp: [],
-			tradePreference: [],
-		};
-
 		return {
 			currentPage: null,
 			selectedShift: null,
 			selectedIndex: 0,
 			currentList: [],
-			currentFilters,
+			currentFilters: new ShiftFilterSet(),
 			pageIsLoading: true,
 			prevPage: null,
 			selectedTab: 1,
@@ -90,7 +83,8 @@ export default {
 						shiftSelected: this.onShiftSelected,
 						back: this.backToList,
 						logout: () => {
-							AuthChecker.clearAuthToken();
+							AuthChecker.logout();
+							this.currentFilters = new ShiftFilterSet();
 							this.setCurrentPage(Login);
 						},
 					};

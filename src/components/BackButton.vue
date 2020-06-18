@@ -1,8 +1,12 @@
+<template>
+	<Button :text="'\uf104'" class="fas cta--is-round pull-left m-t-10" @tap="onBackPressed"></Button>
+</template>
+
+<script>
 import { android, AndroidApplication } from 'tns-core-modules/application'
 import { isAndroid } from 'tns-core-modules/platform'
-import Vue from 'vue';
 
-export default Vue.extend({
+export default{
 	props: {
 		preventDefault: {
 			type: Boolean,
@@ -10,7 +14,7 @@ export default Vue.extend({
 		}
 	},
 	methods: {
-		onBackPressed(data: any) {
+		onBackPressed(data) {
 			if (this.preventDefault) {
 				data.cancel = true // prevents default back button behavior
 			}
@@ -24,6 +28,6 @@ export default Vue.extend({
 	destroyed() {
 		if (!isAndroid) { return }
 		android.off(AndroidApplication.activityBackPressedEvent, this.onBackPressed);
-	},
-	render: (h: Function) => h('Label')
-});
+	}
+};
+</script>

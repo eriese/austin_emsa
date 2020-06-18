@@ -1,8 +1,7 @@
 <template native>
 	<ScrollView>
 		<StackLayout>
-			<BackButtonListener @backPressed="goBack" />
-			<Button text="Back" @tap="goBack" class="cta--is-round pull-left"></Button>
+			<BackButton @backPressed="goBack" />
 			<Label :text="`${this.valueLabels.isOffering} Shift`" class="h1 text-center"/>
 			<Label :text="this.valueLabels.dates" class="h2 text-center"/>
 			<GridLayout columns="*,auto" :rows="rowSpec" class="shift-view">
@@ -45,7 +44,7 @@ export default {
 		},
 		deletePost() {
 			ApiService.deleteShift(this.shift).then(() => {
-				alert('Successfully submitted!').then(() => {
+				alert('Successfully deleted!').then(() => {
 					this.$emit('back');
 				});
 			}).catch((error) => {

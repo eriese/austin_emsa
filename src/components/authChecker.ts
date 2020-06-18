@@ -5,7 +5,8 @@ const checker: AuthChecker = {
 	getAuthToken() {},
 	clearAuthToken() {},
 	saveState() {},
-	getState() {}
+	getState() {},
+	logout() {}
 }
 
 export default checker;

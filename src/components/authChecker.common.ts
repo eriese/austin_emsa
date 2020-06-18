@@ -6,5 +6,6 @@ export default interface AuthChecker {
 	getAuthToken: Function,
 	clearAuthToken: Function,
 	saveState: Function,
-	getState: Function
+	getState: Function,
+	logout: Function
 }
