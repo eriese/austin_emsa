@@ -12,7 +12,7 @@
 						<Label :text="v" @tap="onSelectedIndexChange({value: true}, f.fieldName, i)" verticalAlignment="center"/>
 					</StackLayout>
 				</WrapLayout>
-				<TextField v-else-if="f.inputType == 'date' || f.inputType == 'time'" :text="shift[f.fieldName] | dateFormat(f.inputType == 'date'? 'MM/DD/YY' : 'h:mm a')" @tap="focusPickerField(f.fieldName)" @focus="focusPickerField(f.fieldName)"/>
+				<TextField v-else-if="f.inputType == 'date' || f.inputType == 'time'" :text="shift[f.fieldName] | dateFormat(f.inputType == 'date'? 'dddd MM/DD/YY' : 'h:mm a')" @tap="focusPickerField(f.fieldName)" @focus="focusPickerField(f.fieldName)"/>
 			</Stacklayout>
 			<Button text="Save" @tap="submitForm"/>
 		</StackLayout>

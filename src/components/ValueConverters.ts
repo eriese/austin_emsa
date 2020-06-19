@@ -19,13 +19,36 @@ export class BooleanValueConverter implements PropertyConverter {
 }
 
 export class IndexValueConverter implements PropertyConverter {
-	constructor(private values: Array<string>, private offset: number = 0) { }
+	constructor(private values: Array<string>, private offset: number = 0, private notFound?: string) { }
 
 	convertFrom(num: any) {
-		return this.values[num - this.offset];
+		return num - this.offset < 0 ? this.notFound : this.values[num - this.offset];
 	}
 
 	convertTo(str: string) {
 		return this.values.indexOf(str) + this.offset;
+	}
+}
+
+export class IntegerValueConverter implements PropertyConverter {
+	constructor(private nanString: string) {}
+
+	convertFrom(num: any) {
+		return num < 0 ? this.nanString : num.toString();
+	}
+
+	convertTo(str: string) {
+		const num = parseInt(str);
+		return isNaN(num) ? this.nanString : num;
+	}
+}
+
+export class SimpleConverter implements PropertyConverter {
+	convertFrom(str: any) {
+		return str.toString();
+	}
+
+	convertTo(str: string) {
+		return str;
 	}
 }

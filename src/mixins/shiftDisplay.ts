@@ -26,7 +26,10 @@ export default Vue.extend({
 
 			if (dateFormat === undefined) { return ''; }
 
-			const dayString = dateFormat(new Date(this.shift.shiftDate), "MM/DD/YY");
+			const shiftDate = new Date(this.shift.shiftDate);
+			const isThisYear = shiftDate.getYear() == new Date().getYear();
+			const formatString = isThisYear ? 'dddd, MM/DD' : 'dddd, MM/DD/YY';
+			const dayString = dateFormat(shiftDate, formatString);
 			const startString = dateFormat(new Date(this.shift.shiftStart), 'h:mm a');
 			const endString = dateFormat(new Date(this.shift.shiftEnd), 'h:mm a');
 			return `${dayString} ${startString}-${endString}` ;

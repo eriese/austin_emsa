@@ -1,4 +1,4 @@
-import {BooleanValueConverter, IndexValueConverter} from './ValueConverters';
+import {BooleanValueConverter, IndexValueConverter, IntegerValueConverter, SimpleConverter} from './ValueConverters';
 import Shift, {IShift} from './Shift';
 
 export default class ShiftViewModel{
@@ -8,6 +8,8 @@ export default class ShiftViewModel{
 		'position',
 		'isOcp',
 		'shiftDate',
+		'shiftLetter',
+		'timeFrame',
 		'shiftStart',
 		'shiftEnd',
 		'tradePreference',
@@ -24,6 +26,8 @@ export default class ShiftViewModel{
 			case 'isOffering':
 			case 'isOcp':
 			case 'tradePreference':
+			case 'shiftLetter':
+			case 'timeFrame':
 				return 'radio';
 			case 'shiftDate':
 				return 'date';
@@ -71,6 +75,12 @@ export default class ShiftViewModel{
 			case 'notes':
 				label = 'Any notes about the shift?'
 				break;
+			case 'shiftLetter':
+				label = this.shift.isOffering ? 'Which shift?' : undefined;
+				break;
+			case 'timeFrame':
+				label = (isOffering ? 'Is this shift a' : 'Should this shift be') + ' 12, a 24, or something else? (explain something else in the notes)';
+				break;
 		}
 
 		return label;
@@ -89,6 +99,10 @@ export default class ShiftViewModel{
 				return ['OCP', 'Shift'];
 			case 'tradePreference':
 				return forList ? ['No Trade', 'Open to Trade', 'Trade Only'] : ['No Thanks', "I'm Open", 'Trade Required'];
+			case 'shiftLetter':
+				return ['A', 'B', 'C', 'D'];
+			case 'timeFrame':
+				return ['12', '24', 'Other'];
 		}
 	}
 
@@ -104,6 +118,10 @@ export default class ShiftViewModel{
 				return new IndexValueConverter(fieldValues);
 			case 'tradePreference':
 				return new IndexValueConverter(fieldValues, -1);
+			case 'timeFrame':
+				return new IntegerValueConverter('Other');
+			default:
+				return new SimpleConverter();
 		}
 	}
 
@@ -129,6 +147,10 @@ export default class ShiftViewModel{
 				return this.shift.tradePreference < 0 ? undefined : 'Trade Dates';
 			case 'notes':
 				return 'Notes';
+			case 'shiftLetter':
+				return 'A, B, C, or D?';
+			case 'timeFrame':
+				return '12, 24, or Other?';
 		}
 
 		return field;

@@ -4,6 +4,8 @@ export interface IShift {
 	position?: number;
 	isOcp?: boolean;
 	shiftDate?: Date;
+	shiftLetter?: string;
+	timeFrame?: number;
 	shiftStart?: Date;
 	shiftEnd?: Date;
 	tradePreference?: number;
@@ -14,11 +16,13 @@ export interface IShift {
 }
 
 export interface ShiftLabelSet {
+	isOffering?: string,
 	isField?: string,
 	position?: string,
-	isOffering?: string,
-	shiftDate?: string,
 	isOcp?: string,
+	shiftDate?: string,
+	shiftLetter?: string,
+	timeFrame?: string,
 	tradePreference?: string,
 	shiftStart?: string,
 	shiftEnd?: string,
@@ -28,20 +32,28 @@ export interface ShiftLabelSet {
 	[key: string]: string | undefined;
 }
 
+function copyOrNew(ary: Array<any> | undefined) {
+	return ary ? ary.slice() : [];
+}
+
 export class ShiftFilterSet {
+	isOffering: boolean[] = [];
 	isField: boolean[] = [];
 	position: number[] = [];
-	isOffering: boolean[] = [];
 	isOcp: boolean[] = [];
+	shiftLetter: string[] = [];
+	timeFrame: number[] = [];
 	tradePreference: number[] = [];
 
 	constructor(fromfilters?: ShiftFilterSet) {
-		if (!fromfilters) { return; }
-		this.isField = fromfilters.isField.slice();
-		this.position = fromfilters.position.slice();
-		this.isOffering = fromfilters.isOffering.slice();
-		this.isOcp = fromfilters.isOcp.slice();
-		this.tradePreference = fromfilters.tradePreference.slice();
+		if (!fromfilters ) { return; }
+		this.isField = copyOrNew(fromfilters.isField);
+		this.position = copyOrNew(fromfilters.position);
+		this.isOffering = copyOrNew(fromfilters.isOffering);
+		this.isOcp = copyOrNew(fromfilters.isOcp);
+		this.shiftLetter = copyOrNew(fromfilters.shiftLetter);
+		this.timeFrame = copyOrNew(fromfilters.timeFrame);
+		this.tradePreference = copyOrNew(fromfilters.tradePreference);
 	}
 }
 
@@ -51,8 +63,10 @@ export default class Shift implements IShift {
 	position = 0;
 	isOcp = false;
 	shiftDate = new Date();
-	shiftStart = new Date();
-	shiftEnd = new Date();
+	shiftLetter = 'A';
+	timeFrame = 12;
+	shiftStart = new Date(new Date().setHours(10, 0, 0, 0));
+	shiftEnd = new Date(new Date().setHours(22, 0, 0, 0));
 	tradePreference = 0;
 	tradeDates = '';
 	notes = '';

@@ -43,7 +43,7 @@ export default {
 			selectedShift: null,
 			selectedIndex: 0,
 			currentList: [],
-			currentFilters: new ShiftFilterSet(),
+			currentFilters: {},
 			pageIsLoading: true,
 			prevPage: null,
 			selectedTab: 1,
@@ -217,6 +217,7 @@ export default {
 	created() {
 		const state = AuthChecker.getState();
 		Object.assign(this, state);
+		this.currentFilters = new ShiftFilterSet(this.currentFilters);
 
 		let currentPage;
 		switch(state.currentPage) {

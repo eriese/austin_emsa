@@ -16,7 +16,7 @@
 		<ScrollView row="0" class="emsa-page">
 			<StackLayout verticalAlignment="center" class="form">
 				<Image src="~/assets/images/logo.png" height="125"/>
-				<Label text="Austin EMSA Shift Swap" textWrap="true" class="h1 text-center"/>
+				<Label text="Shift Request" textWrap="true" class="h1 text-center"/>
 				<Label :text="formError" textWrap="true" class="text-center form__error"/>
 				<StackLayout class="form-field">
 					<Label text="Email" class="form-field__label"/>

@@ -29,7 +29,10 @@
 		},
 		computed: {
 			checks() {
-				return this.boxes.map((b) => this.value.indexOf(this.converter.convertTo(b)) >= 0);
+				return this.boxes.map((b) => {
+					const val = this.converter ? this.converter.convertTo(b) : b;
+					return this.value.indexOf(val) >= 0
+				});
 			},
 		},
 		methods: {
