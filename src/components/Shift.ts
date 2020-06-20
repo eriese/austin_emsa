@@ -44,6 +44,8 @@ export class ShiftFilterSet {
 	shiftLetter: string[] = [];
 	timeFrame: number[] = [];
 	tradePreference: number[] = [];
+	date: Date[] = [];
+	dateType: string = 'After';
 
 	constructor(fromfilters?: ShiftFilterSet) {
 		if (!fromfilters ) { return; }
@@ -54,6 +56,12 @@ export class ShiftFilterSet {
 		this.shiftLetter = copyOrNew(fromfilters.shiftLetter);
 		this.timeFrame = copyOrNew(fromfilters.timeFrame);
 		this.tradePreference = copyOrNew(fromfilters.tradePreference);
+		this.date = copyOrNew(fromfilters.date);
+		this.dateType = fromfilters.dateType;
+	}
+
+	get checkboxFields() {
+		return ['isOffering', 'isField', 'position', 'isOcp', 'shiftLetter', 'timeFrame', 'tradePreference'];
 	}
 }
 

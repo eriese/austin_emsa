@@ -209,8 +209,10 @@ export default {
 				if (typeof callback == 'function') {
 					callback();
 				}
-			}, () => {
-				this.setCurrentPage(Login);
+			}, (error) => {
+				if (error.response.status == 401) {
+					this.setCurrentPage(Login);
+				}
 			});
 		}
 	},

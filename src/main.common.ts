@@ -7,7 +7,6 @@ import {TNSFontIcon, fonticon} from 'nativescript-fonticon';
 export default function commonSetup(Vue: VueConstructor) {
 	TNSFontIcon.debug = true;
 	TNSFontIcon.paths = {
-		'fa': './assets/css/fontawesome/fontawesome.min.css',
 		'fas': './assets/css/fontawesome/solid.min.css',
 	};
 	TNSFontIcon.loadCss();

@@ -73,7 +73,7 @@ const ApiService = {
 			callback && callback(convertedList);
 		}).catch(error => {
 			console.log(error);
-			onError && onError();
+			onError && onError(error);
 		})
 	},
 	submitShift(shift: Shift) {

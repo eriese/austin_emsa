@@ -6,12 +6,13 @@
 		render() {
 			const itemClass = `shift-item shift-item--is-${this.valueLabels.isOffering.toLowerCase()}`;
 			if (process.env.VUE_APP_MODE == 'native') {
-				return <GridLayout iosOverflowSafeArea="false" class={itemClass} columns="75,*,*" rows="auto, auto, auto">
+				return <GridLayout iosOverflowSafeArea="false" class={itemClass} columns="75,*,130" rows="auto, auto, auto">
 					<Label text={this.valueLabels.isOffering} row="0" col="0" class="shift-item__is-offering"/>
+					<Label text={this.valueLabels.isOcp} row="0" col="1" class="shift-item__is-ocp text-center"/>
 					<Label text={this.valueLabels.position} row="0" col="2" class="shift-item__position text-right"/>
 					<Label text={this.valueLabels.dates} row="1" col="0" colSpan="3" class="shift-item__dates text-center"/>
 					<Label text={this.valueLabels.isField} row="2" col="0" class="shift-item__is-field"/>
-					<Label text={this.valueLabels.isOcp} row="2" col="1" class="shift-item__is-ocp text-center"/>
+					<Label text={`${this.valueLabels.shiftLetter} ${this.valueLabels.timeFrame}`} row="2" col="1" class="shift-item__is-shift-letter shift-item__is-time-frame text-center"/>
 					<Label text={this.valueLabels.tradePreference} row="2" col="2" class="shift-item__trade-preference text-right"/>
 				</GridLayout>
 			}

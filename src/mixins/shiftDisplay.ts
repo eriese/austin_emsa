@@ -17,6 +17,8 @@ export default Vue.extend({
 				'isOffering',
 				'isField',
 				'tradePreference',
+				'shiftLetter',
+				'timeFrame',
 			]
 		}
 	},
@@ -28,7 +30,7 @@ export default Vue.extend({
 
 			const shiftDate = new Date(this.shift.shiftDate);
 			const isThisYear = shiftDate.getYear() == new Date().getYear();
-			const formatString = isThisYear ? 'dddd, MM/DD' : 'dddd, MM/DD/YY';
+			const formatString = isThisYear ? 'dddd, M/DD' : 'dddd, M/DD/YY';
 			const dayString = dateFormat(shiftDate, formatString);
 			const startString = dateFormat(new Date(this.shift.shiftStart), 'h:mm a');
 			const endString = dateFormat(new Date(this.shift.shiftEnd), 'h:mm a');

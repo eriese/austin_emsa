@@ -5,22 +5,27 @@ import RadListView from 'nativescript-ui-listview/vue';
 import { ModalStack, overrideModalViewMethod, VueWindowedModal } from 'nativescript-windowed-modal';
 import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
 import BackButton from './components/BackButton.vue';
+import DateTimePicker from 'nativescript-datetimepicker/vue';
+import PickerField from 'nativescript-picker/vue';
 
 import VueDevtools from 'nativescript-vue-devtools';
 
 CommonSetup(Vue);
 Vue.use(RadListView);
 Vue.use(VueFilterDateFormat);
+Vue.use(DateTimePicker);
+Vue.use(PickerField);
+
+overrideModalViewMethod();
+Vue.registerElement('ModalStack', () => ModalStack);
+Vue.use(VueWindowedModal);
+
 Vue.registerElement('CheckBox', () => require('@nstudio/nativescript-checkbox').CheckBox, {
 	model: {
 		prop: 'checked',
 		event: 'checkedChange'
 	}
 });
-
-overrideModalViewMethod();
-Vue.registerElement('ModalStack', () => ModalStack);
-Vue.use(VueWindowedModal);
 
 Vue.component('BackButton', BackButton);
 

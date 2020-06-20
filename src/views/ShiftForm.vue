@@ -12,7 +12,8 @@
 						<Label :text="v" @tap="onSelectedIndexChange({value: true}, f.fieldName, i)" verticalAlignment="center"/>
 					</StackLayout>
 				</WrapLayout>
-				<TextField v-else-if="f.inputType == 'date' || f.inputType == 'time'" :text="shift[f.fieldName] | dateFormat(f.inputType == 'date'? 'dddd MM/DD/YY' : 'h:mm a')" @tap="focusPickerField(f.fieldName)" @focus="focusPickerField(f.fieldName)"/>
+				<DatePickerField v-else-if="f.inputType == 'date'" :date="shift[f.fieldName]" dateFormat="EEEE M/d/yy" @dateChange="onDateTimeSelected($event, f.fieldName)" :ref="f.fieldName" />
+				<TimePickerField v-else-if="f.inputType == 'time'" :time="shift[f.fieldName]" timeFormat="h:mm a" @timeChange="onDateTimeSelected($event, f.fieldName)" :ref="f.fieldName" />
 			</Stacklayout>
 			<Button text="Save" @tap="submitForm"/>
 		</StackLayout>
@@ -26,7 +27,6 @@
 	import ShiftViewModel from '../components/ShiftViewModel';
 	import ApiService from '../components/ApiService';
 	import emsaPage from '../mixins/emsaPage';
-	import PickerModal from '../components/PickerModal';
 
 	export default {
 		name: 'ShiftForm',
@@ -108,23 +108,8 @@
 			announce() {
 				console.log(JSON.stringify(this.shift));
 			},
-			focusPickerField: async function(field) {
-				if (this.pickerShowing) {return;}
-				this.pickerShowing = true;
-				const fieldManager = this.valueManager[field]
-				const response = await this.$showModal(PickerModal, {
-					props: {
-						dateObject: this.shift[field],
-						pickerType: fieldManager.inputType,
-						fieldName: this.fieldLabels[field],
-					}
-				});
-
-				if (new Date(response) != 'Invalid Date') {
-					this.shift[field] = response;
-				}
-
-				this.pickerShowing = false;
+			onDateTimeSelected($event, fieldName) {
+				this.shift[fieldName] = $event.value;
 			},
 			onSelectedIndexChange({value}, field, index) {
 				if (!value) { return; }
@@ -141,7 +126,7 @@
 				}).catch((error) => {
 					console.log(error);
 				})
-			}
+			},
 		},
 	};
 </script>
