@@ -16,9 +16,12 @@
 	</ScrollView>
 </template>
 
+<template web>
+	<h1>shift form</h1>
+</template>
+
 
 <script>
-	import formComponent from '../mixins/formComponent';
 	import Shift from '../components/Shift';
 	import ShiftViewModel from '../components/ShiftViewModel';
 	import ApiService from '../components/ApiService';
@@ -26,7 +29,7 @@
 
 	export default {
 		name: 'ShiftForm',
-		mixins: [formComponent, emsaPage],
+		mixins: [emsaPage],
 		data() {
 			const shift = new Shift();
 			const valueManager = {};

@@ -6,6 +6,9 @@
 		</WrapLayout>
 	</StackLayout>
 </template>
+<template web>
+	<h1>Group</h1>
+</template>
 
 <script>
 	import ShiftViewModel from './ShiftViewModel';

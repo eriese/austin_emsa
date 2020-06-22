@@ -19,15 +19,16 @@
 
 	</ModalStack>
 </template>
+<template web>
+	<div>???</div>
+</template>
 
 <script>
-	import formComponent from '../mixins/formComponent';
 	import ShiftFilterGroup from './ShiftFilterGroup';
 	import {ShiftFilterSet} from './Shift';
 	import ShiftViewModel from './ShiftViewModel';
 
 	export default {
-		mixins: [formComponent],
 		components: {
 			ShiftFilterGroup
 		},

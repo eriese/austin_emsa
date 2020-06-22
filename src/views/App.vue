@@ -24,7 +24,7 @@ import Login from './Login';
 import UserView from './UserView';
 import ApiService from '../components/ApiService';
 import AuthChecker from '../components/authChecker';
-import gsap from 'gsap';
+// import gsap from 'gsap';
 import {ShiftFilterSet} from '../components/Shift';
 
 const tabOrder = [ShiftForm, ShiftList, UserView];

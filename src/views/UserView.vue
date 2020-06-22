@@ -1,4 +1,4 @@
-<template>
+<template native>
 	<GridLayout rows="auto, *, auto">
 		<TitleAndBackButton @backPressed="$emit('back')" row="0" text="My Posts"/>
 		<Label textWrap="true" class="body text-center side-padded" v-if="shifts.length == 0" row="1" text="You don't have any open shift posts" verticalAlignment="top"/>
@@ -11,6 +11,9 @@
 		</StackLayout>
 		<Button class="button" text="Log Out" row="2" @tap="$emit('logout')" marginBottom="0"/>
 	</GridLayout>
+</template>
+<template web>
+	<h1>User View</h1>
 </template>
 
 <script>

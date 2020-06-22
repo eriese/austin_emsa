@@ -13,10 +13,13 @@
 	</ScrollView>
 </template>
 
+<template web>
+	<h1>Shift View</h1>
+</template>
+
 <script>
 import shiftDisplay from '../mixins/shiftDisplay';
 import Shift from '../components/Shift';
-import {openUrl} from 'tns-core-modules/utils/utils';
 import emsaPage from '../mixins/emsaPage';
 import ApiService from '../components/ApiService';
 
@@ -39,7 +42,7 @@ export default {
 			this.$emit('back');
 		},
 		openEmail() {
-			openUrl(`mailto:${this.shift.email}`);
+			this.openUrl(`mailto:${this.shift.email}`);
 		},
 		deletePost() {
 			ApiService.deleteShift(this.shift).then(() => {

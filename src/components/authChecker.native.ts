@@ -4,7 +4,7 @@ import { ios } from "tns-core-modules/application";
 
 declare const kSecAttrAccessibleWhenUnlockedThisDeviceOnly : string;
 const storage = new SecureStorage(ios ? kSecAttrAccessibleWhenUnlockedThisDeviceOnly : undefined);
-// storage.clearAllOnFirstRunSync();
+storage.clearAllOnFirstRunSync();
 
 const checker: AuthChecker = {
 	saveAuthToken(token: string) {

@@ -10,6 +10,9 @@ import CheckboxField from './components/CheckBoxField.vue';
 import TitleAndBackButton from './components/TitleAndBackButton.vue';
 import DateTimePicker from 'nativescript-datetimepicker/vue';
 import PickerField from 'nativescript-picker/vue';
+import {openUrl} from 'tns-core-modules/utils/utils';
+import {TNSFontIcon, fonticon} from 'nativescript-fonticon';
+
 
 // import VueDevtools from 'nativescript-vue-devtools';
 
@@ -34,6 +37,14 @@ Vue.component('BackButton', BackButton);
 Vue.component('CheckboxField', CheckboxField);
 Vue.component('TitleAndBackButton', TitleAndBackButton);
 
+TNSFontIcon.debug = true;
+TNSFontIcon.paths = {
+	'fa': './assets/css/fontawesome/fontawesome.min/css',
+	'fas': './assets/css/fontawesome/solid.min.css',
+};
+TNSFontIcon.loadCss();
+Vue.filter('fonticon', fonticon);
+
 const isProduction = process.env.NODE_ENV == 'production';
 // Prints Vue logs when --env.production is *NOT* set while building
 Vue.config.silent = isProduction;
@@ -43,5 +54,8 @@ Vue.config.silent = isProduction;
 // }
 
 new Vue({
+	methods: {
+		openUrl: openUrl
+	},
 	render: h => h('frame', [h(App)])
 }).$start()

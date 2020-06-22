@@ -7,6 +7,7 @@
 		<input type="submit">
 	</form>
 </template>
+
 <template native>
 	<GridLayout rows="*, auto">
 		<FlexboxLayout class="emsa-menu" alignItems="center" justifyContent="center" row="1">
@@ -44,7 +45,6 @@
 <script>
 import ApiService from '../components/ApiService';
 import emsaPage from '../mixins/emsaPage';
-
 
 export default {
 	name: 'Login',
