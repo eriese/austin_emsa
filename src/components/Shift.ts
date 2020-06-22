@@ -44,7 +44,7 @@ export class ShiftFilterSet {
 	shiftLetter: string[] = [];
 	timeFrame: number[] = [];
 	tradePreference: number[] = [];
-	date: Date[] = [];
+	date: Date[] = [new Date()];
 	dateType: string = 'After';
 
 	constructor(fromfilters?: ShiftFilterSet) {
@@ -56,8 +56,8 @@ export class ShiftFilterSet {
 		this.shiftLetter = copyOrNew(fromfilters.shiftLetter);
 		this.timeFrame = copyOrNew(fromfilters.timeFrame);
 		this.tradePreference = copyOrNew(fromfilters.tradePreference);
-		this.date = copyOrNew(fromfilters.date);
-		this.dateType = fromfilters.dateType;
+		this.date = copyOrNew(fromfilters.date || [new Date()]);
+		this.dateType = fromfilters.dateType || this.dateType;
 	}
 
 	get checkboxFields() {

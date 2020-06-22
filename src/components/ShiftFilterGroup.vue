@@ -2,10 +2,7 @@
 	<StackLayout class="filter-group">
 		<Label :text="label" class="filter-group__group-label"/>
 		<WrapLayout class="filter-group__items">
-			<StackLayout orientation="horizontal" v-for="(box, $index) in boxes" :key="$index">
-				<check-box class="filter-group__item-checkbox" :checked="checks[$index]" @checkedChange="updateValue($event, $index)" fillColor="#0e4c97"/>
-				<Label :text="box" class="filter-group__item-label" verticalAlignment="center"/>
-			</StackLayout>
+			<CheckboxField v-for="(box, $index) in boxes" :key="$index" :checked="checks[$index]" @checkedChange="updateValue($event, $index)" :text="box"/>
 		</WrapLayout>
 	</StackLayout>
 </template>
@@ -59,14 +56,11 @@
 <style lang="scss">
 .filter-group {
 	margin: 3 10;
+	font-size: 16;
 
 	&__group-label {
 		margin-bottom: -3;
 		font-size: 20;
-	}
-
-	&__item-label {
-		font-size: 16;
 	}
 }
 </style>

@@ -5,7 +5,7 @@ import Shift, {ShiftFilterSet} from './Shift';
 import AuthChecker from './authChecker';
 
 // const baseURL = 'http://back.austin_emsa.org:3000';
-const baseURL = ' https://cryptic-brook-18592.herokuapp.com';
+const baseURL = 'https://cryptic-brook-18592.herokuapp.com';
 
 const api = axios.create({
 	baseURL,
@@ -13,7 +13,7 @@ const api = axios.create({
 });
 
 let access_token: string;
-let refresh_token: string;
+// let refresh_token: string;
 
 function getAuthHeaders(token?: string) {
 	return {
@@ -49,7 +49,7 @@ const ApiService = {
 				grant_type: 'password'
 			}).then(response => {
 				access_token = response.data.access_token;
-				refresh_token = response.data.refresh_token;
+				// refresh_token = response.data.refresh_token;
 				AuthChecker.saveAuthToken(access_token);
 				callback && callback();
 				resolve();

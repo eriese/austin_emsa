@@ -1,21 +1,17 @@
 <template native>
 	<ScrollView>
 		<StackLayout class="form">
-			<BackButton @backPressed="$emit('back')" />
-			<Label text="List a Shift" class="h1 text-center"/>
+			<TitleAndBackButton @backPressed="$emit('back')" text="List a Shift"/>
 			<Stacklayout v-for="f in fields" :key="f.fieldName" class="form-field">
 				<Label :text="f.label" class="form-field__label" textWrap="true"/>
 				<TextField v-if="f.inputType == 'text' || f.inputType == 'textarea'" v-model="shift[f.fieldName]"  class="form-field__input"/>
 				<WrapLayout v-else-if="f.inputType == 'radio'" class="form-field__input">
-					<StackLayout orientation="horizontal" v-for="(v, i) in f.values" :title="v" :key="v" :class="[i == f.value ? 'form-field__input--is-selected' : 'form-field__input--is-unselected']" >
-						<check-box boxType="circle" :checked="i == f.value" @checkedChange="onSelectedIndexChange($event, f.fieldName, i)" fillColor="#0e4c97"/>
-						<Label :text="v" @tap="onSelectedIndexChange({value: true}, f.fieldName, i)" verticalAlignment="center"/>
-					</StackLayout>
+					<CheckboxField v-for="(v, i) in f.values" :key="v" :class="[i == f.value ? 'form-field__input--is-selected' : 'form-field__input--is-unselected']" @checkedChange="onSelectedIndexChange($event, f.fieldName, i)" :checked="i == f.value" :text="v" boxType="circle"/>
 				</WrapLayout>
 				<DatePickerField v-else-if="f.inputType == 'date'" :date="shift[f.fieldName]" dateFormat="EEEE M/d/yy" @dateChange="onDateTimeSelected($event, f.fieldName)" :ref="f.fieldName" />
 				<TimePickerField v-else-if="f.inputType == 'time'" :time="shift[f.fieldName]" timeFormat="h:mm a" @timeChange="onDateTimeSelected($event, f.fieldName)" :ref="f.fieldName" />
 			</Stacklayout>
-			<Button text="Save" @tap="submitForm"/>
+			<Button text="Save" @tap="submitForm" class="button" />
 		</StackLayout>
 	</ScrollView>
 </template>

@@ -1,12 +1,12 @@
 <template>
 	<Page class="emsa-root" actionBarHidden="true">
 		<GridLayout rows="*, auto" v-if="isAuthed">
-			<component row="0" :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" ref="page" width="100%"/>
-			<SegmentedBar row="1" :selectedIndex="selectedTab" @selectedIndexChange="tabSelect" class="emsa-menu">
-				<SegmentedBarItem title="Post a Shift" class="emsa-menu__item" />
-				<SegmentedBarItem title="Find a Shift" class="emsa-menu__item" />
-				<SegmentedBarItem title="My Posts" class="emsa-menu__item" />
-			</SegmentedBar>
+			<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" ref="page" row="0"/>
+			<FlexboxLayout class="emsa-menu" row="1">
+				<Button class="emsa-menu__item text-center" col="0" text="Post a Shift" @tap="tabSelect(0)" :class="{'emsa-menu__item--is-selected': selectedTab==0}" flexGrow="1"/>
+				<Button class="emsa-menu__item text-center" col="1" text="Find a shift" @tap="tabSelect(1)" :class="{'emsa-menu__item--is-selected': selectedTab==1}" flexGrow="1"/>
+				<Button class="emsa-menu__item text-center" col="2" text="My Posts" @tap="tabSelect(2)" :class="{'emsa-menu__item--is-selected': selectedTab==2}" flexGrow="1"/>
+			</FlexboxLayout>
 		</GridLayout>
 		<Login v-else v-on="currentPageListeners" ref="page" />
 	</Page>
@@ -129,12 +129,7 @@ export default {
 				currentList: this.currentList,
 			});
 		},
-		tabSelect(event) {
-			const {value, oldValue} = event;
-			if (oldValue < 0) {
-				return;
-			}
-
+		tabSelect(value) {
 			const page = tabOrder[value];
 			this.setCurrentPage(page);
 		},
@@ -162,19 +157,25 @@ export default {
 					return;
 				}
 
+				const onComplete = () => {
+					this.currentPage = page;
+					this.getTabIndex();
+					this.saveState();
+					resolve();
+				}
+
 				this.pageIsLoading = true;
 				this.prevPage = this.currentPage;
-				const leaving = this.$refs.page.$el.nativeView;
-				const direction = this.prevPage === Login || this.prevPage === ShiftList ? 'marginLeft' : 'marginRight';
-				gsap.to(leaving, 0.2, {
-					[direction]: '200%',
-					onComplete: () => {
-						this.currentPage = page;
-						this.getTabIndex();
-						this.saveState();
-						resolve();
-					}
-				})
+				// const leaving = this.$refs.page.$el.nativeView;
+				// const direction = this.prevPage === Login || this.prevPage === ShiftList ? 'marginLeft' : 'marginRight';
+				// if (process.env.VUE_APP_PLATFORM == 'ios') {
+					onComplete();
+				// } else {
+				// 	gsap.to(leaving, 0.2, {
+				// 		[direction]: '200%',
+				// 		onComplete
+				// 	})
+				// }
 			})
 		},
 		onShiftSelected(indexOrShift, isUser = false) {

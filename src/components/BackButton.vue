@@ -1,5 +1,5 @@
 <template>
-	<Button :text="'\uf104'" class="fas cta--is-round pull-left m-t-10" @tap="onBackPressed"></Button>
+	<Button :text="'\uf104'" class="fas button cta--is-round pull-left button--is-back-button" @tap="onBackPressed"></Button>
 </template>
 
 <script>

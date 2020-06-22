@@ -29,6 +29,8 @@ Page, .ns-modal, html {
 
 .ns-modal {
 	border-radius: 5;
+	padding: 15;
+
 	&__close-button {
 		margin-right: 0;
 		padding: 0;
@@ -36,15 +38,46 @@ Page, .ns-modal, html {
 }
 
 .emsa-page {
-	padding: 10;
 	color: var(--color);
+}
+
+.emsa-root, .ns-modal {
+	.emsa-menu {
+		font-weight: bold;
+		border-bottom-width: 5;
+		border-color: var(--emsa-blue);
+		font-size: 12;
+		margin-top: 10;
+
+		&__item {
+			padding: 10 0;
+			margin: 0;
+			height: auto;
+			background-color: var(--emsa-blue);
+			color: var(--emsa-yellow);
+			android-elevation: 0;
+			border-radius: 0;
+			border-width: 1;
+			border-color: var(--emsa-blue);
+
+			&--is-selected {
+				color: var(--emsa-blue);
+				border-color: var(--emsa-yellow);
+				background-color: var(--emsa-yellow);
+			}
+		}
+	}
 
 	.h1 {
 		color: var(--highlight);
 		margin-bottom: 15;
 	}
 
-	Button {
+	.side-padded {
+		padding: 0 10;
+	}
+
+	.button {
 		background-color: var(--emsa-blue);
 		color: var(--emsa-yellow);
 		font-weight: bold;
@@ -67,19 +100,6 @@ Page, .ns-modal, html {
 			padding: 0;
 		}
 	}
-}
-
-.emsa-root {
-	.emsa-menu {
-		background-color: var(--emsa-yellow);
-		color: var(--emsa-blue);
-		font-weight: bold;
-		border-bottom-width: 4;
-		border-color: var(--emsa-yellow);
-		selected-background-color: var(--emsa-blue);
-		font-size: 12;
-	}
-
 
 	.indicator-background {
 		margin-top: 25;
@@ -96,17 +116,15 @@ Page, .ns-modal, html {
 		}
 	}
 
-
-
 	.form {
-		padding: 0 20;
-
 		&__error {
 			color: var(--emsa-red);
 		}
 	}
 
 	.form-field {
+		padding: 0 20;
+
 		&__label {
 			font-size: 16;
 			font-weight: bold;
@@ -130,6 +148,6 @@ Page, .ns-modal, html {
 }
 
 .fas {
-	font-family: "Font Awesome 5 Pro", "fa-solid-900";
+	font-family: Font Awesome 5 Free, fa-solid-900;
 	font-weight: 900;
 }

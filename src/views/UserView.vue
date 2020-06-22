@@ -1,14 +1,15 @@
 <template>
 	<GridLayout rows="auto, *, auto">
-		<BackButton @backPressed="$emit('back')"/>
-		<Label text="My Posts" row="0" class="h1 text-center"/>
-		<Label textWrap="true" class="body" v-if="shifts.length == 0" row="1" text="You don't have any open shift posts"/>
-		<RadListView v-else ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="getShifts" @itemTap="showShift($event.index)" row="1">
-			<v-template>
-				<ShiftListItem :shift="shift" :key="$index"></ShiftListItem>
-			</v-template>
-		</RadListView>
-		<Button text="Log Out" row="2" @tap="$emit('logout')"/>
+		<TitleAndBackButton @backPressed="$emit('back')" row="0" text="My Posts"/>
+		<Label textWrap="true" class="body text-center side-padded" v-if="shifts.length == 0" row="1" text="You don't have any open shift posts" verticalAlignment="top"/>
+		<StackLayout row="1" class="side-padded">
+			<RadListView v-if="shifts" ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="getShifts" @itemTap="showShift($event.index)">
+				<v-template>
+					<ShiftListItem :shift="shift" :key="$index"></ShiftListItem>
+				</v-template>
+			</RadListView>
+		</StackLayout>
+		<Button class="button" text="Log Out" row="2" @tap="$emit('logout')" marginBottom="0"/>
 	</GridLayout>
 </template>
 
@@ -39,7 +40,7 @@
 				ApiService.getShifts({is_user: true}, (shifts) => {
 					this.shifts = shifts;
 
-					$event.object.notifyPullToRefreshFinished();
+					$event && $event.object.notifyPullToRefreshFinished();
 				})
 			}
 		},

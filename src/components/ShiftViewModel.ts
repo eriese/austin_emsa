@@ -90,7 +90,6 @@ export default class ShiftViewModel{
 		switch (field) {
 			case 'isField':
 				return ['Field', 'Comm'];
-				break;
 			case 'position':
 				return ['Medic', 'CS', 'Captain', 'Commander'];
 			case 'isOffering':

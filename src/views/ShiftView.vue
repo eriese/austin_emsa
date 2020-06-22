@@ -1,15 +1,14 @@
 <template native>
 	<ScrollView>
 		<StackLayout>
-			<BackButton @backPressed="goBack" />
-			<Label :text="`${this.valueLabels.isOffering} Shift`" class="h1 text-center"/>
+			<TitleAndBackButton @backPressed="goBack" :text="`${this.valueLabels.isOffering} Shift`"/>
 			<Label :text="this.valueLabels.dates" class="h2 text-center"/>
 			<GridLayout columns="*,auto" :rows="rowSpec" class="shift-view">
 				<Label v-for="(field, $index) in listedFields" :text="fieldLabels[field]" :row="$index" col="0" :key="`field_${field}`" class="shift-view__label"/>
 				<Label v-for="(field, $index) in listedFields" :text="valueLabels[field]" :row="$index" col="1" :key="`value_${field}`" class="shift-view__value"/>
 			</GridLayout>
-			<Button v-if="shift.isUser" text="Delete This Post" @tap="deletePost" class="cta" horizontalAlignment="center" />
-			<Button v-else text="Email This Poster" @tap="openEmail" class="cta" horizontalAlignment="center"/>
+			<Button v-if="shift.isUser" text="Delete This Post" @tap="deletePost" class="button cta" horizontalAlignment="center" />
+			<Button v-else text="Email This Poster" @tap="openEmail" class="button cta" horizontalAlignment="center"/>
 		</StackLayout>
 	</ScrollView>
 </template>
