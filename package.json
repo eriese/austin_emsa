@@ -100,7 +100,7 @@
 	],
 	"license": "MIT",
 	"nativescript": {
-		"id": "org.austinEmsa.swap",
+		"id": "org.austinEmsa.shiftRequest",
 		"templateVersion": "v2",
 		"tns-android": {
 			"version": "6.5.1"
