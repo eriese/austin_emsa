@@ -23,7 +23,11 @@ const checker: AuthChecker = {
 		return JSON.parse(storage.getSync({key: 'state'}) || '{"noState": true}');
 	},
 	logout() {
-		return checker.clearAuthToken();
+		return storage.removeAllSync();
+	},
+	isAuthed() {
+		console.log(this.getAuthToken());
+		return this.getAuthToken() !== null;
 	}
 }
 

@@ -1,5 +1,6 @@
 import Shift, {ShiftFilterSet, IShift} from '../models/Shift';
 import ApiService from './ApiService';
+import AuthChecker from './AuthChecker';
 import {AxiosError} from 'axios';
 
 class Store {
@@ -9,8 +10,10 @@ class Store {
 		loginIndex: number
 		currentList: Shift[],
 		currentFilters: ShiftFilterSet,
+		userList: Shift[],
 		currentPage?: string,
-		prevPage?: string
+		prevPage?: string,
+		isAuthed: boolean | null,
 	};
 
 	onListSuccess?: Function;
@@ -22,8 +25,10 @@ class Store {
 			selectedShift: null,
 			scrollIndex: 0,
 			currentList: [],
+			userList: [],
 			loginIndex: 0,
 			currentFilters: new ShiftFilterSet(),
+			isAuthed: null
 		}
 
 		if (process.env.VUE_APP_MODE == 'native') {
@@ -78,12 +83,29 @@ class Store {
 		this.saveState();
 	}
 
+	get userList() {
+		return this.state.userList;
+	}
+
+	set userList(list: Shift[]) {
+		this.state.userList = list;
+	}
+
 	get loginIndex() {
 		return this.state.loginIndex;
 	}
 
 	set loginIndex(index: number) {
 		this.state.loginIndex = index;
+		this.saveState();
+	}
+
+	get isAuthed() {
+		return this.state.isAuthed;
+	}
+
+	set isAuthed(authed: boolean | null) {
+		this.state.isAuthed = authed;
 		this.saveState();
 	}
 

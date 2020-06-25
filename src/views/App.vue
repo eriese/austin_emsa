@@ -10,14 +10,27 @@
 </template>
 
 <template web>
-	<router-view class="emsa-page" />
+	<div>
+		<header>
+			<nav>
+				<ul class="emsa-menu">
+					<li v-for="(tab, $index) in menuTabs" :key="$index" class="emsa-menu__item" :class="{'emsa-menu__item--is-selected': tab.isSelected}">
+						<router-link :to="tab.route">{{tab.title}}</router-link>
+					</li>
+				</ul>
+			</nav>
+		</header>
+		<main>
+			<router-view class="emsa-page" v-on="currentPageListeners"/>
+		</main>
+	</div>
 </template>
 
 <script>
 import Views from './Views';
 import AuthChecker from '../services/AuthChecker';
+import ApiService from '../services/ApiService';
 // import gsap from 'gsap';
-import {ShiftFilterSet} from '../models/Shift';
 import Store from '../services/Store';
 
 export default {
@@ -35,14 +48,11 @@ export default {
 		return data;
 	},
 	computed: {
-		isAuthed() {
-			return this.currentRoute != 'Login';
-		},
 		currentRoute() {
 			return this.$route ? this.$route.name : this.currentPage && this.currentPage.name;
 		},
 		currentPageListeners() {
-			const backToList = () => this.setCurrentPage(this.views.ShiftList);
+			const backToList = () => this.setCurrentPage('ShiftList');
 
 			let listeners = {}
 			switch(this.currentRoute) {
@@ -56,17 +66,14 @@ export default {
 					listeners = {
 						shiftSelected: this.onShiftSelected,
 						back: backToList,
-						logout: () => {
-							AuthChecker.logout();
-							this.currentFilters = new ShiftFilterSet();
-							this.setCurrentPage(this.views.Login);
-						},
+						logout: this.logout,
 					};
 					break;
 				case 'Login':
 					listeners = {
 						authSuccess: () => {
-							this.loadList(this.store.currentFilters);
+							// this.loadList(this.store.currentFilters);
+							this.store.isAuthed = true;
 							backToList();
 						}
 					};
@@ -89,31 +96,36 @@ export default {
 			return listeners;
 		},
 		menuTabs() {
-			if (this.isAuthed) {
+			if (this.store.isAuthed) {
 				const curShift = this.store.selectedShift;
 				return [{
 					title: 'Post a Shift',
-					action: () => this.setCurrentPage(this.views.ShiftForm),
-					isSelected: this.currentRoute == 'ShiftForm'
+					action: () => this.setCurrentPage('ShiftForm'),
+					isSelected: this.currentRoute == 'ShiftForm',
+					route: {name: 'ShiftForm'}
 				}, {
 					title: 'Find a Shift',
-					action: () => this.setCurrentPage(this.views.ShiftList),
+					action: () => this.setCurrentPage('ShiftList'),
 					isSelected: this.currentRoute == 'ShiftList' || (curShift && !curShift.isUser),
+					route: {name: 'ShiftList'}
 				}, {
 					title: 'My Posts',
-					action: () => this.setCurrentPage(this.views.UserView),
-					isSelected: this.currentRoute == 'UserView' || (curShift && curShift.isUser)
+					action: () => this.setCurrentPage('UserView'),
+					isSelected: this.currentRoute == 'UserView' || (curShift && curShift.isUser),
+					route: {name: 'UserView'}
 				}]
 			}
 
 			return [{
 				title: 'Returning User',
 				action: () => this.store.loginIndex = 0,
-				isSelected: this.store.loginIndex == 0
+				isSelected: this.store.loginIndex == 0,
+				route: {name: 'Login'}
 			}, {
 				title: 'New User',
 				action: () => this.store.loginIndex = 1,
-				isSelected: this.store.loginIndex == 1
+				isSelected: this.store.loginIndex == 1,
+				route: {name: 'Signup'}
 			}];
 		},
 	},
@@ -131,8 +143,13 @@ export default {
 
 			AuthChecker.saveState(state);
 		},
-		setCurrentPage(page) {
+		setCurrentPage(pageName) {
+			if (process.env.VUE_APP_MODE == 'web') {
+				return this.$router.push({name: pageName});
+			}
+
 			return new Promise((resolve) => {
+				const page = this.views[pageName];
 				if (!this.currentPage || page === this.currentPage) {
 					resolve();
 					return;
@@ -162,7 +179,7 @@ export default {
 		},
 		onShiftSelected(shift) {
 			this.store.selectedShift = shift;
-			this.setCurrentPage(this.views.ShiftView);
+			this.setCurrentPage('ShiftView');
 		},
 		loadList(newFilters, callback) {
 			if (!this.store.currentFilters.equals(newFilters)) {
@@ -170,17 +187,26 @@ export default {
 			}
 
 			this.store.loadList(callback);
+		},
+		logout() {
+			AuthChecker.logout();
+			this.store.isAuthed = false;
+			this.setCurrentPage('Login');
 		}
 	},
 	created() {
-		this.store.onListError = () => this.setCurrentPage(this.views.Login);
+		this.store.onListError = this.logout;
 		this.store.saveStateMethod = this.saveState;
 
 		if (process.env.VUE_APP_MODE == 'native') {
+			ApiService.testToken().then((isAuthed) => {
+				this.store.isAuthed = isAuthed
+			});
+
 			const state = AuthChecker.getState();
 			this.store.reviveState(state);
-
-			this.currentPage = this.views['ShiftList'];
+			const currentPage = state.currentPage || (this.store.isAuthed ? 'ShiftList' : 'Login');
+			this.currentPage = this.views[currentPage];
 		}
 	}
 }

@@ -22,6 +22,7 @@ import ShiftDisplay from '../mixins/ShiftDisplay';
 import Shift from '../models/Shift';
 import EmsaPage from '../mixins/EmsaPage';
 import ApiService from '../services/ApiService';
+import Store from '../services/Store';
 
 
 const excludedFields = /(id|shiftDate|shiftStart|shiftEnd|email)/
@@ -59,6 +60,24 @@ export default {
 				console.log(error);
 			})
 		}
+	},
+	beforeRouteEnter(toRoute, fromRoute, next) {
+		const list = toRoute.meta.isUser ? Store.userList : Store.currentList;
+
+		if (!list.length) {
+			ApiService.getShift(toRoute.params.id).then((shift) => {
+				Store.selectedShift = new Shift(shift);
+				next();
+			}).catch(() => next(fromRoute || {name: 'ShiftList'}));
+		} else {
+			const foundShift = list.find((s) => s.id == toRoute.params.id);
+			Store.selectedShift = foundShift;
+			next();
+		}
+	},
+	beforeRouteLeave(toRoute, fromRoute, next) {
+		Store.selectedShift = null;
+		next();
 	},
 	created() {
 		for (var i = 0; i < displayFields.length; i++) {

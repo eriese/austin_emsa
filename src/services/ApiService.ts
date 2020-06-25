@@ -4,8 +4,7 @@ import {JsonSnakeToCamel, JsonCamelToSnake} from '../utils';
 import Shift, {ShiftFilterSet} from '../models/Shift';
 import AuthChecker from './AuthChecker';
 
-// const baseURL = 'http://back.austin_emsa.org:3000';
-const baseURL = 'https://cryptic-brook-18592.herokuapp.com';
+const baseURL = process.env.VUE_APP_MODE == 'web' ? 'http://back.austin_emsa.org:3000' : 'https://cryptic-brook-18592.herokuapp.com';
 
 const api = axios.create({
 	baseURL,
@@ -16,6 +15,10 @@ let access_token: string;
 // let refresh_token: string;
 
 function getAuthHeaders(token?: string) {
+	if (process.env.VUE_APP_MODE == 'web') {
+		return {};
+	}
+
 	return {
 		Authorization: `Bearer ${token || AuthChecker.getAuthToken()}`
 	};
@@ -83,10 +86,27 @@ const ApiService = {
 			headers: getAuthHeaders()
 		})
 	},
+	getShift(shiftID: number) {
+		return new Promise((resolve, reject) => {
+			api.get(`/shifts/${shiftID}`).then((response) => {
+				resolve(response.data);
+			}).catch(reject);
+		});
+	},
 	deleteShift(shift: Shift) {
 		return api.delete(`/shifts/${shift.id}`, {
 			headers: getAuthHeaders()
 		})
+	},
+	testToken(): Promise<boolean> {
+		return new Promise((resolve, reject) => {
+			const token = AuthChecker.getAuthToken();
+			if (!token) {resolve(false);}
+
+			api.get('/oauth/token/info', {
+				headers: getAuthHeaders()
+			}).then(() => resolve(true)).catch(() => resolve(false));
+		});
 	}
 };
 

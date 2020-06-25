@@ -19,21 +19,25 @@
 					<Label text={this.valueLabels.position} row="0" col="3" class="shift-item__position text-right"/>
 					<Label text={this.valueLabels.dates} row="1" col="0" colSpan="4" class="shift-item__dates text-center"/>
 					<Label text={this.valueLabels.isField} row="2" col="0" class="shift-item__is-field"/>
-					<Label text={this.valueLabels.shiftLetter} row="2" col="1" class="shift-item__is-shift-letter text-center"/>
+					<Label text={this.valueLabels.shiftLetter} row="2" col="1" class="shift-item__shift-letter text-center"/>
 					<Label text={this.valueLabels.timeFrame} row="2" col="2" class="shift-item__time-frame text-center"/>
 					<Label text={this.valueLabels.tradePreference} row="2" col="3" class="shift-item__trade-preference text-right"/>
 				</GridLayout>
 			}
 
 			return <li class={itemClass}>
-				<span class="shift-item__is-offering">{this.valueLabels.isOffering}</span>
-				<span class="shift-item__position">{this.valueLabels.position}</span>
-				<div class="shift-item__dates">{this.valueLabels.dates}</div>
-				<div class="shift-item__bottom-row">
-					<span class="shift-item__is-field">{this.valueLabels.isField}</span>
+				<router-link to={{name: 'ShiftView', params: { id: this.displayedShift.id }}}>
+					<span class="shift-item__is-offering">{this.valueLabels.isOffering}</span>
 					<span class="shift-item__is-ocp">{this.valueLabels.isOcp}</span>
-					<span class="shift-item__trade-preference">{this.valueLabels.tradePreference}</span>
-				</div>
+					<span class="shift-item__position">{this.valueLabels.position}</span>
+					<div class="shift-item__dates">{this.valueLabels.dates}</div>
+					<div class="shift-item__bottom-row">
+						<span class="shift-item__is-field">{this.valueLabels.isField}</span>
+						<span className="shift-item__shift-letter">{this.valueLabels.shiftLetter}</span>
+						<span className="shift-item__time-frame">{this.valueLabels.timeFrame}</span>
+						<span class="shift-item__trade-preference">{this.valueLabels.tradePreference}</span>
+					</div>
+				</router-link>
 			</li>
 		}
 	}
@@ -96,6 +100,21 @@
 
 <style scoped lang="scss" web>
 .shift-item {
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	&--is-seeking:hover {
+		background-color: var(--emsa-blue);
+		color: var(--emsa-white);
+	}
+
+	&--is-offering:hover {
+		background-color: var(--emsa-yellow);
+		color: var(--emsa-black);
+	}
+
 	&__is-offering {
 		float: left;
 		padding: 0.25rem 0.5rem;
@@ -113,6 +132,11 @@
 
 	&__bottom-row {
 		padding: 0.25rem 0.5rem;
+		display: flex;
+
+		> * {
+			flex-grow: 1;
+		}
 	}
 	&__is-ocp {
 		display: inline-block;

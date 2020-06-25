@@ -19,19 +19,21 @@
 <script>
 	import ShiftListItem from '../components/ShiftListItem';
 	import ApiService from '../services/ApiService';
+	import EmsaPage from '../mixins/EmsaPage';
 
 	export default {
 		name: 'UserView',
+		mixins: [EmsaPage],
 		components: {
 			ShiftListItem
 		},
-		data() {
-			return {
-				shifts: [],
-			}
-		},
 		props: {
 			scrollIndex: Number
+		},
+		computed: {
+			shifts() {
+				return this.store.userList;
+			}
 		},
 		methods: {
 			showShift(index) {
@@ -40,10 +42,19 @@
 				this.$emit('shiftSelected', shift, true);
 			},
 			getShifts($event) {
-				ApiService.getShifts({is_user: true}, (shifts) => {
-					this.shifts = shifts;
-
+				const notify = () => {
 					$event && $event.object.notifyPullToRefreshFinished();
+				};
+
+				ApiService.getShifts({is_user: true}, shifts => {
+					this.store.userList = shifts;
+					notify();
+				}, error => {
+					if (error.response && error.response.status == 401) {
+						this.$emit('logout');
+					} else {
+						notify();
+					}
 				})
 			}
 		},

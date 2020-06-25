@@ -15,9 +15,9 @@ export default EmsaPage.extend({
 	methods: {
 		getShifts(filters: ShiftFilterSet, showLoader: boolean = true, callback?: Function | undefined) {
 			this.dataIsLoading = showLoader;
-			this.$emit('listRequested', filters, () => {
+			this.store.currentFilters = filters;
+			this.store.loadList(() => {
 				this.dataIsLoading = false;
-
 				if (typeof callback == 'function') {
 					callback();
 				}
@@ -50,8 +50,15 @@ export default EmsaPage.extend({
 		}
 	},
 	mounted() {
-		this.$nextTick(() => {
-			this.scrollListToIndex(this.store.scrollIndex);
-		})
+		if (this.store.currentList.length === 0) {
+			this.getShifts(this.store.currentFilters, true, () => {
+				this.scrollListToIndex(this.store.scrollIndex);
+			});
+		}
+		else {
+			this.$nextTick(() => {
+				this.scrollListToIndex(this.store.scrollIndex);
+			})
+		}
 	}
 });
