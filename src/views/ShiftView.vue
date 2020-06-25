@@ -23,6 +23,7 @@ import Shift from '../components/Shift';
 import emsaPage from '../mixins/emsaPage';
 import ApiService from '../components/ApiService';
 
+
 const excludedFields = /(id|shiftDate|shiftStart|shiftEnd|email)/
 const displayFields = Object.getOwnPropertyNames(new Shift()).filter((p) => !p.match(excludedFields));
 
@@ -34,7 +35,12 @@ export default {
 			displayFields,
 			listedFields: [],
 			rowSpec: [],
-			fieldLabels: {}
+			fieldLabels: {},
+		}
+	},
+	computed: {
+		shift() {
+			return this.store.selectedShift;
 		}
 	},
 	methods: {

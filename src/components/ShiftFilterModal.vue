@@ -11,7 +11,7 @@
 						<DatePickerField :date="filterModel.date[0]" dateFormat="EEEE M/d/yy" @dateChange="onDateChanged($event, 0)" :minDate="today"/>
 						<DatePickerField v-if="filterModel.dateType == 'Between'" :date="filterModel.date[1]" dateFormat="EEEE M/d/yy" @dateChange="onDateChanged($event, 1)" :minDate="filterModel.date[0]" />
 					</StackLayout>
-					<ShiftFilterGroup v-for="filterKey in filterModel.checkboxFields" :key="filterKey" v-model="filterModel[filterKey]" :filter-key="filterKey"></ShiftFilterGroup>
+					<ShiftFilterGroup v-for="filterKey in checkboxFields" :key="filterKey" v-model="filterModel[filterKey]" :filter-key="filterKey"></ShiftFilterGroup>
 				</StackLayout>
 			</ScrollView>
 			<Button text="Done" @tap="$modal.close(filterModel)" col="0" row="2" colSpan="2" class="button"/>
@@ -39,6 +39,7 @@
 			const viewModel = new ShiftViewModel();
 			return {
 				filterModel: new ShiftFilterSet(this.filters),
+				checkboxFields: ShiftFilterSet.checkboxFields,
 				viewModel,
 				dateTypes: ['On', 'Before', 'After', 'Between'],
 				today: new Date()

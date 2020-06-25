@@ -3,6 +3,7 @@
 
 	export default {
 		mixins: [shiftDisplay],
+		props: ['shift'],
 		render() {
 			const itemClass = `shift-item shift-item--is-${this.valueLabels.isOffering.toLowerCase()}`;
 			if (process.env.VUE_APP_MODE == 'native') {

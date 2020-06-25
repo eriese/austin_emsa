@@ -37,6 +37,8 @@ function copyOrNew(ary: Array<any> | undefined) {
 }
 
 export class ShiftFilterSet {
+	public static checkboxFields = ['isOffering', 'isField', 'position', 'isOcp', 'shiftLetter', 'timeFrame', 'tradePreference'];
+
 	isOffering: boolean[] = [];
 	isField: boolean[] = [];
 	position: number[] = [];
@@ -60,8 +62,12 @@ export class ShiftFilterSet {
 		this.dateType = fromfilters.dateType || this.dateType;
 	}
 
-	get checkboxFields() {
-		return ['isOffering', 'isField', 'position', 'isOcp', 'shiftLetter', 'timeFrame', 'tradePreference'];
+	get sortedKeys() {
+		return Object.keys(this).sort();
+	}
+
+	equals(otherFilterSet: ShiftFilterSet) {
+		return JSON.stringify(this, this.sortedKeys) == JSON.stringify(otherFilterSet, this.sortedKeys);
 	}
 }
 
@@ -81,8 +87,11 @@ export default class Shift implements IShift {
 	email = '';
 	[key: string]: any;
 
-	constructor(shiftProps: IShift) {
+	constructor(shiftProps?: IShift) {
 		Object.assign(this, shiftProps);
+		this.shiftDate = new Date(this.shiftDate);
+		this.shiftStart = new Date(this.shiftStart);
+		this.shiftEnd = new Date(this.shiftEnd);
 	}
 }
 

@@ -3,13 +3,10 @@ import Shift, {ShiftLabelSet} from '../components/Shift';
 import Vue from 'vue';
 
 export default Vue.extend({
-	props: {
-		shift: Object
-	},
 	data() {
 		return {
 			forList: true,
-			viewModel: new ShiftViewModel(this.shift),
+			viewModel: null,
 			displayFields: [
 				'isOffering',
 				'position',
@@ -49,5 +46,8 @@ export default Vue.extend({
 
 			return labels;
 		},
+	},
+	created() {
+		this.viewModel = new ShiftViewModel(this.shift)
 	}
 });

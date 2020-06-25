@@ -4,18 +4,10 @@ import ShiftListItem from '../components/ShiftListItem.vue';
 import emsaPage from '../mixins/emsaPage';
 
 export default Vue.extend({
+	name: 'ShiftList',
 	mixins: [emsaPage],
 	components: {
 		ShiftListItem
-	},
-	props: {
-		shifts: {
-			type: Array,
-			default: (): Shift[] => []
-		},
-		filters: Object,
-		scrollIndex: Number,
-		useFilters: Boolean,
 	},
 	data() {
 		return {
@@ -35,39 +27,33 @@ export default Vue.extend({
 		},
 		onPullToRefresh(eventObject: any) {
 			this.$nextTick(() => {
-				this.getShifts(this.filters, false, () => this.notifyPullToRefreshFinished(eventObject));
+				this.getShifts(this.store.currentFilters, false, () => this.notifyPullToRefreshFinished(eventObject));
 			})
 		},
 		showFiltersModal: async function() {
-			const oldFilterState: string = JSON.stringify(this.filters);
 			const options = {
 				props: {
-					filters: this.filters
+					filters: this.store.currentFilters
 				}
 			};
 
 			const filterResults = await this.showModal(options);
-			if (!filterResults) { return; }
+			if (!filterResults || this.store.currentFilters.equals(filterResults)) { return; }
 
-			const newFilterState = JSON.stringify(filterResults);
-			if (newFilterState != oldFilterState) {
-				this.getShifts(filterResults);
-			}
-		},
-		showShift(index: number) {
-			this.$emit('shiftSelected', index);
+			this.getShifts(filterResults);
 		},
 		showModal(options: { props: any}): Promise<ShiftFilterSet | undefined> {
 			return new Promise((resolve) => resolve());
 		},
-		notifyPullToRefreshFinished(eventObject: any) {
-
-		},
-		scrollListToIndex(index: number) {}
+		notifyPullToRefreshFinished(eventObject: any) {},
+		scrollListToIndex(index: number) {},
+		onScroll(scrollIndex) {
+			this.store.scrollIndex = scrollIndex;
+		}
 	},
 	mounted() {
 		this.$nextTick(() => {
-			this.scrollListToIndex(this.scrollIndex);
+			this.scrollListToIndex(this.store.scrollIndex);
 		})
 	}
 });

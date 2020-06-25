@@ -1,12 +1,15 @@
 import Vue, {CreateElement, VueConstructor} from 'vue';
 import CommonSetup from './main.common';
 import App from './views/App.vue';
+import router from './router'
 
 CommonSetup(Vue);
 
 new Vue({
-	methods: {
+    methods: {
 		openUrl() {}
 	},
-	render: (h: CreateElement) => h(<VueConstructor>App),
+
+    router,
+    render: (h: CreateElement) => h(<VueConstructor>App)
 }).$mount('#app');
