@@ -11,7 +11,7 @@
 </template>
 
 <script>
-	import ShiftViewModel from './ShiftViewModel';
+	import ShiftViewModel from '../models/ShiftViewModel';
 
 	export default {
 		props: {

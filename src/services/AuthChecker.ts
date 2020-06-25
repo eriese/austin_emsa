@@ -1,4 +1,4 @@
-import AuthChecker from './authChecker.common';
+import AuthChecker from './AuthChecker.common';
 
 const checker: AuthChecker = {
 	saveAuthToken() {},

@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import ApiService from '../components/ApiService';
-import EmsaPage from '../mixins/emsaPage';
+import ApiService from '../services/ApiService';
+import EmsaPage from '../mixins/EmsaPage';
 
 export default {
 	name: 'Login',

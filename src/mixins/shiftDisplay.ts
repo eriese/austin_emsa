@@ -1,5 +1,5 @@
-import ShiftViewModel from '../components/ShiftViewModel';
-import Shift, {ShiftLabelSet} from '../components/Shift';
+import ShiftViewModel from '../models/ShiftViewModel';
+import Shift, {ShiftLabelSet} from '../models/Shift';
 import Vue from 'vue';
 
 export default Vue.extend({

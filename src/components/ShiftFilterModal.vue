@@ -25,8 +25,8 @@
 
 <script>
 	import ShiftFilterGroup from './ShiftFilterGroup';
-	import {ShiftFilterSet} from './Shift';
-	import ShiftViewModel from './ShiftViewModel';
+	import {ShiftFilterSet} from '../models/Shift';
+	import ShiftViewModel from '../models/ShiftViewModel';
 
 	export default {
 		components: {

@@ -18,7 +18,7 @@
 
 <script>
 	import ShiftListItem from '../components/ShiftListItem';
-	import ApiService from '../components/ApiService';
+	import ApiService from '../services/ApiService';
 
 	export default {
 		name: 'UserView',

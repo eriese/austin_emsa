@@ -22,10 +22,10 @@
 
 
 <script>
-	import Shift from '../components/Shift';
-	import ShiftViewModel from '../components/ShiftViewModel';
-	import ApiService from '../components/ApiService';
-	import EmsaPage from '../mixins/emsaPage';
+	import Shift from '../models/Shift';
+	import ShiftViewModel from '../models/ShiftViewModel';
+	import ApiService from '../services/ApiService';
+	import EmsaPage from '../mixins/EmsaPage';
 
 	export default {
 		name: 'ShiftForm',

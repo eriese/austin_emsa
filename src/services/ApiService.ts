@@ -1,8 +1,8 @@
 import axios, {AxiosError} from 'axios';
 
 import {JsonSnakeToCamel, JsonCamelToSnake} from '../utils';
-import Shift, {ShiftFilterSet} from './Shift';
-import AuthChecker from './authChecker';
+import Shift, {ShiftFilterSet} from '../models/Shift';
+import AuthChecker from './AuthChecker';
 
 // const baseURL = 'http://back.austin_emsa.org:3000';
 const baseURL = 'https://cryptic-brook-18592.herokuapp.com';

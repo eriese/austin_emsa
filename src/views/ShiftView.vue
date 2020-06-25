@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import shiftDisplay from '../mixins/shiftDisplay';
-import Shift from '../components/Shift';
-import emsaPage from '../mixins/emsaPage';
-import ApiService from '../components/ApiService';
+import ShiftDisplay from '../mixins/ShiftDisplay';
+import Shift from '../models/Shift';
+import EmsaPage from '../mixins/EmsaPage';
+import ApiService from '../services/ApiService';
 
 
 const excludedFields = /(id|shiftDate|shiftStart|shiftEnd|email)/
@@ -29,7 +29,7 @@ const displayFields = Object.getOwnPropertyNames(new Shift()).filter((p) => !p.m
 
 export default {
 	name: 'ShiftView',
-	mixins: [shiftDisplay, emsaPage],
+	mixins: [ShiftDisplay, EmsaPage],
 	data() {
 		return {
 			displayFields,

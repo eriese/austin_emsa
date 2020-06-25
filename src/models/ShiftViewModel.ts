@@ -1,4 +1,4 @@
-import {BooleanValueConverter, IndexValueConverter, IntegerValueConverter, SimpleConverter} from './ValueConverters';
+import {BooleanValueConverter, IndexValueConverter, IntegerValueConverter, SimpleConverter} from '../services/ValueConverters';
 import Shift, {IShift} from './Shift';
 
 export default class ShiftViewModel{

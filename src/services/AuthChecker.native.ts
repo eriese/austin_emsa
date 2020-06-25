@@ -1,5 +1,5 @@
 import {SecureStorage} from 'nativescript-secure-storage';
-import AuthChecker, {authTokenName} from './authChecker.common';
+import AuthChecker, {authTokenName} from './AuthChecker.common';
 import { ios } from "tns-core-modules/application";
 
 declare const kSecAttrAccessibleWhenUnlockedThisDeviceOnly : string;

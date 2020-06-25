@@ -1,5 +1,5 @@
-import Shift, {ShiftFilterSet, IShift} from '../components/Shift';
-import ApiService from '../components/ApiService';
+import Shift, {ShiftFilterSet, IShift} from '../models/Shift';
+import ApiService from './ApiService';
 import {AxiosError} from 'axios';
 
 class Store {

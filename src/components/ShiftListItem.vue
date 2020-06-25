@@ -1,9 +1,9 @@
 <script>
-	import shiftDisplay from '../mixins/shiftDisplay';
+	import ShiftDisplay from '../mixins/ShiftDisplay';
 
 	export default {
 		name: 'ShiftListItem',
-		mixins: [shiftDisplay],
+		mixins: [ShiftDisplay],
 		props: ['shift'],
 		computed: {
 			displayedShift() {

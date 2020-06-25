@@ -15,9 +15,9 @@
 
 <script>
 import Views from './Views';
-import AuthChecker from '../components/authChecker';
+import AuthChecker from '../services/AuthChecker';
 // import gsap from 'gsap';
-import {ShiftFilterSet} from '../components/Shift';
+import {ShiftFilterSet} from '../models/Shift';
 import Store from '../services/Store';
 
 export default {
