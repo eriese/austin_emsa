@@ -42,6 +42,8 @@ export default {
 			return this.$route ? this.$route.name : this.currentPage && this.currentPage.name;
 		},
 		currentPageListeners() {
+			const backToList = () => this.setCurrentPage(this.views.ShiftList);
+
 			let listeners = {}
 			switch(this.currentRoute) {
 				case 'ShiftList':
@@ -53,7 +55,7 @@ export default {
 				case 'UserView':
 					listeners = {
 						shiftSelected: this.onShiftSelected,
-						back: this.backToList,
+						back: backToList,
 						logout: () => {
 							AuthChecker.logout();
 							this.currentFilters = new ShiftFilterSet();
@@ -64,8 +66,8 @@ export default {
 				case 'Login':
 					listeners = {
 						authSuccess: () => {
-							this.backToList();
-							this.loadList(this.currentFilters);
+							this.loadList(this.store.currentFilters);
+							backToList();
 						}
 					};
 					break;
@@ -73,13 +75,13 @@ export default {
 					listeners = {
 						back: () => {
 							const listPage = this.store.selectedShift.isUser ? this.views.UserView : this.views.ShiftList;
-							this.backToList(listPage)
+							this.setCurrentPage(listPage)
 						}
 					}
 					break;
 				default:
 					listeners = {
-						back: this.backToList,
+						back: backToList,
 					};
 					break;
 			}
@@ -140,6 +142,9 @@ export default {
 
 				const onComplete = () => {
 					this.currentPage = page;
+					if (page != this.views.ShiftView) {
+						this.store.selectedShift = null;
+					}
 					this.saveState();
 					resolve();
 				}
@@ -158,12 +163,6 @@ export default {
 		onShiftSelected(shift) {
 			this.store.selectedShift = shift;
 			this.setCurrentPage(this.views.ShiftView);
-		},
-		backToList(listPage=this.views.ShiftList) {
-			this.setCurrentPage(listPage).then(() => {
-				this.store.selectedShift = undefined;
-				this.saveState();
-			});
 		},
 		loadList(newFilters, callback) {
 			if (!this.store.currentFilters.equals(newFilters)) {

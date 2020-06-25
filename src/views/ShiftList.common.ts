@@ -1,11 +1,9 @@
-import Vue from 'vue';
 import Shift, {ShiftFilterSet} from '../components/Shift';
 import ShiftListItem from '../components/ShiftListItem.vue';
-import emsaPage from '../mixins/emsaPage';
+import EmsaPage from '../mixins/emsaPage';
 
-export default Vue.extend({
+export default EmsaPage.extend({
 	name: 'ShiftList',
-	mixins: [emsaPage],
 	components: {
 		ShiftListItem
 	},
@@ -47,7 +45,7 @@ export default Vue.extend({
 		},
 		notifyPullToRefreshFinished(eventObject: any) {},
 		scrollListToIndex(index: number) {},
-		onScroll(scrollIndex) {
+		onScroll(scrollIndex: number) {
 			this.store.scrollIndex = scrollIndex;
 		}
 	},

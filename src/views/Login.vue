@@ -38,11 +38,11 @@
 
 <script>
 import ApiService from '../components/ApiService';
-import emsaPage from '../mixins/emsaPage';
+import EmsaPage from '../mixins/emsaPage';
 
 export default {
 	name: 'Login',
-	mixins: [emsaPage],
+	mixins: [EmsaPage],
 	data() {
 		return {
 			formError: '',

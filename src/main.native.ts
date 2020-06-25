@@ -14,7 +14,7 @@ import {openUrl} from 'tns-core-modules/utils/utils';
 import {TNSFontIcon, fonticon} from 'nativescript-fonticon';
 
 
-import VueDevtools from 'nativescript-vue-devtools';
+// import VueDevtools from 'nativescript-vue-devtools';
 
 CommonSetup(Vue);
 Vue.use(RadListView);
@@ -50,7 +50,7 @@ const isProduction = process.env.NODE_ENV == 'production';
 Vue.config.silent = isProduction;
 // Vue.config.silent = true;
 // if(!isProduction) {
-	Vue.use(VueDevtools, {host: '192.168.1.9'});
+	// Vue.use(VueDevtools, {host: '192.168.1.9'});
 // }
 
 new Vue({

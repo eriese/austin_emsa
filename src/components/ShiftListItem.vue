@@ -2,8 +2,14 @@
 	import shiftDisplay from '../mixins/shiftDisplay';
 
 	export default {
+		name: 'ShiftListItem',
 		mixins: [shiftDisplay],
 		props: ['shift'],
+		computed: {
+			displayedShift() {
+				return this.shift;
+			}
+		},
 		render() {
 			const itemClass = `shift-item shift-item--is-${this.valueLabels.isOffering.toLowerCase()}`;
 			if (process.env.VUE_APP_MODE == 'native') {

@@ -25,11 +25,11 @@
 	import Shift from '../components/Shift';
 	import ShiftViewModel from '../components/ShiftViewModel';
 	import ApiService from '../components/ApiService';
-	import emsaPage from '../mixins/emsaPage';
+	import EmsaPage from '../mixins/emsaPage';
 
 	export default {
 		name: 'ShiftForm',
-		mixins: [emsaPage],
+		mixins: [EmsaPage],
 		data() {
 			const shift = new Shift();
 			const valueManager = {};

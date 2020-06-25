@@ -7,7 +7,7 @@
 				<Label v-for="(field, $index) in listedFields" :text="fieldLabels[field]" :row="$index" col="0" :key="`field_${field}`" class="shift-view__label"/>
 				<Label v-for="(field, $index) in listedFields" :text="valueLabels[field]" :row="$index" col="1" :key="`value_${field}`" class="shift-view__value"/>
 			</GridLayout>
-			<Button v-if="shift.isUser" text="Delete This Post" @tap="deletePost" class="button cta" horizontalAlignment="center" />
+			<Button v-if="displayedShift.isUser" text="Delete This Post" @tap="deletePost" class="button cta" horizontalAlignment="center" />
 			<Button v-else text="Email This Poster" @tap="openEmail" class="button cta" horizontalAlignment="center"/>
 		</StackLayout>
 	</ScrollView>
@@ -39,7 +39,7 @@ export default {
 		}
 	},
 	computed: {
-		shift() {
+		displayedShift() {
 			return this.store.selectedShift;
 		}
 	},
@@ -48,10 +48,10 @@ export default {
 			this.$emit('back');
 		},
 		openEmail() {
-			this.openUrl(`mailto:${this.shift.email}`);
+			this.openUrl(`mailto:${this.displayedShift.email}`);
 		},
 		deletePost() {
-			ApiService.deleteShift(this.shift).then(() => {
+			ApiService.deleteShift(this.displayedShift).then(() => {
 				alert('Successfully deleted!').then(() => {
 					this.$emit('back');
 				});
