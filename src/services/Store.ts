@@ -128,7 +128,7 @@ class Store {
 				callback();
 			}
 		}, (error: AxiosError) => {
-			if (error.response && error.response.status == 401 && this.onListError) {
+			if (error.response && this.onListError && [401, 403].includes(error.response.status)) {
 				this.onListError(error);
 			}
 		});

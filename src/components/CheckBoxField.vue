@@ -1,7 +1,7 @@
 <template>
 	<StackLayout orientation="horizontal">
 		<check-box class="check-box" :fillColor="emsaBlue" ios:style="width: 25; margin-right: 0; height: 25; font-size: 18;" ios:lineWidth="2" ios:onCheckColor="white" :boxType="boxType" :checked="checked" @checkedChange="emit" :tintColor="emsaBlue" :onTintColor="emsaBlue" verticalAlignment="center" :class="`check-box--is-${boxType}`"/>
-		<Label :text="text" @tap="emit" verticalAlignment="center"/>
+		<Label :text="text" @tap="emit({value: true})" verticalAlignment="center"/>
 	</StackLayout>
 </template>
 
@@ -31,7 +31,9 @@ export default {
 	},
 	methods: {
 		emit($event) {
-			this.$emit('checkedChange', $event);
+			if ($event.value && !this.checked) {
+				this.$emit('checkedChange', $event);
+			}
 		}
 	}
 }

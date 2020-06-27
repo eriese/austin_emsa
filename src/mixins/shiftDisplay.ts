@@ -19,22 +19,28 @@ export default Vue.extend({
 		}
 	},
 	computed: {
+		dateFormatFilter() {
+			return this.$options.filters && this.$options.filters.dateFormat;
+		},
 		dateString() : string {
-			const dateFormat: Function | undefined = this.$options.filters && this.$options.filters.dateFormat;
-
-			if (dateFormat === undefined) { return ''; }
+			if (this.dateFormatFilter === undefined) { return ''; }
 
 			const shiftDate = new Date(this.displayedShift.shiftDate);
 			const isThisYear = shiftDate.getFullYear() == new Date().getFullYear();
 			const formatString = isThisYear ? 'dddd, M/DD' : 'dddd, M/DD/YY';
-			const dayString = dateFormat(shiftDate, formatString);
-			const startString = dateFormat(new Date(this.displayedShift.shiftStart), 'h:mm a');
-			const endString = dateFormat(new Date(this.displayedShift.shiftEnd), 'h:mm a');
-			return `${dayString} ${startString}-${endString}` ;
+			return this.dateFormatFilter(shiftDate, formatString);
+		},
+		timeString() : string {
+			if (this.dateFormatFilter === undefined) { return ''; }
+
+			const startString = this.dateFormatFilter(new Date(this.displayedShift.shiftStart), 'h:mm a');
+			const endString = this.dateFormatFilter(new Date(this.displayedShift.shiftEnd), 'h:mm a');
+			return `${startString}-${endString}` ;
 		},
 		valueLabels() : ShiftLabelSet {
 			let labels: ShiftLabelSet = {
-				dates: this.dateString
+				date: this.dateString,
+				time: this.timeString
 			}
 
 			const vm = this;

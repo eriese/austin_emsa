@@ -13,7 +13,16 @@
 	</GridLayout>
 </template>
 <template web>
-	<h1>User View</h1>
+	<div>
+		<router-link :to="{name: 'ShiftList'}" class="button cta--is-round">Back</router-link>
+		<h1 class="h1 text-center">My Posts</h1>
+		<ul>
+			<ShiftListItem v-for="(shift, $index) in shifts" :key="$index" :shift="shift" :is-user="true"/>
+		</ul>
+		<div class="text-center">
+			<button class="button" @click="$emit('logout')">Log Out</button>
+		</div>
+	</div>
 </template>
 
 <script>

@@ -4,7 +4,7 @@
 	export default {
 		name: 'ShiftListItem',
 		mixins: [ShiftDisplay],
-		props: ['shift'],
+		props: ['shift', 'isUser'],
 		computed: {
 			displayedShift() {
 				return this.shift;
@@ -17,7 +17,7 @@
 					<Label text={this.valueLabels.isOffering} row="0" col="0" class="shift-item__is-offering"/>
 					<Label text={this.valueLabels.isOcp} row="0" col="1" colSpan="2" class="shift-item__is-ocp text-center"/>
 					<Label text={this.valueLabels.position} row="0" col="3" class="shift-item__position text-right"/>
-					<Label text={this.valueLabels.dates} row="1" col="0" colSpan="4" class="shift-item__dates text-center"/>
+					<Label text={`${this.valueLabels.date} ${this.valueLabels.time}` } row="1" col="0" colSpan="4" class="shift-item__dates text-center"/>
 					<Label text={this.valueLabels.isField} row="2" col="0" class="shift-item__is-field"/>
 					<Label text={this.valueLabels.shiftLetter} row="2" col="1" class="shift-item__shift-letter text-center"/>
 					<Label text={this.valueLabels.timeFrame} row="2" col="2" class="shift-item__time-frame text-center"/>
@@ -26,11 +26,11 @@
 			}
 
 			return <li class={itemClass}>
-				<router-link to={{name: 'ShiftView', params: { id: this.displayedShift.id }}}>
+				<router-link to={{name: this.isUser ? 'UserShiftView' : 'ShiftView', params: { id: this.displayedShift.id }}}>
 					<span class="shift-item__is-offering">{this.valueLabels.isOffering}</span>
 					<span class="shift-item__is-ocp">{this.valueLabels.isOcp}</span>
 					<span class="shift-item__position">{this.valueLabels.position}</span>
-					<div class="shift-item__dates">{this.valueLabels.dates}</div>
+					<div class="shift-item__dates">{`${this.valueLabels.date} ${this.valueLabels.time}`}</div>
 					<div class="shift-item__bottom-row">
 						<span class="shift-item__is-field">{this.valueLabels.isField}</span>
 						<span className="shift-item__shift-letter">{this.valueLabels.shiftLetter}</span>

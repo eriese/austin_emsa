@@ -10,7 +10,7 @@
 </template>
 
 <template web>
-	<div>
+	<div class="emsa-root">
 		<header>
 			<nav>
 				<ul class="emsa-menu">
@@ -212,6 +212,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" web>
+@import 'reset-css';
 @import '../app.scss';
 </style>

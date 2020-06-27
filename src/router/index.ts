@@ -21,7 +21,7 @@ const routes: Array<RouteConfig> = [
 	{
 		path: '/me/:id',
 		name: 'UserShiftView',
-		component: Views.UserView,
+		component: Views.ShiftView,
 		meta: {requiresAuth: true, isUser: true}
 	},
 	{

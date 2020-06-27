@@ -48,7 +48,7 @@ export class IntegerValueConverter implements PropertyConverter<number> {
 
 export class SimpleConverter implements PropertyConverter<any> {
 	convertFrom(str: any) {
-		return str.toString();
+		return str && str.toString();
 	}
 
 	convertTo(str: string) {

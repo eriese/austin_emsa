@@ -28,7 +28,8 @@ export interface ShiftLabelSet {
 	shiftEnd?: string,
 	tradeDates?: string,
 	notes?: string,
-	dates?: string,
+	date?: string,
+	time?: string,
 	[key: string]: string | undefined;
 }
 

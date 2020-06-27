@@ -4,7 +4,8 @@ import {JsonSnakeToCamel, JsonCamelToSnake} from '../utils';
 import Shift, {ShiftFilterSet} from '../models/Shift';
 import AuthChecker from './AuthChecker';
 
-const baseURL = process.env.VUE_APP_MODE == 'web' ? 'http://back.austin_emsa.org:3000' : 'https://cryptic-brook-18592.herokuapp.com';
+// const baseURL = process.env.VUE_APP_MODE == 'web' ? 'http://back.austin_emsa.org:3000' : 'https://cryptic-brook-18592.herokuapp.com';
+const baseURL = 'http://back.austin_emsa.org:3000'
 
 const api = axios.create({
 	baseURL,
@@ -49,7 +50,8 @@ const ApiService = {
 		return new Promise((resolve, reject) => {
 			api.post('/oauth/token', {
 				...user,
-				grant_type: 'password'
+				grant_type: 'password',
+				scope: process.env.VUE_APP_MODE
 			}).then(response => {
 				access_token = response.data.access_token;
 				// refresh_token = response.data.refresh_token;
