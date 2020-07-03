@@ -15,8 +15,8 @@
 </template>
 
 <template web>
-	<div>
-		<router-link :to="{name: displayedShift.isUser ? 'UserView' : 'ShiftList'}" class="button cta--is-round">Back</router-link>
+	<div class="side-padded">
+		<back-button :to="{name: displayedShift.isUser ? 'UserView' : 'ShiftList'}" />
 		<h1 class="h1 text-center">{{valueLabels.isOffering}} Shift</h1>
 		<h2 class="h2 text-center">{{valueLabels.date}}</h2>
 		<h2 class="h2 text-center">{{valueLabels.time}}</h2>

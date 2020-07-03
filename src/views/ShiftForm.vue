@@ -17,8 +17,8 @@
 </template>
 
 <template web>
-	<div>
-		<router-link :to="{name: 'ShiftList'}" class="button cta--is-round">Back</router-link>
+	<div class="side-padded">
+		<back-button/>
 		<h1 class="h1 text-center">List a Shift</h1>
 		<form novalidate @submit="submitForm" class="form">
 			<div class="form-field" v-for="f in fields" :key="f.fieldName">
@@ -30,7 +30,7 @@
 					</span>
 				</div>
 				<div v-else>
-					<input v-if="f.inputType == 'date' || f.inputType == 'time'" :type="f.inputType" :value="f.mask" @input="f.listener">
+					<date-input v-model="shift[f.fieldName]" :type="f.inputType" v-if="f.inputType == 'date' || f.inputType == 'time'"/>
 					<input v-else :type="f.inputType" :id="f.fieldName" v-model="shift[f.fieldName]">
 				</div>
 			</div>
@@ -58,36 +58,18 @@
 
 			viewModel.annotatedFields.forEach((f) => {
 				const inputType = viewModel.getFieldInputType(f)
-				const fieldManager = {inputType};
-
-
-				if (inputType == 'date') {
-					fieldManager.listener = ($event) => {
-							this.shift[f] = new Date($event.target.value);
-						}
-				} else if (inputType == 'time') {
-					fieldManager.listener = ($event) => {
-						const newDate = new Date(this.shift.shiftDate);
-						const hourSet = $event.target.value.split(':');
-						newDate.setHours(...hourSet);
-						this.shift[f] = newDate;
-					}
-				}
+				valueManager[f] = {inputType};
 
 				const valueLabels = viewModel.getFieldValueLabels(f);
-
 				if (valueLabels) {
 					const converter = viewModel.getFieldValueConverter(f)
-
-					fieldManager.values = valueLabels.map((v) => {
+					valueManager[f].values = valueLabels.map((v) => {
 						return {
 							label: v,
 							value: converter ? converter.convertTo(v) : v
 						}
 					})
 				}
-
-				valueManager[f] = fieldManager
 			});
 
 			return {
@@ -99,38 +81,24 @@
 		computed: {
 			fields() {
 				const fields = []
-				const dateFormatFilter = this.$options.filters.dateFormat
 				for (var f in this.shift) {
 					let label =  this.viewModel.getFieldLabel(f);
 
 					if (!label) { continue; }
-					let fieldManager = this.valueManager[f] || {};
-					let inputType = fieldManager.inputType;
 
-					let field = {
+					let fieldManager = this.valueManager[f] || {};
+
+					fields.push({
 						label,
-						inputType,
+						inputType: fieldManager.inputType,
 						values: fieldManager.values,
 						fieldName: f,
-					}
-
-					if (inputType == 'date' || inputType == 'time') {
-						field.mask = dateFormatFilter(this.shift[f], inputType == 'date' ? 'YYYY-MM-DD' : 'HH:mm');
-						field.listener = fieldManager.listener
-					}
-
-					fields.push(field);
+					});
 				}
 				return fields;
 			},
 		},
 		methods: {
-			// announce() {
-			// 	console.log(JSON.stringify(this.shift));
-			// },
-			onDateTimeSelected($event, fieldName) {
-				this.shift[fieldName] = $event.value;
-			},
 			submitForm() {
 				ApiService.submitShift(this.shift).then(() => {
 					alert('Successfully saved!').then(() => {

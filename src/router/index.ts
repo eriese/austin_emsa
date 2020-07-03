@@ -3,15 +3,9 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Views from '../views/Views';
 import Store from '../services/Store';
 import ApiService from '../services/ApiService';
-import Shift from '../models/Shift';
+import Shift, {ShiftFilterSet} from '../models/Shift';
 
 const routes: Array<RouteConfig> = [
-	// {
-	// 	path: '/',
-	// 	name: 'ShiftList',
-	// 	component: Views.ShiftList,
-	// 	meta: {requiresAuth: true},
-	// },
 	{
 		path: '/me',
 		name: 'UserView',
@@ -34,7 +28,17 @@ const routes: Array<RouteConfig> = [
 		path: '/shifts',
 		name: 'ShiftList',
 		component: Views.ShiftList,
-		meta: {requiresAuth: true}
+		meta: {requiresAuth: true},
+		beforeEnter(toRoute, fromRoute, next) {
+			if (Object.keys(toRoute.query).length === 0) {
+				Object.assign(toRoute.query, Store.currentFilters);
+				next(toRoute);
+			}
+			else {
+				Store.currentFilters = new ShiftFilterSet(toRoute.query);
+				next();
+			}
+		}
 	},
 	{
 		path: '/shifts/new',
@@ -46,13 +50,21 @@ const routes: Array<RouteConfig> = [
 		path: '/login',
 		name: 'Login',
 		component: Views.Login,
-		meta: {requiresAuth: false}
+		meta: {requiresAuth: false},
+		beforeEnter(toRoute, fromRoute, next) {
+			Store.loginIndex = 0;
+			next();
+		}
 	},
 	{
 		path: '/signup',
 		name: 'Signup',
 		component: Views.Login,
-		meta: {requiresAuth: false}
+		meta: {requiresAuth: false},
+		beforeEnter(toRoute, fromRoute, next) {
+			Store.loginIndex = 1;
+			next();
+		}
 	}
 ]
 

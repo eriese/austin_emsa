@@ -23,6 +23,7 @@
 		<main>
 			<router-view class="emsa-page" v-on="currentPageListeners"/>
 		</main>
+		<dialogs-wrapper/>
 	</div>
 </template>
 
@@ -214,5 +215,7 @@ export default {
 
 <style lang="scss" web>
 @import 'reset-css';
+@import '../assets/css/fontawesome/fontawesome.min.css';
+@import '../assets/css/fontawesome/solid.min.css';
 @import '../app.scss';
 </style>

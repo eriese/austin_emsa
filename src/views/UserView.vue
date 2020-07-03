@@ -12,9 +12,10 @@
 		<Button class="button" text="Log Out" row="2" @tap="$emit('logout')" marginBottom="0"/>
 	</GridLayout>
 </template>
+
 <template web>
-	<div>
-		<router-link :to="{name: 'ShiftList'}" class="button cta--is-round">Back</router-link>
+	<div class="side-padded">
+		<back-button />
 		<h1 class="h1 text-center">My Posts</h1>
 		<ul>
 			<ShiftListItem v-for="(shift, $index) in shifts" :key="$index" :shift="shift" :is-user="true"/>

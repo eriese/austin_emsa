@@ -5,7 +5,6 @@ import App from './views/App.vue';
 import RadListView from 'nativescript-ui-listview/vue';
 import { ModalStack, overrideModalViewMethod, VueWindowedModal } from 'nativescript-windowed-modal';
 import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
-import BackButton from './components/BackButton.vue';
 import CheckboxField from './components/CheckBoxField.vue';
 import TitleAndBackButton from './components/TitleAndBackButton.vue';
 import DateTimePicker from 'nativescript-datetimepicker/vue';
@@ -33,7 +32,6 @@ Vue.registerElement('CheckBox', () => require('@nstudio/nativescript-checkbox').
 	}
 });
 
-Vue.component('BackButton', BackButton);
 Vue.component('CheckboxField', CheckboxField);
 Vue.component('TitleAndBackButton', TitleAndBackButton);
 

@@ -104,6 +104,7 @@ Page, .ns-modal, html {
 	}
 
 	.side-padded {
+		padding: 0 1rem;
 		padding: 0 10;
 	}
 
@@ -111,23 +112,49 @@ Page, .ns-modal, html {
 		background-color: var(--emsa-blue);
 		color: var(--emsa-yellow);
 		font-weight: bold;
+		font-size: 1rem;
 		font-size: 16;
+		padding: 0.5rem 1.25rem;
 		padding: 5 20;
 		text-align: center;
+		display: inline-block;
+		text-decoration: none;
+		border: none;
+
+		&:hover {
+			background-color: var(--emsa-yellow);
+			color: var(--emsa-blue);
+		}
 	}
 
 	.cta {
 		width: auto;
 		height: auto;
+		padding: 1.25rem 2rem;
 		padding: 20 30;
+		border-radius: 1rem;
 		border-radius: 15;
 
 		&--is-round {
+			width: 2.5rem;
+			height: 2.5rem;
 			width: 40;
 			height: 40;
+			display: flex;
 			border-radius: 50%;
+			font-size: 1.5rem;
+			align-items: center;
+			justify-content: center;
 			font-size: 20;
 			padding: 0;
+		}
+
+		&--is-close {
+			float: right;
+		}
+
+		&--is-back {
+			float: left;
 		}
 	}
 
@@ -150,22 +177,33 @@ Page, .ns-modal, html {
 		&__error {
 			color: var(--emsa-red);
 		}
+
+		&__submit {
+			clear: both;
+		}
 	}
 
 	.form-field {
 		padding: 0.5rem 1rem;
 		padding: 0 20;
+		text-align: left;
 
 		&__label {
 			font-size: 16;
 			font-weight: bold;
 			color: var(--color);
+			display: block;
 		}
 
 		&__input {
 			color: var(--color);
 			font-size: 12;
 			margin-bottom: 10;
+
+			&[type=text], &[type="email"], &[type="password"] {
+				display: block;
+				width: 100%;
+			}
 
 			Label {
 				font-size: inherit;

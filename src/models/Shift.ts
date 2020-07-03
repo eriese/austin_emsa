@@ -33,8 +33,20 @@ export interface ShiftLabelSet {
 	[key: string]: string | undefined;
 }
 
-function copyOrNew(ary: Array<any> | undefined) {
-	return ary ? ary.slice() : [];
+function copyOrNew(ary: Array<any> | undefined, parser?: Function) {
+	if (!ary) {return [];}
+	if (typeof ary == 'string' && parser !== undefined) {
+		return [parser(ary)];
+	}
+	if (ary.length === undefined || typeof ary == 'string') {
+		return [ary]
+	}
+
+	return ary.slice();
+}
+
+function parseBool(str: string) {
+	return str.toLowerCase() == 'true';
 }
 
 export class ShiftFilterSet {
@@ -52,15 +64,18 @@ export class ShiftFilterSet {
 
 	constructor(fromfilters?: ShiftFilterSet) {
 		if (!fromfilters ) { return; }
-		this.isField = copyOrNew(fromfilters.isField);
-		this.position = copyOrNew(fromfilters.position);
-		this.isOffering = copyOrNew(fromfilters.isOffering);
-		this.isOcp = copyOrNew(fromfilters.isOcp);
+		this.isField = copyOrNew(fromfilters.isField, parseBool);
+		this.position = copyOrNew(fromfilters.position, parseInt);
+		this.isOffering = copyOrNew(fromfilters.isOffering, parseBool);
+		this.isOcp = copyOrNew(fromfilters.isOcp, parseBool);
 		this.shiftLetter = copyOrNew(fromfilters.shiftLetter);
-		this.timeFrame = copyOrNew(fromfilters.timeFrame);
-		this.tradePreference = copyOrNew(fromfilters.tradePreference);
-		this.date = copyOrNew(fromfilters.date || [new Date()]);
-		this.dateType = fromfilters.dateType || this.dateType;
+		this.timeFrame = copyOrNew(fromfilters.timeFrame, parseInt);
+		this.tradePreference = copyOrNew(fromfilters.tradePreference, parseInt);
+		this.dateType = fromfilters.dateType || 'After';
+
+		if (JSON.stringify(fromfilters.date) != '[{}]') {
+			this.date = copyOrNew(fromfilters.date || [new Date()], (d: string) => new Date(d));
+		}
 	}
 
 	get sortedKeys() {

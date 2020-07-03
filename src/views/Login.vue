@@ -1,10 +1,29 @@
 <template web>
-	<form novalidate @submit="onSubmit">
-		<label for="email">Email</label>
-		<input v-model="user.email" type="email" id="email" autocomplete="email" />
-		<label for="password">Password</label>
-		<input type="password" v-model="user.password" id="password"/>
-		<input type="submit">
+	<form novalidate @submit="onSubmit" class="side-padded text-center login-form">
+		<img src="~/assets/images/logo.png" alt="Austin EMSA Logo">
+		<h1 class="h1">Shift Request</h1>
+		<div>
+			<div class="form__error text-center">{{formError}}</div>
+			<div class="form-field">
+				<label class="form-field__label" for="email">Email</label>
+				<p class="form-field__error">{{fieldErrors.email && `Email ${fieldErrors.email[0]}` }}</p>
+				<input class="form-field__input" v-model="user.email" type="email" id="email" autocomplete="email" />
+			</div>
+			<div class="form-field">
+				<label class="form-field__label" for="password">Password</label>
+				<p class="form-field__error">{{fieldErrors.password && `Password ${fieldErrors.password[0]}`}}</p>
+				<input class="form-field__input" :type="showPassword ? 'text' : 'password'" v-model="user.password" id="password"/>
+			</div>
+			<div class="form-field" v-if="!isLogin">
+				<label for="password_confirmation" class="form-field__label">Confirm Password</label>
+				<p class="form-field__error">{{fieldErrors.password_confirmation && `Password confrimation ${fieldErrors.password_confirmation[0]}` }}</p>
+				<input :type="showPassword ? 'text' : 'password'"  id="password_confirmation" v-model="user.password_confirmation" class="form-field__input">
+			</div>
+			<button class="button cta--is-close" @click="showPassword = !showPassword"> {{showPassword ? 'Hide Password' : 'Show Password'}} </button>
+			<div class="form__submit">
+				<input type="submit" class="button" :value="isLogin ? 'Log In' : 'Sign Up'">
+			</div>
+		</div>
 	</form>
 </template>
 
@@ -48,7 +67,6 @@ export default {
 			formError: '',
 			fieldErrors: {},
 			isSubmitting: false,
-			loginItems: ['Returning User', 'New User'],
 			user: {
 				email: '',
 				password: '',
@@ -90,3 +108,10 @@ export default {
 	}
 }
 </script>
+
+<style web>
+	.login-form {
+		margin-top: 2rem;
+	}
+</style>
+

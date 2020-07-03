@@ -1,5 +1,9 @@
 <template web>
-	<div>
+	<div class="side-padded">
+		<div class="text-center filter-button">
+			<button @click="showFiltersModal" class="button">Filters</button>
+		</div>
+		<p v-if="store.currentList.length == 0">There are currently no posts that match your search criteria. Please check back again soon, or make your own post seeking a swap</p>
 		<ul>
 			<ShiftListItem v-for="(shift, $index) in store.currentList" :key="$index" :shift="shift"/>
 		</ul>
@@ -27,10 +31,24 @@
 
 <script web>
 	import ShiftListCommon from './ShiftList.common';
+	import ShiftFilterModal from '../components/ShiftFilterModal';
+	import {create} from 'vue-modal-dialogs';
+
+	const createModal = create(ShiftFilterModal);
 
 	export default {
 		name: 'ShiftList',
-		mixins: [ShiftListCommon]
+		mixins: [ShiftListCommon],
+		methods: {
+			showModal(options) {
+				return createModal({
+					...options.props
+				});
+			},
+			onNewFilters(newFilters) {
+				this.$router.push({name: 'ShiftList', query: newFilters});
+			}
+		}
 	};
 
 </script>
@@ -60,4 +78,7 @@
 </script>
 
 <style scoped lang="scss">
+	.filter-button {
+		margin: 1rem 0 0.5rem 0;
+	}
 </style>

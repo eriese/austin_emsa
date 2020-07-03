@@ -43,6 +43,7 @@
     "reset-css": "^5.0.1",
     "tns-core-modules": "^6.5.8",
     "vue": "^2.6.11",
+    "vue-modal-dialogs": "^3.0.0",
     "vue-router": "^3.2.0"
   },
   "devDependencies": {

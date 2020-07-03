@@ -36,13 +36,17 @@ export default EmsaPage.extend({
 			};
 
 			const filterResults = await this.showModal(options);
-			if (!filterResults || this.store.currentFilters.equals(filterResults)) { return; }
+			if (!filterResults || this.store.currentFilters.equals(filterResults)) {
+				return;
+			}
 
 			this.getShifts(filterResults);
+			this.onNewFilters(filterResults);
 		},
 		showModal(options: { props: any}): Promise<ShiftFilterSet | undefined> {
 			return new Promise((resolve) => resolve());
 		},
+		onNewFilters(newFilters) {},
 		notifyPullToRefreshFinished(eventObject: any) {},
 		scrollListToIndex(index: number) {},
 		onScroll(scrollIndex: number) {

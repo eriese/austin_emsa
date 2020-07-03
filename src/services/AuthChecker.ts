@@ -8,7 +8,9 @@ const checker: AuthChecker = {
 	clearAuthToken() {},
 	saveState() {},
 	getState() {},
-	logout() {},
+	logout() {
+		// TODO this needs to be real
+	},
 	isAuthed() {
 		return true;
 	}
