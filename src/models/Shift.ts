@@ -61,8 +61,9 @@ export class ShiftFilterSet {
 	tradePreference: number[] = [];
 	date: Date[] = [new Date()];
 	dateType: string = 'After';
+	[key: string]: Array<any> | string| Function
 
-	constructor(fromfilters?: ShiftFilterSet) {
+	constructor(fromfilters?: ShiftFilterSet | {[key: string]: any} ) {
 		if (!fromfilters ) { return; }
 		this.isField = copyOrNew(fromfilters.isField, parseBool);
 		this.position = copyOrNew(fromfilters.position, parseInt);
@@ -78,8 +79,26 @@ export class ShiftFilterSet {
 		}
 	}
 
-	get sortedKeys() {
+	get sortedKeys() : string[] {
 		return Object.keys(this).sort();
+	}
+
+	asQuery() {
+		let queryDict : {[key: string]: string | string[] } = {};
+		this.sortedKeys.forEach((k: string) => {
+			if (k == 'date') {
+				queryDict[k] = this[k].map((d : Date) => d.getTime().toString());
+			} else if (k == 'dateType') {
+				queryDict[k] = this[k];
+			} else {
+				const kArray = this[k];
+				if (kArray instanceof Array && kArray.length > 0) {
+					queryDict[k] = kArray.map((v : any) => v.toString());
+				}
+			}
+		})
+
+		return queryDict;
 	}
 
 	equals(otherFilterSet: ShiftFilterSet) {

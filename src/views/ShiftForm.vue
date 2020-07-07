@@ -6,10 +6,9 @@
 				<Label :text="f.label" class="form-field__label" textWrap="true"/>
 				<TextField v-if="f.inputType == 'text' || f.inputType == 'textarea'" v-model="shift[f.fieldName]"  class="form-field__input"/>
 				<WrapLayout v-else-if="f.inputType == 'radio'" class="form-field__input">
-					<CheckboxField v-for="(v, i) in f.values" :key="v.label" :class="[i == f.value ? 'form-field__input--is-selected' : 'form-field__input--is-unselected']" @checkedChange="shift[f.fieldName] = v.value" :checked="v.value == shift[f.fieldName]" :text="v.label" boxType="circle"/>
+					<CheckboxField v-for="(v, i) in f.values" :key="v.label" :class="[i == f.value ? 'form-field__input--is-selected' : 'form-field__input--is-unselected']" @checkedChange="shift[f.fieldName] = v.value" :checked="v.value == shift[f.fieldName]" :text="v.label" boxType="circle" :radio="true"/>
 				</WrapLayout>
-				<DatePickerField v-else-if="f.inputType == 'date'" :date="shift[f.fieldName]" dateFormat="EEEE M/d/yy" @dateChange="onDateTimeSelected($event, f.fieldName)" :ref="f.fieldName" />
-				<TimePickerField v-else-if="f.inputType == 'time'" :time="shift[f.fieldName]" timeFormat="h:mm a" @timeChange="onDateTimeSelected($event, f.fieldName)" :ref="f.fieldName" />
+				<DateInput v-else :type="f.inputType" v-model="shift[f.fieldName]"/>
 			</Stacklayout>
 			<Button text="Save" @tap="submitForm" class="button" />
 		</StackLayout>

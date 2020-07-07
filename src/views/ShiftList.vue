@@ -46,7 +46,7 @@
 				});
 			},
 			onNewFilters(newFilters) {
-				this.$router.push({name: 'ShiftList', query: newFilters});
+				this.$router.push({name: 'ShiftList', query: Object.assign({}, newFilters)});
 			}
 		}
 	};

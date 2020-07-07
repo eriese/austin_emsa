@@ -31,8 +31,7 @@ const routes: Array<RouteConfig> = [
 		meta: {requiresAuth: true},
 		beforeEnter(toRoute, fromRoute, next) {
 			if (Object.keys(toRoute.query).length === 0) {
-				Object.assign(toRoute.query, Store.currentFilters);
-				next(toRoute);
+				next({name: 'ShiftList', query: Object.assign(toRoute.query, Store.currentFilters.asQuery())});
 			}
 			else {
 				Store.currentFilters = new ShiftFilterSet(toRoute.query);
@@ -93,7 +92,7 @@ router.beforeEach(async (toRoute, fromRoute, next) => {
 	} else if (!isAuthed) {
 		next({name: 'Login'});
 	} else {
-		next({name: 'ShiftList'});
+		next({name: 'ShiftList', query: Store.currentFilters.asQuery()});
 	}
 })
 

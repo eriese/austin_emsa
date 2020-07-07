@@ -82,7 +82,7 @@ export default {
 				case 'ShiftView':
 					listeners = {
 						back: () => {
-							const listPage = this.store.selectedShift.isUser ? this.views.UserView : this.views.ShiftList;
+							const listPage = this.store.selectedShift.isUser ? 'UserView' : 'ShiftList';
 							this.setCurrentPage(listPage)
 						}
 					}
@@ -146,7 +146,8 @@ export default {
 		},
 		setCurrentPage(pageName) {
 			if (process.env.VUE_APP_MODE == 'web') {
-				return this.$router.push({name: pageName});
+				let query = pageName == 'ShiftList' ? this.store.currentFilters : {}
+				return this.$router.push({name: pageName, query});
 			}
 
 			return new Promise((resolve) => {

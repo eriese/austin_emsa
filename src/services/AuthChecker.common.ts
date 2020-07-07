@@ -2,10 +2,9 @@ export const authTokenName: string = 'authToken';
 import {AxiosResponse} from 'axios';
 
 export default interface AuthChecker {
-	saveAuthToken(token: string);
+	saveAuthToken(token: string): void;
 	getAuthToken() : string;
-	clearAuthToken();
-	saveState(state: any);
+	saveState(state: any): void;
 	getState() : any;
 	logout():  boolean;
 	isAuthed() : boolean;

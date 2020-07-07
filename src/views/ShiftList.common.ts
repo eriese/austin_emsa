@@ -46,7 +46,7 @@ export default EmsaPage.extend({
 		showModal(options: { props: any}): Promise<ShiftFilterSet | undefined> {
 			return new Promise((resolve) => resolve());
 		},
-		onNewFilters(newFilters) {},
+		onNewFilters(newFilters: ShiftFilterSet) {},
 		notifyPullToRefreshFinished(eventObject: any) {},
 		scrollListToIndex(index: number) {},
 		onScroll(scrollIndex: number) {
