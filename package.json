@@ -6,7 +6,7 @@
 	"scripts": {
 		"lint": "vue-cli-service lint",
 		"build:android": "npm run setup-webpack-config && tns build android --env.production && npm run remove-webpack-config",
-		"build:ios": "npm run setup-webpack-config && tns build ios --env.production && npm run remove-webpack-config",
+		"build:ios": "npm run setup-webpack-config && tns build ios --env.production && npm run remove-webpack-config rm -f platforms/ios/austinemsa/app/App_Resources/",
 		"build:web": "vue-cli-service build --mode production.web",
 		"clean:android": "rimraf platforms/android",
 		"clean:ios": "rimraf platforms/ios",
@@ -25,6 +25,7 @@
 		"@nativescript/core": "^6.5.8",
 		"@nativescript/theme": "^2.2.1",
 		"@nstudio/nativescript-checkbox": "^1.0.0",
+		"@types/qs": "^6.9.3",
 		"@vuejs-community/vue-filter-date-format": "^1.3.2",
 		"axios": "^0.19.2",
 		"core-js": "^3.6.5",
@@ -40,8 +41,12 @@
 		"nativescript-vue": "^2.6.1",
 		"nativescript-vue-web": "^0.9.4",
 		"nativescript-windowed-modal": "^6.2.1",
+		"qs": "^6.9.4",
+		"reset-css": "^5.0.1",
 		"tns-core-modules": "^6.5.8",
-		"vue": "^2.6.11"
+		"vue": "^2.6.11",
+		"vue-modal-dialogs": "^3.0.0",
+		"vue-router": "^3.2.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.10.3",
@@ -54,6 +59,7 @@
 		"@vue/babel-preset-jsx": "^1.1.2",
 		"@vue/cli-plugin-babel": "^4.4.4",
 		"@vue/cli-plugin-eslint": "^4.4.4",
+		"@vue/cli-plugin-router": "^4.4.5",
 		"@vue/cli-plugin-typescript": "^4.4.4",
 		"@vue/cli-service": "^4.4.4",
 		"@vue/devtools": "^5.3.3",
@@ -65,7 +71,6 @@
 		"nativescript-dev-webpack": "^1.5.1",
 		"nativescript-vue-devtools": "^1.4.0",
 		"nativescript-vue-template-compiler": "^2.6.1",
-		"nativescript-worker-loader": "~0.11.0",
 		"node-sass": "^4.14.1",
 		"rimraf": "^2.6.3",
 		"string-replace-loader": "^2.2.0",

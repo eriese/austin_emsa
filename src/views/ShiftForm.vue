@@ -6,119 +6,104 @@
 				<Label :text="f.label" class="form-field__label" textWrap="true"/>
 				<TextField v-if="f.inputType == 'text' || f.inputType == 'textarea'" v-model="shift[f.fieldName]"  class="form-field__input"/>
 				<WrapLayout v-else-if="f.inputType == 'radio'" class="form-field__input">
-					<CheckboxField v-for="(v, i) in f.values" :key="v" :class="[i == f.value ? 'form-field__input--is-selected' : 'form-field__input--is-unselected']" @checkedChange="onSelectedIndexChange($event, f.fieldName, i)" :checked="i == f.value" :text="v" boxType="circle"/>
+					<CheckboxField v-for="(v, i) in f.values" :key="v.label" :class="[i == f.value ? 'form-field__input--is-selected' : 'form-field__input--is-unselected']" @checkedChange="shift[f.fieldName] = v.value" :checked="v.value == shift[f.fieldName]" :text="v.label" boxType="circle" :radio="true"/>
 				</WrapLayout>
-				<DatePickerField v-else-if="f.inputType == 'date'" :date="shift[f.fieldName]" dateFormat="EEEE M/d/yy" @dateChange="onDateTimeSelected($event, f.fieldName)" :ref="f.fieldName" />
-				<TimePickerField v-else-if="f.inputType == 'time'" :time="shift[f.fieldName]" timeFormat="h:mm a" @timeChange="onDateTimeSelected($event, f.fieldName)" :ref="f.fieldName" />
+				<DateInput v-else :type="f.inputType" v-model="shift[f.fieldName]"/>
 			</Stacklayout>
 			<Button text="Save" @tap="submitForm" class="button" />
 		</StackLayout>
 	</ScrollView>
 </template>
 
+<template web>
+	<div class="side-padded">
+		<back-button/>
+		<h1 class="h1 text-center">List a Shift</h1>
+		<form novalidate @submit="submitForm" class="form">
+			<div class="form-field" v-for="f in fields" :key="f.fieldName">
+				<label class="form-field__label" :for="f.fieldName">{{f.label}}</label>
+				<div v-if="f.inputType == 'radio'" role="radiogroup">
+					<span v-for="v in f.values">
+						<input type="radio" :value="v.value" v-model="shift[f.fieldName]" :id="`${f.fieldName}-${v}`" >
+						<label :for="`${f.fieldName}-${v}`">{{v.label}}</label>
+					</span>
+				</div>
+				<div v-else>
+					<date-input v-model="shift[f.fieldName]" :type="f.inputType" v-if="f.inputType == 'date' || f.inputType == 'time'"/>
+					<input v-else :type="f.inputType" :id="f.fieldName" v-model="shift[f.fieldName]">
+				</div>
+			</div>
+			<div class="text-center">
+				<input type="submit" class="button">
+			</div>
+		</form>
+	</div>
+</template>
+
 
 <script>
-	import formComponent from '../mixins/formComponent';
-	import Shift from '../components/Shift';
-	import ShiftViewModel from '../components/ShiftViewModel';
-	import ApiService from '../components/ApiService';
-	import emsaPage from '../mixins/emsaPage';
+	import Shift from '../models/Shift';
+	import ShiftViewModel from '../models/ShiftViewModel';
+	import ApiService from '../services/ApiService';
+	import EmsaPage from '../mixins/EmsaPage';
 
 	export default {
 		name: 'ShiftForm',
-		mixins: [formComponent, emsaPage],
+		mixins: [EmsaPage],
 		data() {
 			const shift = new Shift();
 			const valueManager = {};
 			const viewModel = new ShiftViewModel(shift);
+
 			viewModel.annotatedFields.forEach((f) => {
-				valueManager[f] = {
-					values: viewModel.getFieldValueLabels(f),
-					converter: viewModel.getFieldValueConverter(f),
-					inputType: viewModel.getFieldInputType(f)
+				const inputType = viewModel.getFieldInputType(f)
+				valueManager[f] = {inputType};
+
+				const valueLabels = viewModel.getFieldValueLabels(f);
+				if (valueLabels) {
+					const converter = viewModel.getFieldValueConverter(f)
+					valueManager[f].values = valueLabels.map((v) => {
+						return {
+							label: v,
+							value: converter ? converter.convertTo(v) : v
+						}
+					})
 				}
-			})
+			});
+
 			return {
 				shift,
 				valueManager,
 				viewModel,
-				boxColor: '',
-				pickerShowing: false
 			};
 		},
 		computed: {
 			fields() {
 				const fields = []
 				for (var f in this.shift) {
-					let fieldManager = this.valueManager[f];
 					let label =  this.viewModel.getFieldLabel(f);
 
 					if (!label) { continue; }
 
-					let value;
-					let inputType = 'text';
-					let values;
-					if (fieldManager) {
-						inputType = fieldManager.inputType
-						values = fieldManager.values
-
-						if (fieldManager.converter) {
-						let valueName = fieldManager.converter.convertFrom(this.shift[f]);
-						value = fieldManager.values.indexOf(valueName);
-						}
-					} else {
-						value = this.shift[f];
-					}
+					let fieldManager = this.valueManager[f] || {};
 
 					fields.push({
 						label,
-						value,
-						inputType,
-						values,
+						inputType: fieldManager.inputType,
+						values: fieldManager.values,
 						fieldName: f,
 					});
 				}
 				return fields;
 			},
-			fieldLabels() {
-				const values = {}
-				this.viewModel.annotatedFields.forEach((f) => values[f] = this.viewModel.getFieldLabel(f));
-				return values;
-			},
-			formValues() {
-				const values = {};
-				for (var f in this.shift) {
-					let fieldManager = this.valueManager[f];
-					if (fieldManager && fieldManager.converter) {
-						let valueName = fieldManager.converter.convertFrom(this.shift[f]);
-						values[f] = fieldManager.values.indexOf(valueName);
-					} else {
-						values[f] = this.shift[f];
-					}
-				}
-
-				return values;
-			},
 		},
 		methods: {
-			announce() {
-				console.log(JSON.stringify(this.shift));
-			},
-			onDateTimeSelected($event, fieldName) {
-				this.shift[fieldName] = $event.value;
-			},
-			onSelectedIndexChange({value}, field, index) {
-				if (!value) { return; }
-				const fieldManager = this.valueManager[field];
-				const valueName = fieldManager.values[index];
-				this.shift[field] = fieldManager.converter.convertTo(valueName);
-				this.announce();
-			},
-			submitForm() {
-				ApiService.submitShift(this.shift).then(() => {
-					alert('Successfully saved!').then(() => {
-						this.$emit('back');
-					})
+			submitForm(e) {
+				e.preventDefault && e.preventDefault();
+				console.log('submitting shift: ', this.shift);
+				ApiService.submitShift(this.shift).then(async () => {
+					await alert('Successfully saved!');
+					this.$emit('back');
 				}).catch((error) => {
 					console.log(error);
 				})

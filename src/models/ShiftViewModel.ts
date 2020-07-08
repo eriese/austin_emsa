@@ -1,4 +1,4 @@
-import {BooleanValueConverter, IndexValueConverter, IntegerValueConverter, SimpleConverter} from './ValueConverters';
+import {BooleanValueConverter, IndexValueConverter, IntegerValueConverter, SimpleConverter} from '../services/ValueConverters';
 import Shift, {IShift} from './Shift';
 
 export default class ShiftViewModel{
@@ -143,11 +143,11 @@ export default class ShiftViewModel{
 			case 'tradePreference':
 				return 'Trade Preference';
 			case 'tradeDates':
-				return this.shift.tradePreference < 0 ? undefined : 'Trade Dates';
+				return this.shift && this.shift.tradePreference < 0 ? undefined : 'Trade Dates';
 			case 'notes':
 				return 'Notes';
 			case 'shiftLetter':
-				return 'A, B, C, or D?';
+				return this.shift && this.shift.isOffering ? 'A, B, C, or D?' : undefined;
 			case 'timeFrame':
 				return '12, 24, or Other?';
 		}

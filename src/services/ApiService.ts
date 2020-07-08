@@ -1,21 +1,53 @@
 import axios, {AxiosError} from 'axios';
 
-import {JsonSnakeToCamel, JsonCamelToSnake} from '../utils';
-import Shift, {ShiftFilterSet} from './Shift';
-import AuthChecker from './authChecker';
+import {snakeToCamel, camelToSnake, JsonSnakeToCamel} from '../utils';
+import Shift from '../models/Shift';
+import ShiftFilterSet from '../models/ShiftFilterSet';
+import AuthChecker from './AuthChecker';
+import {dateFormat} from '@vuejs-community/vue-filter-date-format';
+import Qs from 'qs';
 
-// const baseURL = 'http://back.austin_emsa.org:3000';
-const baseURL = 'https://cryptic-brook-18592.herokuapp.com';
+let baseURL = 'https://cryptic-brook-18592.herokuapp.com';
+
+// if (process.env.VUE_APP_MODE == 'web') {
+// 	baseURL = 'http://back.austin_emsa.org:3000'
+// }
+
+function serializeDate(d: Date) {
+	const zone = d.getTimezoneOffset() / 60;
+	const offsetMarker = zone < 0 ? '+' : '-';
+	return `${dateFormat(d, 'YYYY-MM-DDTHH:mm:ss')}${offsetMarker}${Math.abs(zone)}00`
+}
+
+function paramsSerializer(params: object) {
+	return Qs.stringify(params, {
+		arrayFormat: 'brackets',
+		serializeDate,
+		encoder: (str, defaultEncoder, charset, type) => {
+			if (type == 'key') {
+				str = camelToSnake(str);
+			}
+
+			return defaultEncoder(str, defaultEncoder, charset);
+		}
+	})
+}
 
 const api = axios.create({
 	baseURL,
 	withCredentials: true,
+	transformRequest:[paramsSerializer],
+	paramsSerializer
 });
 
 let access_token: string;
 // let refresh_token: string;
 
 function getAuthHeaders(token?: string) {
+	if (process.env.VUE_APP_MODE == 'web') {
+		return {};
+	}
+
 	return {
 		Authorization: `Bearer ${token || AuthChecker.getAuthToken()}`
 	};
@@ -46,7 +78,8 @@ const ApiService = {
 		return new Promise((resolve, reject) => {
 			api.post('/oauth/token', {
 				...user,
-				grant_type: 'password'
+				grant_type: 'password',
+				scope: process.env.VUE_APP_MODE
 			}).then(response => {
 				access_token = response.data.access_token;
 				// refresh_token = response.data.refresh_token;
@@ -58,7 +91,7 @@ const ApiService = {
 	},
 	getShifts(filters: ShiftFilterSet, callback?: Function, onError?: Function) {
 		return api.get('/shifts', {
-			params: JsonCamelToSnake(filters),
+			params: filters,
 			headers: getAuthHeaders(),
 		}).then((response) => {
 			const convertedList = JsonSnakeToCamel(response.data).sort((a: Shift, b: Shift) => {
@@ -78,15 +111,32 @@ const ApiService = {
 	},
 	submitShift(shift: Shift) {
 		return api.post('/shifts', {
-			shift: JsonCamelToSnake(shift),
+			shift,
 		}, {
 			headers: getAuthHeaders()
 		})
+	},
+	getShift(shiftID: number) {
+		return new Promise((resolve, reject) => {
+			api.get(`/shifts/${shiftID}`).then((response) => {
+				resolve(response.data);
+			}).catch(reject);
+		});
 	},
 	deleteShift(shift: Shift) {
 		return api.delete(`/shifts/${shift.id}`, {
 			headers: getAuthHeaders()
 		})
+	},
+	testToken(): Promise<boolean> {
+		return new Promise((resolve, reject) => {
+			const token = AuthChecker.getAuthToken();
+			if (!token) {resolve(false);}
+
+			api.get('/oauth/token/info', {
+				headers: getAuthHeaders()
+			}).then(() => resolve(true)).catch(() => resolve(false));
+		});
 	}
 };
 

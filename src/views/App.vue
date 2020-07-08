@@ -1,171 +1,172 @@
 <template>
 	<Page class="emsa-root" actionBarHidden="true">
-		<GridLayout rows="*, auto" v-if="isAuthed">
-			<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" ref="page" row="0"/>
+		<GridLayout rows="*, auto">
+			<component :is="views[currentRoute]" v-on="currentPageListeners" class="emsa-page" ref="page" row="0"/>
 			<FlexboxLayout class="emsa-menu" row="1">
-				<Button class="emsa-menu__item text-center" col="0" text="Post a Shift" @tap="tabSelect(0)" :class="{'emsa-menu__item--is-selected': selectedTab==0}" flexGrow="1"/>
-				<Button class="emsa-menu__item text-center" col="1" text="Find a shift" @tap="tabSelect(1)" :class="{'emsa-menu__item--is-selected': selectedTab==1}" flexGrow="1"/>
-				<Button class="emsa-menu__item text-center" col="2" text="My Posts" @tap="tabSelect(2)" :class="{'emsa-menu__item--is-selected': selectedTab==2}" flexGrow="1"/>
+				<Button class="emsa-menu__item text-center" v-for="(tab, $index) in menuTabs" :text="tab.title" @tap="tab.action" :class="{'emsa-menu__item--is-selected': tab.isSelected}" :key="$index" flexGrow="1"/>
 			</FlexboxLayout>
 		</GridLayout>
-		<Login v-else v-on="currentPageListeners" ref="page" />
 	</Page>
 </template>
 
 <template web>
-	<component :is="currentPage" v-bind="currentPageProps" v-on="currentPageListeners" class="emsa-page" />
+	<div class="emsa-root">
+		<header>
+			<nav>
+				<ul class="emsa-menu">
+					<li v-for="(tab, $index) in menuTabs" :key="$index" class="emsa-menu__item" :class="{'emsa-menu__item--is-selected': tab.isSelected}">
+						<router-link :to="tab.route">{{tab.title}}</router-link>
+					</li>
+				</ul>
+			</nav>
+		</header>
+		<main>
+			<router-view class="emsa-page" v-on="currentPageListeners"/>
+		</main>
+		<dialogs-wrapper/>
+	</div>
 </template>
 
 <script>
-import ShiftForm from './ShiftForm';
-import ShiftList from './ShiftList';
-import ShiftView from './ShiftView';
-import Login from './Login';
-import UserView from './UserView';
-import ApiService from '../components/ApiService';
-import AuthChecker from '../components/authChecker';
+import Views from './Views';
+import AuthChecker from '../services/AuthChecker';
+import ApiService from '../services/ApiService';
 // import gsap from 'gsap';
-import {ShiftFilterSet} from '../components/Shift';
-
-const tabOrder = [ShiftForm, ShiftList, UserView];
+import Store from '../services/Store';
 
 export default {
-	components: {
-		ShiftForm,
-		ShiftList,
-		ShiftView,
-		Login,
-		UserView
-	},
 	data() {
-		return {
-			currentPage: null,
-			selectedShift: null,
-			selectedIndex: 0,
-			currentList: [],
-			currentFilters: {},
-			pageIsLoading: true,
-			prevPage: null,
-			selectedTab: 1,
+		const data = {
+			store: Store,
 		};
+
+		if (process.env.VUE_APP_MODE == 'native') {
+			data.currentPage = null;
+			data.prevPage = null;
+			data.views = Views;
+		}
+
+		return data;
 	},
 	computed: {
-		isAuthed() {
-			return this.currentPage != Login;
-		},
-		currentPageProps() {
-			switch(this.currentPage) {
-				case ShiftList:
-					return {
-						shifts: this.currentList,
-						filters: this.currentFilters,
-						scrollIndex: this.selectedIndex,
-						useFilters: true,
-					};
-				case ShiftView:
-					return {
-						shift: this.selectedShift,
-					}
-			}
-			return {};
+		currentRoute() {
+			return this.$route ? this.$route.name : this.currentPage && this.currentPage.name;
 		},
 		currentPageListeners() {
+			const backToList = () => this.setCurrentPage('ShiftList');
+
 			let listeners = {}
-			switch(this.currentPage) {
-				case ShiftList:
+			switch(this.currentRoute) {
+				case 'ShiftList':
 					listeners = {
 						shiftSelected: this.onShiftSelected,
 						listRequested: this.loadList,
 					};
 					break;
-				case UserView:
+				case 'UserView':
 					listeners = {
 						shiftSelected: this.onShiftSelected,
-						back: this.backToList,
-						logout: () => {
-							AuthChecker.logout();
-							this.currentFilters = new ShiftFilterSet();
-							this.setCurrentPage(Login);
-						},
+						back: backToList,
+						logout: this.logout,
 					};
 					break;
-				case Login:
+				case 'Login':
 					listeners = {
 						authSuccess: () => {
-							this.backToList();
-							this.loadList(this.currentFilters);
+							// this.loadList(this.store.currentFilters);
+							this.store.isAuthed = true;
+							backToList();
 						}
 					};
 					break;
-				case ShiftView:
+				case 'ShiftView':
 					listeners = {
-						back: !this.selectedShift.isUser ? this.backToList : () => this.setCurrentPage(UserView),
+						back: () => {
+							const listPage = this.store.selectedShift.isUser ? 'UserView' : 'ShiftList';
+							this.setCurrentPage(listPage)
+						}
 					}
 					break;
 				default:
 					listeners = {
-						back: this.backToList,
+						back: backToList,
 					};
 					break;
 			}
 
-			return {
-				...listeners,
-				pageMounted: () => {
-					this.pageIsLoading = false;
-				}
-			};
-		}
+			return listeners;
+		},
+		menuTabs() {
+			if (this.store.isAuthed) {
+				const curShift = this.store.selectedShift;
+				return [{
+					title: 'Post a Shift',
+					action: () => this.setCurrentPage('ShiftForm'),
+					isSelected: this.currentRoute == 'ShiftForm',
+					route: {name: 'ShiftForm'}
+				}, {
+					title: 'Find a Shift',
+					action: () => this.setCurrentPage('ShiftList'),
+					isSelected: this.currentRoute == 'ShiftList' || (curShift && !curShift.isUser),
+					route: {name: 'ShiftList'}
+				}, {
+					title: 'My Posts',
+					action: () => this.setCurrentPage('UserView'),
+					isSelected: this.currentRoute == 'UserView' || (curShift && curShift.isUser),
+					route: {name: 'UserView'}
+				}]
+			}
+
+			return [{
+				title: 'Returning User',
+				action: () => this.store.loginIndex = 0,
+				isSelected: this.store.loginIndex == 0,
+				route: {name: 'Login'}
+			}, {
+				title: 'New User',
+				action: () => this.store.loginIndex = 1,
+				isSelected: this.store.loginIndex == 1,
+				route: {name: 'Signup'}
+			}];
+		},
 	},
 	methods: {
 		saveState() {
-			if (!this.currentPage) {return;}
+			if (process.env.VUE_APP_MODE == 'web' || !this.currentRoute) {return;}
 
-			AuthChecker.saveState({
-				currentPage: this.currentPage.name,
-				selectedShift: this.selectedShift,
+			const state = {
+				currentPage: this.currentRoute,
+				selectedShift: this.store.selectedShift,
 				prevPage: this.prevPage && this.prevPage.name,
-				currentFilters: this.currentFilters,
-				currentList: this.currentList,
-			});
+				currentFilters: this.store.currentFilters,
+				currentList: this.store.currentList,
+			};
+
+			AuthChecker.saveState(state);
 		},
-		tabSelect(value) {
-			const page = tabOrder[value];
-			this.setCurrentPage(page);
-		},
-		getTabIndex() {
-			if (this.currentPage === Login) {
-				return;
+		setCurrentPage(pageName) {
+			if (process.env.VUE_APP_MODE == 'web') {
+				let query = pageName == 'ShiftList' ? this.store.currentFilters : {}
+				return this.$router.push({name: pageName, query});
 			}
 
-			let checkPage = this.currentPage;
-			if (checkPage === ShiftView) {
-				checkPage = this.selectedShift.isUser ? UserView : ShiftList;
-			}
-
-			console.log('checking tab order of ', checkPage.name);
-			let tabIndex = tabOrder.indexOf(checkPage);
-
-			if (tabIndex >= 0) {
-				this.selectedTab = tabIndex;
-			}
-		},
-		setCurrentPage(page) {
 			return new Promise((resolve) => {
+				const page = this.views[pageName];
 				if (!this.currentPage || page === this.currentPage) {
 					resolve();
 					return;
 				}
 
+				this.prevPage = this.currentPage;
+
 				const onComplete = () => {
 					this.currentPage = page;
-					this.getTabIndex();
+					if (page != this.views.ShiftView) {
+						this.store.selectedShift = null;
+					}
 					this.saveState();
 					resolve();
 				}
-
-				this.pageIsLoading = true;
-				this.prevPage = this.currentPage;
 				// const leaving = this.$refs.page.$el.nativeView;
 				// const direction = this.prevPage === Login || this.prevPage === ShiftList ? 'marginLeft' : 'marginRight';
 				// if (process.env.VUE_APP_PLATFORM == 'ios') {
@@ -178,79 +179,44 @@ export default {
 				// }
 			})
 		},
-		onShiftSelected(indexOrShift, isUser = false) {
-			if (isUser) {
-				this.selectedShift = indexOrShift;
-			} else {
-				this.selectedIndex = indexOrShift;
-				this.selectedShift = this.currentList[indexOrShift]
-			}
-			this.setCurrentPage(ShiftView);
-		},
-		backToList() {
-			this.setCurrentPage(ShiftList).then(() => {
-				this.selectedShift = undefined;
-				this.saveState();
-			});
+		onShiftSelected(shift) {
+			this.store.selectedShift = shift;
+			this.setCurrentPage('ShiftView');
 		},
 		loadList(newFilters, callback) {
-			this.currentFilters = newFilters;
+			if (!this.store.currentFilters.equals(newFilters)) {
+				this.store.currentFilters = newFilters;
+			}
 
-			return ApiService.getShifts(this.currentFilters, (newList) => {
-				this.currentList = newList.sort((a, b) => {
-					let diff = new Date(a.shiftDate) - new Date(b.shiftDate);
-					if (diff == 0) {
-						diff = new Date(a.shiftState) - new Date(b.shiftStart);
-					}
-
-					return diff;
-				});
-
-				this.saveState();
-				if (typeof callback == 'function') {
-					callback();
-				}
-			}, (error) => {
-				if (error.response.status == 401) {
-					this.setCurrentPage(Login);
-				}
-			});
+			this.store.loadList(callback);
+		},
+		logout() {
+			AuthChecker.logout();
+			this.store.isAuthed = false;
+			this.setCurrentPage('Login');
 		}
 	},
 	created() {
-		const state = AuthChecker.getState();
-		Object.assign(this, state);
-		this.currentFilters = new ShiftFilterSet(this.currentFilters);
+		this.store.onListError = this.logout;
+		this.store.saveStateMethod = this.saveState;
 
-		let currentPage;
-		switch(state.currentPage) {
-			case 'Login':
-				currentPage = Login;
-				break;
-			case 'ShiftForm':
-				currentPage = ShiftForm;
-				break;
-			case 'UserView':
-				currentPage = UserView;
-				break;
-			default:
-				if (state.selectedShift) {
-					currentPage = ShiftView;
-				} else {
-					currentPage = state.currentList ? ShiftList : {
-						template: '<Label/>'
-					};
+		if (process.env.VUE_APP_MODE == 'native') {
+			ApiService.testToken().then((isAuthed) => {
+				this.store.isAuthed = isAuthed
+			});
 
-					this.loadList(this.currentFilters, this.backToList);
-				}
+			const state = AuthChecker.getState();
+			this.store.reviveState(state);
+			const currentPage = state.currentPage || (this.store.isAuthed ? 'ShiftList' : 'Login');
+			this.currentPage = this.views[currentPage];
 		}
-
-		this.currentPage = currentPage;
-		this.getTabIndex();
 	}
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" web>
+@import 'reset-css';
+@import '../assets/css/fontawesome/fontawesome.min.css';
+@import '../assets/css/fontawesome/solid.min.css';
 @import '../app.scss';
 </style>

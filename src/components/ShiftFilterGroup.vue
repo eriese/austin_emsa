@@ -6,9 +6,20 @@
 		</WrapLayout>
 	</StackLayout>
 </template>
+<template web>
+	<fieldset class="filter-group">
+		<legend class="filter-group__group-label">{{label}}</legend>
+		<div class="filter-group__items">
+			<span v-for="(box, $index) in boxes" :key="box">
+				<input :id="`${filterKey}-${box}`" type="checkbox" :checked="checks[$index]" @change="updateValue($event, $index)">
+				<label :for="`${filterKey}-${box}`">{{box}}</label>
+			</span>
+		</div>
+	</fieldset>
+</template>
 
 <script>
-	import ShiftViewModel from './ShiftViewModel';
+	import ShiftViewModel from '../models/ShiftViewModel';
 
 	export default {
 		props: {
@@ -35,7 +46,7 @@
 		methods: {
 			updateValue($event, $index) {
 				const modelCopy = this.value.slice()
-				const newVal = $event.value;
+				const newVal = $event.target ? $event.target.checked : $event.value;
 				if (newVal == this.checks[$index]) { return; }
 
 				const valEquiv = this.converter.convertTo(this.boxes[$index]);
@@ -55,11 +66,15 @@
 
 <style lang="scss">
 .filter-group {
+	margin: 0.5rem 0.75rem;
 	margin: 3 10;
+	font-size: 1rem;
 	font-size: 16;
 
 	&__group-label {
+		margin-bottom: 0.25rem;
 		margin-bottom: -3;
+		font-size: 1.25rem;
 		font-size: 20;
 	}
 }

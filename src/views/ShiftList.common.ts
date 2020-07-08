@@ -1,21 +1,12 @@
-import Vue from 'vue';
-import Shift, {ShiftFilterSet} from '../components/Shift';
+import Shift from '../models/Shift';
+import ShiftFilterSet from '../models/ShiftFilterSet';
 import ShiftListItem from '../components/ShiftListItem.vue';
-import emsaPage from '../mixins/emsaPage';
+import EmsaPage from '../mixins/EmsaPage';
 
-export default Vue.extend({
-	mixins: [emsaPage],
+export default EmsaPage.extend({
+	name: 'ShiftList',
 	components: {
 		ShiftListItem
-	},
-	props: {
-		shifts: {
-			type: Array,
-			default: (): Shift[] => []
-		},
-		filters: Object,
-		scrollIndex: Number,
-		useFilters: Boolean,
 	},
 	data() {
 		return {
@@ -25,9 +16,9 @@ export default Vue.extend({
 	methods: {
 		getShifts(filters: ShiftFilterSet, showLoader: boolean = true, callback?: Function | undefined) {
 			this.dataIsLoading = showLoader;
-			this.$emit('listRequested', filters, () => {
+			this.store.currentFilters = filters;
+			this.store.loadList(() => {
 				this.dataIsLoading = false;
-
 				if (typeof callback == 'function') {
 					callback();
 				}
@@ -35,39 +26,44 @@ export default Vue.extend({
 		},
 		onPullToRefresh(eventObject: any) {
 			this.$nextTick(() => {
-				this.getShifts(this.filters, false, () => this.notifyPullToRefreshFinished(eventObject));
+				this.getShifts(this.store.currentFilters, false, () => this.notifyPullToRefreshFinished(eventObject));
 			})
 		},
 		showFiltersModal: async function() {
-			const oldFilterState: string = JSON.stringify(this.filters);
 			const options = {
 				props: {
-					filters: this.filters
+					filters: this.store.currentFilters
 				}
 			};
 
 			const filterResults = await this.showModal(options);
-			if (!filterResults) { return; }
-
-			const newFilterState = JSON.stringify(filterResults);
-			if (newFilterState != oldFilterState) {
-				this.getShifts(filterResults);
+			if (!filterResults || this.store.currentFilters.equals(filterResults)) {
+				return;
 			}
-		},
-		showShift(index: number) {
-			this.$emit('shiftSelected', index);
+
+			this.getShifts(filterResults);
+			this.onNewFilters(filterResults);
 		},
 		showModal(options: { props: any}): Promise<ShiftFilterSet | undefined> {
 			return new Promise((resolve) => resolve());
 		},
-		notifyPullToRefreshFinished(eventObject: any) {
-
-		},
-		scrollListToIndex(index: number) {}
+		onNewFilters(newFilters: ShiftFilterSet) {},
+		notifyPullToRefreshFinished(eventObject: any) {},
+		scrollListToIndex(index: number) {},
+		onScroll(scrollIndex: number) {
+			this.store.scrollIndex = scrollIndex;
+		}
 	},
 	mounted() {
-		this.$nextTick(() => {
-			this.scrollListToIndex(this.scrollIndex);
-		})
+		if (this.store.currentList.length === 0) {
+			this.getShifts(this.store.currentFilters, true, () => {
+				this.scrollListToIndex(this.store.scrollIndex);
+			});
+		}
+		else {
+			this.$nextTick(() => {
+				this.scrollListToIndex(this.store.scrollIndex);
+			})
+		}
 	}
 });

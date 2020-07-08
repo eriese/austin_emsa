@@ -1,6 +1,9 @@
-import {PropertyConverter} from 'nativescript-ui-dataform';
+interface PropertyConverter<T> {
+	convertFrom(val: T) : string | undefined;
+	convertTo(str: string) : T | undefined;
+}
 
-export class BooleanValueConverter implements PropertyConverter {
+export class BooleanValueConverter implements PropertyConverter<boolean> {
 	trueValue: string;
 	falseValue: string;
 
@@ -9,7 +12,7 @@ export class BooleanValueConverter implements PropertyConverter {
 		this.falseValue = values[1];
 	}
 
-	convertFrom(bool: any) {
+	convertFrom(bool: boolean) {
 		return bool ? this.trueValue : this.falseValue;
 	}
 
@@ -18,10 +21,10 @@ export class BooleanValueConverter implements PropertyConverter {
 	}
 }
 
-export class IndexValueConverter implements PropertyConverter {
+export class IndexValueConverter implements PropertyConverter<number> {
 	constructor(private values: Array<string>, private offset: number = 0, private notFound?: string) { }
 
-	convertFrom(num: any) {
+	convertFrom(num: number) {
 		return num - this.offset < 0 ? this.notFound : this.values[num - this.offset];
 	}
 
@@ -30,22 +33,22 @@ export class IndexValueConverter implements PropertyConverter {
 	}
 }
 
-export class IntegerValueConverter implements PropertyConverter {
+export class IntegerValueConverter implements PropertyConverter<number> {
 	constructor(private nanString: string) {}
 
-	convertFrom(num: any) {
+	convertFrom(num: number) {
 		return num < 0 ? this.nanString : num.toString();
 	}
 
 	convertTo(str: string) {
 		const num = parseInt(str);
-		return isNaN(num) ? this.nanString : num;
+		return isNaN(num) ? -1 : num;
 	}
 }
 
-export class SimpleConverter implements PropertyConverter {
+export class SimpleConverter implements PropertyConverter<any> {
 	convertFrom(str: any) {
-		return str.toString();
+		return str && str.toString();
 	}
 
 	convertTo(str: string) {

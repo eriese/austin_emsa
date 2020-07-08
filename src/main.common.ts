@@ -1,17 +1,12 @@
 import {VueConstructor} from 'vue';
 import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
-import {TNSFontIcon, fonticon} from 'nativescript-fonticon';
-
-
+import DateInput from './components/DateInput.vue';
+import ModalContainer from './components/ModalContainer.vue';
+import BackButton from './components/BackButton.vue';
 
 export default function commonSetup(Vue: VueConstructor) {
-	TNSFontIcon.debug = true;
-	TNSFontIcon.paths = {
-		'fa': './assets/css/fontawesome/fontawesome.min/css',
-		'fas': './assets/css/fontawesome/solid.min.css',
-	};
-	TNSFontIcon.loadCss();
-
 	Vue.use(VueFilterDateFormat);
-	Vue.filter('fonticon', fonticon);
+	Vue.component('DateInput', DateInput);
+	Vue.component('ModalContainer', ModalContainer);
+	Vue.component('BackButton', BackButton);
 }
