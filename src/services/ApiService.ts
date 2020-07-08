@@ -19,25 +19,6 @@ function serializeDate(d: Date) {
 	return `${dateFormat(d, 'YYYY-MM-DDTHH:mm:ss')}${offsetMarker}${Math.abs(zone)}00`
 }
 
-function seekDates(obj: {[key: string]: any}) {
-	if (typeof obj != 'object') {
-		return obj;
-	}
-
-	const newObj : {[key: string]: any} = {};
-	Object.keys(obj).forEach((k: string) => {
-		const kObj = obj[k];
-		const newKey = camelToSnake(k);
-		if (kObj instanceof Date) {
-			newObj[newKey] = serializeDate(kObj)
-		} else {
-			newObj[newKey] = seekDates(kObj);
-		}
-	})
-
-	return newObj;
-}
-
 function paramsSerializer(params: object) {
 	return Qs.stringify(params, {
 		arrayFormat: 'brackets',
