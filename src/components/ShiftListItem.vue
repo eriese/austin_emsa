@@ -19,7 +19,7 @@
 					<Label text={this.valueLabels.position} row="0" col="3" class="shift-item__position text-right"/>
 					<Label text={`${this.valueLabels.date} ${this.valueLabels.time}` } row="1" col="0" colSpan="4" class="shift-item__dates text-center"/>
 					<Label text={this.valueLabels.isField} row="2" col="0" class="shift-item__is-field"/>
-					<Label text={this.valueLabels.shiftLetter} row="2" col="1" class="shift-item__shift-letter text-center"/>
+					<Label text={this.displayedShift.isOffering ? this.valueLabels.shiftLetter : ''} row="2" col="1" class="shift-item__shift-letter text-center"/>
 					<Label text={this.valueLabels.timeFrame} row="2" col="2" class="shift-item__time-frame text-center"/>
 					<Label text={this.valueLabels.tradePreference} row="2" col="3" class="shift-item__trade-preference text-right"/>
 				</GridLayout>
@@ -33,7 +33,7 @@
 					<div class="shift-item__dates">{`${this.valueLabels.date} ${this.valueLabels.time}`}</div>
 					<div class="shift-item__bottom-row">
 						<span class="shift-item__is-field">{this.valueLabels.isField}</span>
-						<span className="shift-item__shift-letter">{this.valueLabels.shiftLetter}</span>
+						<span className="shift-item__shift-letter">{this.displayedShift.isOffering ? this.valueLabels.shiftLetter : ''}</span>
 						<span className="shift-item__time-frame">{this.valueLabels.timeFrame}</span>
 						<span class="shift-item__trade-preference">{this.valueLabels.tradePreference}</span>
 					</div>

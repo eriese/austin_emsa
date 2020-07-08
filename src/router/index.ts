@@ -3,7 +3,8 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Views from '../views/Views';
 import Store from '../services/Store';
 import ApiService from '../services/ApiService';
-import Shift, {ShiftFilterSet} from '../models/Shift';
+import Shift from '../models/Shift';
+import ShiftFilterSet from '../models/ShiftFilterSet';
 
 const routes: Array<RouteConfig> = [
 	{

@@ -1,4 +1,5 @@
-import Shift, {ShiftFilterSet, IShift} from '../models/Shift';
+import Shift, {IShift} from '../models/Shift';
+import ShiftFilterSet from '../models/ShiftFilterSet';
 import ApiService from './ApiService';
 import AuthChecker from './AuthChecker';
 import {AxiosError} from 'axios';
@@ -59,7 +60,7 @@ class Store {
 	}
 
 	set currentList(list: Shift[]) {
-		list.map((s: IShift) => new Shift(s));
+		list = list.map((s: IShift) => new Shift(s));
 		this.state.currentList = list.sort((a: Shift, b: Shift) => {
 			let diff = a.shiftDate.valueOf() - b.shiftDate.valueOf();
 			if (diff == 0) {

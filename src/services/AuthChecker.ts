@@ -3,7 +3,7 @@ import AuthChecker from './AuthChecker.common';
 const checker: AuthChecker = {
 	saveAuthToken() {},
 	getAuthToken() {
-		return '';
+		return 'token';
 	},
 	saveState() {},
 	getState() {},

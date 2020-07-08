@@ -1,15 +1,62 @@
 import axios, {AxiosError} from 'axios';
 
-import {JsonSnakeToCamel, JsonCamelToSnake} from '../utils';
-import Shift, {ShiftFilterSet} from '../models/Shift';
+import {snakeToCamel, camelToSnake, JsonSnakeToCamel} from '../utils';
+import Shift from '../models/Shift';
+import ShiftFilterSet from '../models/ShiftFilterSet';
 import AuthChecker from './AuthChecker';
+import {dateFormat} from '@vuejs-community/vue-filter-date-format';
+import Qs from 'qs';
 
-// const baseURL = process.env.VUE_APP_MODE == 'web' ? 'http://back.austin_emsa.org:3000' : 'https://cryptic-brook-18592.herokuapp.com';
-const baseURL = 'http://back.austin_emsa.org:3000'
+let baseURL = 'https://cryptic-brook-18592.herokuapp.com';
+
+// if (process.env.VUE_APP_MODE == 'web') {
+// 	baseURL = 'http://back.austin_emsa.org:3000'
+// }
+
+function serializeDate(d: Date) {
+	const zone = d.getTimezoneOffset() / 60;
+	const offsetMarker = zone < 0 ? '+' : '-';
+	return `${dateFormat(d, 'YYYY-MM-DDTHH:mm:ss')}${offsetMarker}${Math.abs(zone)}00`
+}
+
+function seekDates(obj: {[key: string]: any}) {
+	if (typeof obj != 'object') {
+		return obj;
+	}
+
+	const newObj : {[key: string]: any} = {};
+	Object.keys(obj).forEach((k: string) => {
+		const kObj = obj[k];
+		const newKey = camelToSnake(k);
+		if (kObj instanceof Date) {
+			newObj[newKey] = serializeDate(kObj)
+		} else {
+			newObj[newKey] = seekDates(kObj);
+		}
+	})
+
+	return newObj;
+}
+
+function paramsSerializer(params: object) {
+	return Qs.stringify(params, {
+		arrayFormat: 'brackets',
+		serializeDate,
+		encoder: (str, defaultEncoder, charset, type) => {
+			if (type == 'key') {
+				str = camelToSnake(str);
+			}
+
+			return defaultEncoder(str, defaultEncoder, charset);
+		}
+	})
+}
 
 const api = axios.create({
 	baseURL,
 	withCredentials: true,
+	transformRequest:[paramsSerializer],
+	paramsSerializer
 });
 
 let access_token: string;
@@ -63,7 +110,7 @@ const ApiService = {
 	},
 	getShifts(filters: ShiftFilterSet, callback?: Function, onError?: Function) {
 		return api.get('/shifts', {
-			params: JsonCamelToSnake(filters),
+			params: filters,
 			headers: getAuthHeaders(),
 		}).then((response) => {
 			const convertedList = JsonSnakeToCamel(response.data).sort((a: Shift, b: Shift) => {
@@ -83,7 +130,7 @@ const ApiService = {
 	},
 	submitShift(shift: Shift) {
 		return api.post('/shifts', {
-			shift: JsonCamelToSnake(shift),
+			shift,
 		}, {
 			headers: getAuthHeaders()
 		})

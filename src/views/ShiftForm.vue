@@ -98,11 +98,12 @@
 			},
 		},
 		methods: {
-			submitForm() {
-				ApiService.submitShift(this.shift).then(() => {
-					alert('Successfully saved!').then(() => {
-						this.$emit('back');
-					})
+			submitForm(e) {
+				e.preventDefault && e.preventDefault();
+				console.log('submitting shift: ', this.shift);
+				ApiService.submitShift(this.shift).then(async () => {
+					await alert('Successfully saved!');
+					this.$emit('back');
 				}).catch((error) => {
 					console.log(error);
 				})

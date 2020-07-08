@@ -44,7 +44,7 @@
 
 <script>
 	import ShiftFilterGroup from './ShiftFilterGroup';
-	import {ShiftFilterSet} from '../models/Shift';
+	import ShiftFilterSet from '../models/ShiftFilterSet';
 	import ShiftViewModel from '../models/ShiftViewModel';
 
 	export default {

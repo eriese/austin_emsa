@@ -1,4 +1,5 @@
-import Shift, {ShiftFilterSet} from '../models/Shift';
+import Shift from '../models/Shift';
+import ShiftFilterSet from '../models/ShiftFilterSet';
 import ShiftListItem from '../components/ShiftListItem.vue';
 import EmsaPage from '../mixins/EmsaPage';
 

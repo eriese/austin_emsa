@@ -16,7 +16,7 @@
 
 <template web>
 	<div class="side-padded">
-		<back-button :to="{name: displayedShift.isUser ? 'UserView' : 'ShiftList'}" />
+		<back-button :to="backPage" />
 		<h1 class="h1 text-center">{{valueLabels.isOffering}} Shift</h1>
 		<h2 class="h2 text-center">{{valueLabels.date}}</h2>
 		<h2 class="h2 text-center">{{valueLabels.time}}</h2>
@@ -28,7 +28,7 @@
 		</table>
 
 		<div class="text-center">
-			<button v-if="displayedShift.isUser" class="button cta" @tap="deletePost">Delete This Post</button>
+			<button v-if="displayedShift.isUser" class="button cta" @click="deletePost">Delete This Post</button>
 			<a v-else class="button cta" :href="shiftEmail">Email This Poster</a>
 		</div>
 	</div>
@@ -62,6 +62,9 @@ export default {
 		},
 		shiftEmail() {
 			return `mailto:${this.displayedShift.email}`
+		},
+		backPage() {
+			return {name: this.displayedShift.isUser ? 'UserView' : 'ShiftList'}
 		}
 	},
 	methods: {
@@ -72,10 +75,14 @@ export default {
 			this.openUrl(this.shiftEmail);
 		},
 		deletePost() {
-			ApiService.deleteShift(this.displayedShift).then(() => {
-				alert('Successfully deleted!').then(() => {
+			ApiService.deleteShift(this.displayedShift).then(async () => {
+				await alert('Successfully deleted!')
+
+				if (this.$router) {
+					this.$router.push(this.backPage);
+				} else {
 					this.$emit('back');
-				});
+				}
 			}).catch((error) => {
 				console.log(error);
 			})
