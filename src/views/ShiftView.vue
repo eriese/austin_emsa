@@ -72,7 +72,7 @@ export default {
 			this.$emit('back');
 		},
 		openEmail() {
-			this.openUrl(this.shiftEmail);
+			this.$root.openUrl(this.shiftEmail);
 		},
 		deletePost() {
 			ApiService.deleteShift(this.displayedShift).then(async () => {
