@@ -35,7 +35,7 @@ Vue.registerElement('CheckBox', () => require('@nstudio/nativescript-checkbox').
 Vue.component('CheckboxField', CheckboxField);
 Vue.component('TitleAndBackButton', TitleAndBackButton);
 
-TNSFontIcon.debug = true;
+// TNSFontIcon.debug = true;
 TNSFontIcon.paths = {
 	'fa': './assets/css/fontawesome/fontawesome.min/css',
 	'fas': './assets/css/fontawesome/solid.min.css',
