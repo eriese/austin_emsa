@@ -1,4 +1,4 @@
-import axios, {AxiosError} from 'axios';
+import axios, {AxiosError, AxiosResponse} from 'axios';
 
 import {snakeToCamel, camelToSnake, JsonSnakeToCamel} from '../utils';
 import Shift from '../models/Shift';
@@ -62,19 +62,14 @@ function handleError(rejector?: Function) {
 	}
 }
 const ApiService = {
-	signup(user: {email: string, password: string, password_confirmation: string}, callback?: Function) {
+	signup(user: {email: string, password: string, password_confirmation: string}) {
 		return new Promise((resolve, reject) => {
-			api.post('/signup', {
-				user
-			}).then(() => {
-				ApiService.login(user, () => {
-					callback && callback();
-					resolve();
-				}).catch(handleError(reject));
-			}).catch(handleError(reject))
+			api.post('/signup', { user })
+				.then(resolve)
+				.catch(handleError(reject))
 		})
 	},
-	login(user : {email: string, password: string}, callback?: Function) {
+	login(user : {email: string, password: string}) {
 		return new Promise((resolve, reject) => {
 			api.post('/oauth/token', {
 				...user,
@@ -84,7 +79,6 @@ const ApiService = {
 				access_token = response.data.access_token;
 				// refresh_token = response.data.refresh_token;
 				AuthChecker.saveAuthToken(access_token);
-				callback && callback();
 				resolve();
 			}).catch(handleError(reject))
 		})

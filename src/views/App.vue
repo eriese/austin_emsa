@@ -127,7 +127,7 @@ export default {
 			}, {
 				title: 'New User',
 				action: () => this.store.loginIndex = 1,
-				isSelected: this.store.loginIndex == 1,
+				isSelected: this.store.loginIndex > 0,
 				route: {name: 'Signup'}
 			}];
 		},

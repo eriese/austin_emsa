@@ -2,7 +2,8 @@
 	<form novalidate @submit="onSubmit" class="side-padded text-center login-form">
 		<img src="~/assets/images/logo.png" alt="Austin EMSA Logo">
 		<h1 class="h1">Shift Request</h1>
-		<div>
+		<div class="form__message text-center">{{formMessage}}</div>
+		<div v-if="store.loginIndex < 2">
 			<div class="form__error text-center">{{formError}}</div>
 			<div class="form-field">
 				<label class="form-field__label" for="email">Email</label>
@@ -19,7 +20,7 @@
 				<p class="form-field__error">{{fieldErrors.password_confirmation && `Password confrimation ${fieldErrors.password_confirmation[0]}` }}</p>
 				<input :type="showPassword ? 'text' : 'password'"  id="password_confirmation" v-model="user.password_confirmation" class="form-field__input">
 			</div>
-			<button class="button cta--is-close" @click="showPassword = !showPassword"> {{showPassword ? 'Hide Password' : 'Show Password'}} </button>
+			<button class="button cta--is-close" @click="showPassword = !showPassword" type="button"> {{showPassword ? 'Hide Password' : 'Show Password'}} </button>
 			<div class="form__submit">
 				<input type="submit" class="button" :value="isLogin ? 'Log In' : 'Sign Up'">
 			</div>
@@ -33,24 +34,27 @@
 			<Image src="~/assets/images/logo.png" height="125"/>
 			<Label text="Shift Request" textWrap="true" class="h1 text-center"/>
 			<Label :text="formError" textWrap="true" class="text-center form__error"/>
-			<StackLayout class="form-field">
-				<Label text="Email" class="form-field__label"/>
-				<Label class="form-field__error" :text="fieldErrors.email" />
-				<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input"/>
+			<Label :text="formMessage" textWrap="true" class="text-center form__message" />
+			<StackLayout v-if="store.loginIndex < 2">
+				<StackLayout class="form-field">
+					<Label text="Email" class="form-field__label"/>
+					<Label class="form-field__error" :text="fieldErrors.email" />
+					<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input"/>
+				</StackLayout>
+				<StackLayout class="form-field">
+					<Label text="Password" class="form-field__label"/>
+					<Label class="form-field__error" :text="fieldErrors.password" />
+					<TextField v-model="user.password" :secure="!showPassword" :returnKeyType="isLogin ? 'go' : 'next'" autoCapitalizationType="none" class="form-field__input" @returnPress="passwordReturnPress" ref="password"/>
+				</StackLayout>
+				<StackLayout class="form-field" v-if="!isLogin">
+					<Label text="Confirm Password" class="form-field__label"/>
+					<Label class="form-field__error" :text="fieldErrors.password_confirmation" />
+					<TextField v-model="user.password_confirmation" :secure="!showPassword" returnKeyType="go" autoCapitalizationType="none" class="form-field__input" @returnPress="onSubmit" ref="password_confirmation"/>
+				</StackLayout>
+				<Button horizontalAlignment="right" :text="showPassword ? 'Hide Password' : 'Show Password'" @tap="showPassword = !showPassword" class="button"/>
+				<Button :text="isLogin ? 'Log In' : 'Sign Up'" @tap="onSubmit" class="button"/>
+				<ActivityIndicator :busy="isSubmitting" />
 			</StackLayout>
-			<StackLayout class="form-field">
-				<Label text="Password" class="form-field__label"/>
-				<Label class="form-field__error" :text="fieldErrors.password" />
-				<TextField v-model="user.password" :secure="!showPassword" :returnKeyType="isLogin ? 'go' : 'next'" autoCapitalizationType="none" class="form-field__input" @returnPress="passwordReturnPress" ref="password"/>
-			</StackLayout>
-			<StackLayout class="form-field" v-if="!isLogin">
-				<Label text="Confirm Password" class="form-field__label"/>
-				<Label class="form-field__error" :text="fieldErrors.password_confirmation" />
-				<TextField v-model="user.password_confirmation" :secure="!showPassword" returnKeyType="go" autoCapitalizationType="none" class="form-field__input" @returnPress="onSubmit" ref="password_confirmation"/>
-			</StackLayout>
-			<Button horizontalAlignment="right" :text="showPassword ? 'Hide Password' : 'Show Password'" @tap="showPassword = !showPassword" class="button"/>
-			<Button :text="isLogin ? 'Log In' : 'Sign Up'" @tap="onSubmit" class="button"/>
-			<ActivityIndicator :busy="isSubmitting" />
 		</StackLayout>
 	</ScrollView>
 </template>
@@ -65,6 +69,7 @@ export default {
 	data() {
 		return {
 			formError: '',
+			formMessage: '',
 			fieldErrors: {},
 			isSubmitting: false,
 			user: {
@@ -86,24 +91,34 @@ export default {
 	methods: {
 		onSubmit(e) {
 			this.formError = '';
+			this.formMessage = '';
 			this.fieldErrors = {};
 			this.isSubmitting = true;
 			if (typeof e.preventDefault == 'function') {
 				e.preventDefault();
 			}
-			const serviceCall = this.isLogin ? ApiService.login : ApiService.signup
-			const vm = this;
-			serviceCall(this.user, () => {
-				vm.$emit('authSuccess');
-			}).catch(e => {
-				vm.isSubmitting = false;
-				const data = e.response.data;
-				if (data.error_description) {
-					vm.formError = data.error_description
-				} else {
-					vm.fieldErrors = data.errors
-				}
-			});
+
+			if (this.isLogin) {
+				ApiService.login(this.user)
+					.then(() => this.$emit('authSuccess'))
+					.catch(this.onSubmitError);
+			} else {
+				ApiService.signup(this.user)
+					.then(() => {
+						this.store.loginIndex = 2;
+						this.formMessage = 'You have signed up successfully but your account has not been approved by your administrator yet. We\'ll email you when it\'s time to come back and log in!'
+					})
+					.catch(this.onSubmitError);
+			}
+		},
+		onSubmitError(e) {
+			this.isSubmitting = false;
+			const data = e.response.data;
+			if (data.error_description) {
+				this.formError = data.error_description;
+			} else {
+				this.fieldErrors = data.errors;
+			}
 		}
 	}
 }
