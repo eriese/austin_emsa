@@ -2,7 +2,7 @@ import Shift, {IShift} from '../models/Shift';
 import ShiftFilterSet from '../models/ShiftFilterSet';
 import ApiService from './ApiService';
 import AuthChecker from './AuthChecker';
-import {AxiosError} from 'axios';
+import {AxiosError, AxiosResponse} from 'axios';
 
 class Store {
 	state: {
@@ -15,6 +15,7 @@ class Store {
 		currentPage?: string,
 		prevPage?: string,
 		isAuthed: boolean | null,
+		isAdmin: boolean
 	};
 
 	onListSuccess?: Function;
@@ -29,7 +30,8 @@ class Store {
 			userList: [],
 			loginIndex: 0,
 			currentFilters: new ShiftFilterSet(),
-			isAuthed: null
+			isAuthed: null,
+			isAdmin: false
 		}
 
 		if (process.env.VUE_APP_MODE == 'native') {
@@ -108,6 +110,21 @@ class Store {
 	set isAuthed(authed: boolean | null) {
 		this.state.isAuthed = authed;
 		this.saveState();
+	}
+
+	get isAdmin() { return this.state.isAdmin; }
+
+	async testToken() {
+		const tokenReponse : boolean | AxiosResponse = await ApiService.testToken();
+		if (tokenReponse === false) {
+			this.isAuthed = false;
+		} else {
+			this.state.isAuthed = true;
+			this.state.isAdmin = tokenReponse.data.admin;
+			this.saveState();
+		}
+
+		return this.isAuthed;
 	}
 
 	saveState() {

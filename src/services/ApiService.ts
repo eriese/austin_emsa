@@ -122,14 +122,14 @@ const ApiService = {
 			headers: getAuthHeaders()
 		})
 	},
-	testToken(): Promise<boolean> {
+	testToken(): Promise<false|AxiosResponse> {
 		return new Promise((resolve, reject) => {
 			const token = AuthChecker.getAuthToken();
 			if (!token) {resolve(false);}
 
 			api.get('/oauth/token/info', {
 				headers: getAuthHeaders()
-			}).then(() => resolve(true)).catch(() => resolve(false));
+			}).then((response) => resolve(response)).catch(() => resolve(false));
 		});
 	},
 	getAdminData() {

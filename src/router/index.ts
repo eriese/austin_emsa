@@ -91,8 +91,7 @@ const router = new VueRouter({
 router.beforeEach(async (toRoute, fromRoute, next) => {
 	let isAuthed = Store.isAuthed;
 	if (isAuthed === null) {
-		isAuthed = await ApiService.testToken();
-		Store.isAuthed = isAuthed;
+		isAuthed = await Store.testToken();
 	}
 
 	if (toRoute.matched.some(record => record.meta.requiresAuth == isAuthed)) {

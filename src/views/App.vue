@@ -30,7 +30,6 @@
 <script>
 import Views from './Views';
 import AuthChecker from '../services/AuthChecker';
-import ApiService from '../services/ApiService';
 // import gsap from 'gsap';
 import Store from '../services/Store';
 
@@ -203,9 +202,7 @@ export default {
 		this.store.saveStateMethod = this.saveState;
 
 		if (process.env.VUE_APP_MODE == 'native') {
-			ApiService.testToken().then((isAuthed) => {
-				this.store.isAuthed = isAuthed
-			});
+			this.store.testToken();
 
 			const state = AuthChecker.getState();
 			this.store.reviveState(state);
@@ -218,7 +215,10 @@ export default {
 
 <style lang="scss" web>
 @import 'reset-css';
+button {
+	font: unset;
+}
+@import '../app.scss';
 @import '../assets/css/fontawesome/fontawesome.min.css';
 @import '../assets/css/fontawesome/solid.min.css';
-@import '../app.scss';
 </style>

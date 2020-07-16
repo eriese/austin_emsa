@@ -21,7 +21,8 @@
 			<ShiftListItem v-for="(shift, $index) in shifts" :key="$index" :shift="shift" :is-user="true"/>
 		</ul>
 		<div class="text-center">
-			<button class="button" @click="$emit('logout')">Log Out</button>
+			<button class="button button__is-inline" @click="$emit('logout')" type="button">Log Out</button>
+			<router-link :to="{name: 'Admin'}" v-if="store.isAdmin" class="button button__is-inline">Admin Panel</router-link>
 		</div>
 	</div>
 </template>
