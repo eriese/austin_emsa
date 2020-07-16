@@ -5,6 +5,7 @@ import Store from '../services/Store';
 import ApiService from '../services/ApiService';
 import Shift from '../models/Shift';
 import ShiftFilterSet from '../models/ShiftFilterSet';
+import AdminPanel from '../views/AdminPanel.vue';
 
 const routes: Array<RouteConfig> = [
 	{
@@ -65,6 +66,12 @@ const routes: Array<RouteConfig> = [
 			Store.loginIndex = 1;
 			next();
 		}
+	},
+	{
+		path: '/admin',
+		name: 'Admin',
+		component: AdminPanel,
+		meta: {requiresAuth: true}
 	}
 ]
 

@@ -97,6 +97,8 @@ export default {
 			return listeners;
 		},
 		menuTabs() {
+			if (this.currentRoute == 'Admin') {return [];}
+
 			if (this.store.isAuthed) {
 				const curShift = this.store.selectedShift;
 				return [{

@@ -9,9 +9,9 @@ import Qs from 'qs';
 
 let baseURL = 'https://cryptic-brook-18592.herokuapp.com';
 
-// if (process.env.VUE_APP_MODE == 'web') {
-// 	baseURL = 'http://back.austin_emsa.org:3000'
-// }
+if (process.env.VUE_APP_MODE == 'web') {
+	baseURL = 'http://back.austin_emsa.org:3000'
+}
 
 function serializeDate(d: Date) {
 	const zone = d.getTimezoneOffset() / 60;
@@ -137,6 +137,14 @@ const ApiService = {
 				headers: getAuthHeaders()
 			}).then(() => resolve(true)).catch(() => resolve(false));
 		});
+	},
+	getAdminData() {
+		return api.get('/users')
+	},
+	approveUsers(userIDs: number[]) {
+		return api.post('/approve', {
+			user_ids: userIDs
+		})
 	}
 };
 
