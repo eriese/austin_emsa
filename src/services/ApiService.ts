@@ -132,14 +132,16 @@ const ApiService = {
 			}).then((response) => resolve(response)).catch(() => resolve(false));
 		});
 	},
-	getAdminData() {
-		return api.get('/users')
+	getAdminData(allUsers: boolean | undefined) {
+		return api.get('/users', {
+			params: {all: allUsers}
+		})
 	},
-	approveUsers(userIDs: number[]) {
-		return api.post('/approve', {
+	adminPost(propToSet: string, userIDs: number[]) {
+		return api.post(`/bulk_${propToSet}`, {
 			user_ids: userIDs
 		})
-	}
+	},
 };
 
 export default ApiService;

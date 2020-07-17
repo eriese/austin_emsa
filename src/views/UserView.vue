@@ -22,7 +22,7 @@
 		</ul>
 		<div class="text-center">
 			<button class="button button__is-inline" @click="$emit('logout')" type="button">Log Out</button>
-			<router-link :to="{name: 'Admin'}" v-if="store.isAdmin" class="button button__is-inline">Admin Panel</router-link>
+			<router-link :to="{name: 'AdminApproval'}" v-if="store.isAdmin" class="button button__is-inline">Admin Panel</router-link>
 		</div>
 	</div>
 </template>

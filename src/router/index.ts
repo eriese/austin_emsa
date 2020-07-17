@@ -12,25 +12,22 @@ const routes: Array<RouteConfig> = [
 		path: '/me',
 		name: 'UserView',
 		component: Views.UserView,
-		meta: {requiresAuth: true}
 	},
 	{
 		path: '/me/:id',
 		name: 'UserShiftView',
 		component: Views.ShiftView,
-		meta: {requiresAuth: true, isUser: true}
+		meta: {isUser: true}
 	},
 	{
 		path: '/shift/:id',
 		name: 'ShiftView',
 		component: Views.ShiftView,
-		meta: {requiresAuth: true},
 	},
 	{
 		path: '/shifts',
 		name: 'ShiftList',
 		component: Views.ShiftList,
-		meta: {requiresAuth: true},
 		beforeEnter(toRoute, fromRoute, next) {
 			if (Object.keys(toRoute.query).length === 0) {
 				next({name: 'ShiftList', query: Object.assign(toRoute.query, Store.currentFilters.asQuery())});
@@ -45,13 +42,13 @@ const routes: Array<RouteConfig> = [
 		path: '/shifts/new',
 		name: 'ShiftForm',
 		component: Views.ShiftForm,
-		meta: {requiresAuth: true}
+
 	},
 	{
 		path: '/login',
 		name: 'Login',
 		component: Views.Login,
-		meta: {requiresAuth: false},
+		meta: {skipAuth: true},
 		beforeEnter(toRoute, fromRoute, next) {
 			Store.loginIndex = 0;
 			next();
@@ -61,17 +58,27 @@ const routes: Array<RouteConfig> = [
 		path: '/signup',
 		name: 'Signup',
 		component: Views.Login,
-		meta: {requiresAuth: false},
+		meta: {skipAuth: true},
 		beforeEnter(toRoute, fromRoute, next) {
 			Store.loginIndex = 1;
 			next();
 		}
 	},
 	{
-		path: '/admin',
-		name: 'Admin',
+		path: '/admin/approve',
+		name: 'AdminApproval',
 		component: AdminPanel,
-		meta: {requiresAuth: true}
+		props: {
+			propName: 'approved'
+		}
+	},
+	{
+		path: '/admin/admins',
+		name: 'AdminManagement',
+		component: AdminPanel,
+		props: {
+			propName: 'admin'
+		}
 	}
 ]
 
@@ -94,7 +101,7 @@ router.beforeEach(async (toRoute, fromRoute, next) => {
 		isAuthed = await Store.testToken();
 	}
 
-	if (toRoute.matched.some(record => record.meta.requiresAuth == isAuthed)) {
+	if (toRoute.matched.some(record => !record.meta.skipAuth == isAuthed)) {
 		next();
 	} else if (!isAuthed) {
 		next({name: 'Login'});

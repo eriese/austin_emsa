@@ -96,7 +96,18 @@ export default {
 			return listeners;
 		},
 		menuTabs() {
-			if (this.currentRoute == 'Admin') {return [];}
+			if (this.currentRoute && this.currentRoute.includes('Admin')) {
+				return [{
+					title: 'Manage Admins',
+					route: {name: 'AdminManagement'},
+					isSelected: this.currentRoute == 'AdminManagement'
+				},
+				{
+					title: 'Approve Users',
+					route: {name: 'AdminApproval'},
+					isSelected: this.currentRoute == 'AdminApproval'
+				}];
+			}
 
 			if (this.store.isAuthed) {
 				const curShift = this.store.selectedShift;
