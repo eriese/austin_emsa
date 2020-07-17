@@ -5,7 +5,6 @@
 	"author": "Enoch Riese <enoch.riese@gmail.com>",
 	"scripts": {
 		"lint": "vue-cli-service lint",
-		"build": "npm run build:web",
 		"start": "node server.js",
 		"build:android": "npm run setup-webpack-config && tns build android --env.production --release && npm run remove-webpack-config",
 		"build:ios": "npm run setup-webpack-config && tns build ios --env.production --release && npm run remove-webpack-config && rm platforms/ios/austinemsa/app/App_Resources/Info.plist",
