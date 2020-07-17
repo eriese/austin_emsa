@@ -70,11 +70,15 @@ export default {
 					};
 					break;
 				case 'Login':
+				case 'AdminLogin':
 					listeners = {
-						authSuccess: () => {
-							// this.loadList(this.store.currentFilters);
+						authSuccess: (isAdmin) => {
 							this.store.isAuthed = true;
-							backToList();
+							if (isAdmin) {
+								this.setCurrentPage('AdminApproval')
+							} else {
+								backToList();
+							}
 						}
 					};
 					break;
@@ -97,6 +101,11 @@ export default {
 		},
 		menuTabs() {
 			if (this.currentRoute && this.currentRoute.includes('Admin')) {
+
+				if (this.currentRoute == 'AdminLogin') {
+					return [];
+				}
+
 				return [{
 					title: 'Manage Admins',
 					route: {name: 'AdminManagement'},

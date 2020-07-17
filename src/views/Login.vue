@@ -1,7 +1,7 @@
 <template web>
 	<form novalidate @submit="onSubmit" class="side-padded text-center login-form">
 		<img src="~/assets/images/logo.png" alt="Austin EMSA Logo">
-		<h1 class="h1">Shift Request</h1>
+		<h1 class="h1">Shift Request {{isAdmin ? 'Admin Panel' : ''}}</h1>
 		<div class="form__message text-center">{{formMessage}}</div>
 		<div v-if="store.loginIndex < 2">
 			<div class="form__error text-center">{{formError}}</div>
@@ -66,6 +66,9 @@ import EmsaPage from '../mixins/EmsaPage';
 export default {
 	name: 'Login',
 	mixins: [EmsaPage],
+	props: {
+		isAdmin: Boolean
+	},
 	data() {
 		return {
 			formError: '',
@@ -100,7 +103,7 @@ export default {
 
 			if (this.isLogin) {
 				ApiService.login(this.user)
-					.then(() => this.$emit('authSuccess'))
+					.then(() => this.$emit('authSuccess', this.isAdmin))
 					.catch(this.onSubmitError);
 			} else {
 				ApiService.signup(this.user)

@@ -65,6 +65,17 @@ const routes: Array<RouteConfig> = [
 		}
 	},
 	{
+		path: '/admin/login',
+		name: 'AdminLogin',
+		component: Views.Login,
+		meta: {skipAuth: true},
+		props: {isAdmin: true},
+		beforeEnter(toRoute, fromRoute, next) {
+			Store.loginIndex = 0;
+			next();
+		}
+	},
+	{
 		path: '/admin/approve',
 		name: 'AdminApproval',
 		component: AdminPanel,
@@ -101,12 +112,15 @@ router.beforeEach(async (toRoute, fromRoute, next) => {
 		isAuthed = await Store.testToken();
 	}
 
+	const isAdmin = toRoute.matched.some(record => record.name && record.name.includes('Admin'));
+
 	if (toRoute.matched.some(record => !record.meta.skipAuth == isAuthed)) {
 		next();
 	} else if (!isAuthed) {
-		next({name: 'Login'});
+		next({name: isAdmin ? 'AdminLogin': 'Login'});
 	} else {
-		next({name: 'ShiftList', query: Store.currentFilters.asQuery()});
+		const nextRoute = isAdmin ? {name: 'AdminApproval'} : {name: 'ShiftList', query: Store.currentFilters.asQuery()}
+		next(nextRoute);
 	}
 })
 

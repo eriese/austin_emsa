@@ -1,4 +1,4 @@
-<template>
+<template web>
 	<form @submit="submitUsers" v-if="users.length" class="users-form side-padded">
 		<back-button :to="{name: 'ShiftList'}" />
 		<h1 class="h1">{{title}}</h1>
@@ -212,6 +212,9 @@ export default {
 
 .table-sort {
 	padding: 0;
+	width: 100%;
+	text-align: inherit;
+	border-width: 0;
 
 	&__icon:before {
 		font-size: 1rem;
