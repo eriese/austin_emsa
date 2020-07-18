@@ -9,7 +9,7 @@ import Qs from 'qs';
 
 let baseURL = 'https://cryptic-brook-18592.herokuapp.com';
 
-if (process.env.VUE_APP_MODE == 'web') {
+if (process.env.VUE_APP_MODE == 'web' && process.env.NODE_ENV == 'development') {
 	baseURL = 'http://back.austin_emsa.org:3000'
 }
 
