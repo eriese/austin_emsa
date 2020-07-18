@@ -127,6 +127,20 @@ class Store {
 		return this.isAuthed;
 	}
 
+	logout() {
+		return new Promise((resolve) => {
+			ApiService.logout().then(() => {
+				AuthChecker.logout();
+				this.state.isAuthed = false;
+				this.clearState();
+				resolve(true);
+			}).catch((error) => {
+				console.log(error);
+				resolve(false);
+			});
+		})
+	}
+
 	saveState() {
 		this.saveStateMethod && this.saveStateMethod();
 	}

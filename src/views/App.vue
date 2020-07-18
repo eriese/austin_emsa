@@ -1,8 +1,9 @@
 <template>
 	<Page class="emsa-root" actionBarHidden="true">
-		<GridLayout rows="*, auto">
-			<component :is="views[currentRoute]" v-on="currentPageListeners" class="emsa-page" ref="page" row="0"/>
-			<FlexboxLayout class="emsa-menu" row="1">
+		<GridLayout rows="auto,*, auto">
+			<Label class="notification text-center" textWrap="true" :text="notification" row="0"/>
+			<component :is="views[currentRoute]" v-on="currentPageListeners" class="emsa-page" ref="page" row="1"/>
+			<FlexboxLayout class="emsa-menu" row="2">
 				<Button class="emsa-menu__item text-center" v-for="(tab, $index) in menuTabs" :text="tab.title" @tap="tab.action" :class="{'emsa-menu__item--is-selected': tab.isSelected}" :key="$index" flexGrow="1"/>
 			</FlexboxLayout>
 		</GridLayout>
@@ -21,6 +22,7 @@
 			</nav>
 		</header>
 		<main>
+			<div class="notification text-center">{{notification}}</div>
 			<router-view class="emsa-page" v-on="currentPageListeners"/>
 		</main>
 		<dialogs-wrapper/>
@@ -37,6 +39,7 @@ export default {
 	data() {
 		const data = {
 			store: Store,
+			notification: '',
 		};
 
 		if (process.env.VUE_APP_MODE == 'native') {
@@ -211,10 +214,18 @@ export default {
 
 			this.store.loadList(callback);
 		},
-		logout() {
-			AuthChecker.logout();
-			this.store.isAuthed = false;
-			this.setCurrentPage('Login');
+		logout: async function() {
+			const loggedOut = await this.store.logout();
+			if (loggedOut) {
+				this.store.isAuthed = false;
+				this.setCurrentPage('Login');
+			} else {
+				this.notify('Somehow we were unable to log you out. Please try again later');
+			}
+		},
+		notify(notification) {
+			this.notification = notification;
+			setTimeout(() => {this.notification = ''}, 60000);
 		}
 	},
 	created() {

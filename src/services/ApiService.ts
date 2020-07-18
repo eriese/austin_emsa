@@ -83,6 +83,9 @@ const ApiService = {
 			}).catch(handleError(reject))
 		})
 	},
+	logout() {
+		return api.post('/oauth/revoke');
+	},
 	getShifts(filters: ShiftFilterSet, callback?: Function, onError?: Function) {
 		return api.get('/shifts', {
 			params: filters,
@@ -123,7 +126,7 @@ const ApiService = {
 		})
 	},
 	testToken(): Promise<false|AxiosResponse> {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			const token = AuthChecker.getAuthToken();
 			if (!token) {resolve(false);}
 
