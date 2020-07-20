@@ -23,7 +23,7 @@
 		"setup-webpack-config": "node ./node_modules/vue-cli-plugin-nativescript-vue/lib/scripts/webpack-maintenance pre"
 	},
 	"dependencies": {
-		"@nativescript/core": "^6.5.10",
+		"@nativescript/core": "^6.5.11",
 		"@nativescript/theme": "^2.2.1",
 		"@nstudio/nativescript-checkbox": "^1.0.0",
 		"@types/qs": "^6.9.3",
@@ -32,9 +32,9 @@
 		"clean": "^4.0.2",
 		"core-js": "^3.6.5",
 		"express": "^4.17.1",
-		"gsap": "^3.4.0",
+		"gsap": "^3.4.1",
 		"nativescript-datetimepicker": "^1.2.2",
-		"nativescript-fonticon": "^2.0.1",
+		"nativescript-fonticon": "^2.0.2",
 		"nativescript-picker": "^2.1.2",
 		"nativescript-secure-storage": "^2.6.1",
 		"nativescript-socketio": "^3.3.1",
@@ -47,7 +47,7 @@
 		"qs": "^6.9.4",
 		"reset-css": "^5.0.1",
 		"serve-static": "^1.14.1",
-		"tns-core-modules": "^6.5.10",
+		"tns-core-modules": "^6.5.11",
 		"vue": "^2.6.11",
 		"vue-modal-dialogs": "^3.0.0",
 		"vue-router": "^3.2.0"
@@ -78,7 +78,7 @@
 		"node-sass": "^4.14.1",
 		"rimraf": "^2.6.3",
 		"string-replace-loader": "^2.2.0",
-		"tns-platform-declarations": "^6.5.10",
+		"tns-platform-declarations": "^6.5.11",
 		"typescript": "^3.9.6",
 		"vue-cli-plugin-nativescript-vue": "~0.3.1",
 		"vue-template-compiler": "^2.6.11"
