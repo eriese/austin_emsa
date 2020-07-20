@@ -56,7 +56,7 @@
 		"@babel/core": "^7.10.5",
 		"@babel/preset-env": "^7.10.4",
 		"@babel/traverse": "^7.10.5",
-		"@types/node": "^14.0.23",
+		"@types/node": "^14.0.24",
 		"@typescript-eslint/eslint-plugin": "^2.34.0",
 		"@typescript-eslint/parser": "^2.34.0",
 		"@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
