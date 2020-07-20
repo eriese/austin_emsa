@@ -7,7 +7,7 @@ import AuthChecker from './AuthChecker';
 import {dateFormat} from '@vuejs-community/vue-filter-date-format';
 import Qs from 'qs';
 
-let baseURL = 'https://emsa-shift-request.herokuapp.com';
+let baseURL = 'https://emsa-shift-request-backend.herokuapp.com';
 
 if (process.env.VUE_APP_MODE == 'web' && process.env.NODE_ENV == 'development') {
 	baseURL = 'http://back.austin_emsa.org:3000'
