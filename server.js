@@ -7,6 +7,18 @@ const app = express()
 //here we are configuring dist to serve app files
 app.use('/', serveStatic(path.join(__dirname, '/dist')))
 
+app.use((req, res, next) => {
+		if (process.env.NODE_ENV === 'production') {
+				// if (req.headers.host === 'your-app.herokuapp.com')
+				//     return res.redirect(301, 'https://www.your-custom-domain.com');
+				if (req.headers['x-forwarded-proto'] !== 'https') {
+					return res.redirect('https://' + req.headers.host + req.url);
+				}
+		}
+
+		return next();
+});
+
 app.get('/privacy', function(req, res) {
 	res.sendFile(path.join(__dirname, '/public/privacy.html'))
 })
