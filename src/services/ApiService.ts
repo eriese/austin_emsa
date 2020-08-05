@@ -9,8 +9,8 @@ import Qs from 'qs';
 
 let baseURL = 'https://emsa-shift-request-backend.herokuapp.com';
 
-if (process.env.VUE_APP_MODE == 'web' && process.env.NODE_ENV == 'development') {
-	baseURL = 'http://back.austin_emsa.org:3000'
+if (process.env.NODE_ENV == 'development') {
+	baseURL = process.env.VUE_APP_MODE == 'web' ? 'http://back.austin_emsa.org:3000' : 'https://cryptic-brook-18592.herokuapp.com/'
 }
 
 function serializeDate(d: Date) {
