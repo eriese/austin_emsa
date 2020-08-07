@@ -1,12 +1,12 @@
 {
-	"name": "austin_emsa_2",
+	"name": "austin_emsa",
 	"version": "1.0.0",
 	"description": "An application to help EMTs swap shifts",
 	"author": "Enoch Riese <enoch.riese@gmail.com>",
 	"scripts": {
 		"lint": "vue-cli-service lint",
 		"start": "node server.js",
-		"build:android": "npm run setup-webpack-config && tns build android --env.production --release && npm run remove-webpack-config",
+		"build:android": "npm run setup-webpack-config && tns build android --env.production --release --aab && npm run remove-webpack-config",
 		"build:ios": "npm run setup-webpack-config && tns prepare ios --env.production --release && npm run remove-webpack-config",
 		"build:web": "vue-cli-service build --mode production.web",
 		"clean:android": "rimraf platforms/android",
