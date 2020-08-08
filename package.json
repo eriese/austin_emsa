@@ -3,6 +3,9 @@
 	"version": "1.0.0",
 	"description": "An application to help EMTs swap shifts",
 	"author": "Enoch Riese <enoch.riese@gmail.com>",
+	"engines": {
+		"node": "14.x"
+	},
 	"scripts": {
 		"lint": "vue-cli-service lint",
 		"start": "node server.js",
