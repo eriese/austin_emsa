@@ -77,6 +77,7 @@
 		"babel-loader": "^8.0.6",
 		"eslint": "^6.8.0",
 		"eslint-plugin-vue": "^6.2.2",
+		"nativescript": "^6.8.0",
 		"nativescript-dev-webpack": "^1.5.1",
 		"nativescript-vue-devtools": "^1.4.0",
 		"nativescript-vue-template-compiler": "^2.7.0",
