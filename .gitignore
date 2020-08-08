@@ -25,3 +25,6 @@ pnpm-debug.log*
 hooks
 platforms
 webpack.config.js
+
+# Keystores
+*.keystore*
