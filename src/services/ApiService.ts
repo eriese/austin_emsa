@@ -7,11 +7,7 @@ import AuthChecker from './AuthChecker';
 import {dateFormat} from '@vuejs-community/vue-filter-date-format';
 import Qs from 'qs';
 
-let baseURL = process.env.API_URL;
-
-if (process.env.NODE_ENV == 'development') {
-	baseURL = 'https://cryptic-brook-18592.herokuapp.com/'
-}
+let baseURL = process.env.VUE_APP_API_URL || 'https://emsa-shift-request-backend.herokuapp.com';
 
 function serializeDate(d: Date) {
 	const zone = d.getTimezoneOffset() / 60;
