@@ -118,6 +118,11 @@ export default {
 					title: 'Approve Users',
 					route: {name: 'AdminApproval'},
 					isSelected: this.currentRoute == 'AdminApproval'
+				},
+				{
+					title: 'App Codes',
+					route: {name: 'AdminCodes'},
+					isSelected: this.currentRoute == 'AdminCodes'
 				}];
 			}
 

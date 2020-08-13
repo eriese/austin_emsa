@@ -141,6 +141,18 @@ const ApiService = {
 			user_ids: userIDs
 		})
 	},
+	getCodesCount() {
+		return new Promise((resolve, reject) => {
+			api.get('/codes/count').then((response) => {
+				resolve(response.data)
+			}).catch(reject);
+		});
+	},
+	submitCodes(codeList: string[]) {
+		return api.post('/codes/upload', {
+			codes: codeList
+		})
+	}
 };
 
 export default ApiService;

@@ -6,6 +6,7 @@ import ApiService from '../services/ApiService';
 import Shift from '../models/Shift';
 import ShiftFilterSet from '../models/ShiftFilterSet';
 import AdminPanel from '../views/AdminPanel.vue';
+import CodeUploader from '../views/CodeUploader.vue';
 
 const routes: Array<RouteConfig> = [
 	{
@@ -90,6 +91,11 @@ const routes: Array<RouteConfig> = [
 		props: {
 			propName: 'admin'
 		}
+	},
+	{
+		path: '/admin/codes',
+		name: 'AdminCodes',
+		component: CodeUploader
 	}
 ]
 
