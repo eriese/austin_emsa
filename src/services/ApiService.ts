@@ -152,6 +152,12 @@ const ApiService = {
 		return api.post('/codes/upload', {
 			codes: codeList
 		})
+	},
+	getUserCodes(){
+		return api.get('/codes');
+	},
+	requestCode() {
+		return api.post('/codes');
 	}
 };
 

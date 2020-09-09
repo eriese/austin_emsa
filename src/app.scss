@@ -102,11 +102,28 @@ Page, .ns-modal, html {
 	.h2 {
 		font-size: 1.5rem;
 		font-size: 24;
+		margin: 0.7s5rem 0rem;
+		margin: 10 0;
+	}
+
+	.p {
+		margin: 0.5rem 0rem;
+		margin: 10 0;
 	}
 
 	.side-padded {
 		padding: 0 1rem;
 		padding: 0 10;
+	}
+
+	.link {
+		color: var(--emsa-red);
+		text-decoration: underline;
+		cursor: pointer;
+
+		&:hover {
+			font-weight: bold;
+		}
 	}
 
 	.button {
@@ -220,11 +237,29 @@ Page, .ns-modal, html {
 		&__error {
 			color: var(--emsa-red);
 		}
+
+		&__desc {
+			color: var(--highlight);
+			font-size: 0.85rem;
+			font-size: 10;
+		}
 	}
 
 	.fas {
 		font-family: "Font Awesome 5 Free", fa-solid-900;
 		font-weight: 900;
+	}
+
+	.plain-list {
+		margin-bottom: 1rem;
+		margin-bottom: 15;
+		li {
+			border-bottom: 1px solid var(--highlight);
+			border-bottom-width: 1;
+			border-color: var(--highlight);
+			padding-top: 0.5rem;
+			padding-top: 10;
+		}
 	}
 
 	header {

@@ -20,6 +20,11 @@
 				<p class="form-field__error">{{fieldErrors.password_confirmation && `Password confrimation ${fieldErrors.password_confirmation[0]}` }}</p>
 				<input :type="showPassword ? 'text' : 'password'"  id="password_confirmation" v-model="user.password_confirmation" class="form-field__input">
 			</div>
+			<div class="form-field" v-if="!isLogin">
+				<label for="app_code" class="form-field__label">App Code (optional)</label>
+				<p class="form-field__desc">You should have received an email from Austin EMSA with your personal app code. If you are signing up with the email address you use for your Austin EMSA membership, entering that code here will allow you to automatically be approved. If you're using a different email address or you don't have an app code, you will have to wait for administrator approval before you can use Shift Request.</p>
+				<input type="text" class="form-field__input" v-model="user.app_code">
+			</div>
 			<button class="button cta--is-close" @click="showPassword = !showPassword" type="button"> {{showPassword ? 'Hide Password' : 'Show Password'}} </button>
 			<div class="form__submit">
 				<input type="submit" class="button" :value="isLogin ? 'Log In' : 'Sign Up'">
@@ -49,7 +54,12 @@
 				<StackLayout class="form-field" v-if="!isLogin">
 					<Label text="Confirm Password" class="form-field__label"/>
 					<Label class="form-field__error" :text="fieldErrors.password_confirmation" />
-					<TextField v-model="user.password_confirmation" :secure="!showPassword" returnKeyType="go" autoCapitalizationType="none" class="form-field__input" @returnPress="onSubmit" ref="password_confirmation"/>
+					<TextField v-model="user.password_confirmation" :secure="!showPassword" returnKeyType="next" autoCapitalizationType="none" class="form-field__input" ref="password_confirmation"/>
+				</StackLayout>
+				<StackLayout class="form-field" v-if="!isLogin">
+					<Label class="form-field__label" text="App Code"/>
+					<Label class="form-field__desc" text="You should have received an email from Austin EMSA with your personal app code. If you are signing up with the email address you use for your Austin EMSA membership, entering that code here will allow you to automatically be approved. If you're using a different email address or you don't have an app code, you will have to wait for administrator approval before you can use Shift Request."/>
+					<TextField v-model="user.app_code" returnKeyType="go" class="form-field__input" @returnPress="onSubmit" autoCapitalizationType="allCharacters"/>
 				</StackLayout>
 				<Button horizontalAlignment="right" :text="showPassword ? 'Hide Password' : 'Show Password'" @tap="showPassword = !showPassword" class="button"/>
 				<Button :text="isLogin ? 'Log In' : 'Sign Up'" @tap="onSubmit" class="button"/>
@@ -78,7 +88,8 @@ export default {
 			user: {
 				email: '',
 				password: '',
-				password_confirmation: ''
+				password_confirmation: '',
+				app_code: ''
 			},
 			showPassword: false
 		}
@@ -107,9 +118,17 @@ export default {
 					.catch(this.onSubmitError);
 			} else {
 				ApiService.signup(this.user)
-					.then(() => {
-						this.store.loginIndex = 2;
-						this.formMessage = 'You have signed up successfully but your account has not been approved by your administrator yet. We\'ll email you when it\'s time to come back and log in!'
+					.then((response) => {
+						if (response.data.approved) {
+							ApiService.login(this.user)
+								.then(() => this.$emit('authSuccess', this.isAdmin))
+								.catch(() => {
+									this.formMessage = 'You have successfully signed up but we had a problem logging you in. Please try again from the login page.'
+								})
+						} else {
+							this.store.loginIndex = 2;
+							this.formMessage = 'You have signed up successfully but your account has not been approved by your administrator yet. We\'ll email you when it\'s time to come back and log in!'
+						}
 					})
 					.catch(this.onSubmitError);
 			}

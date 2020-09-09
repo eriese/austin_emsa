@@ -74,6 +74,7 @@ export default {
 					break;
 				case 'Login':
 				case 'AdminLogin':
+				case 'Signup':
 					listeners = {
 						authSuccess: (isAdmin) => {
 							this.store.isAuthed = true;
@@ -139,7 +140,7 @@ export default {
 					isSelected: this.currentRoute == 'ShiftList' || (curShift && !curShift.isUser),
 					route: {name: 'ShiftList'}
 				}, {
-					title: 'My Posts',
+					title: 'My Account',
 					action: () => this.setCurrentPage('UserView'),
 					isSelected: this.currentRoute == 'UserView' || (curShift && curShift.isUser),
 					route: {name: 'UserView'}
