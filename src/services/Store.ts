@@ -115,6 +115,7 @@ class Store {
 	get isAdmin() { return this.state.isAdmin; }
 
 	async testToken() {
+		// TODO somehow this isn't always getting set properly
 		const tokenReponse : boolean | AxiosResponse = await ApiService.testToken();
 		if (tokenReponse === false) {
 			this.isAuthed = false;
