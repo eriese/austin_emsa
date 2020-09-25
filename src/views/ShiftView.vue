@@ -29,7 +29,7 @@
 
 		<div class="text-center">
 			<button v-if="displayedShift.isUser" class="button cta" @click="deletePost">Delete This Post</button>
-			<a v-else class="button cta" :href="shiftEmail">Email This Poster</a>
+			<a v-else class="button cta" :href="shiftEmail" target="_blank">Email This Poster</a>
 		</div>
 	</div>
 </template>
@@ -61,7 +61,7 @@ export default {
 			return this.store.selectedShift;
 		},
 		shiftEmail() {
-			return `mailto:${this.displayedShift.email}`
+			return `mailto:${this.displayedShift.email}?subject=Your%20Shift%20App%20Post&body=%0A%0A${this.store.state.config.email_warning}`
 		},
 		backPage() {
 			return {name: this.displayedShift.isUser ? 'UserView' : 'ShiftList'}

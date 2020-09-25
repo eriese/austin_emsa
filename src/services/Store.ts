@@ -15,7 +15,8 @@ class Store {
 		currentPage?: string,
 		prevPage?: string,
 		isAuthed: boolean | null,
-		isAdmin: boolean
+		isAdmin: boolean,
+		config: object
 	};
 
 	onListSuccess?: Function;
@@ -31,7 +32,8 @@ class Store {
 			loginIndex: 0,
 			currentFilters: new ShiftFilterSet(),
 			isAuthed: null,
-			isAdmin: false
+			isAdmin: false,
+			config: {}
 		}
 
 		if (process.env.VUE_APP_MODE == 'native') {
@@ -122,6 +124,7 @@ class Store {
 		} else {
 			this.state.isAuthed = true;
 			this.state.isAdmin = tokenReponse.data.admin;
+			this.state.config = tokenReponse.data.config || {};
 			this.saveState();
 		}
 
