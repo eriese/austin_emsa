@@ -1,4 +1,4 @@
-<template>
+<template web>
 	<div class="side-padded text-center">
 		<h1 class="h1">App Store Codes</h1>
 		<h2 class="h2">Codes remaining: {{numCodes}}</h2>
@@ -15,6 +15,8 @@
 		</form>
 	</div>
 </template>
+
+<template native></template>
 
 <script>
 import ApiService from '../services/ApiService';
