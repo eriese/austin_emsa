@@ -16,7 +16,7 @@ function serializeDate(d: Date) {
 }
 
 function paramsSerializer(params: object) {
-	const paramKeys = params ? Object.keys(params) : {};
+	const paramKeys = params ? Object.keys(params) : [];
 	return Qs.stringify(params, {
 		arrayFormat: 'brackets',
 		serializeDate,
