@@ -51,7 +51,7 @@
 		"reset-css": "^5.0.1",
 		"serve-static": "^1.14.1",
 		"tns-core-modules": "^6.5.20",
-		"vue": "^2.6.11",
+		"vue": "^2.6.12",
 		"vue-modal-dialogs": "^3.0.0",
 		"vue-router": "^3.2.0"
 	},
@@ -87,7 +87,7 @@
 		"tns-platform-declarations": "^6.5.15",
 		"typescript": "^3.9.7",
 		"vue-cli-plugin-nativescript-vue": "~0.3.1",
-		"vue-template-compiler": "^2.6.11"
+		"vue-template-compiler": "^2.6.12"
 	},
 	"eslintConfig": {
 		"root": true,
