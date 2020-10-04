@@ -1,16 +1,16 @@
 <template native>
-	<GridLayout rows="auto, *, auto">
+	<GridLayout rows="auto, auto, *, auto">
 		<TitleAndBackButton @backPressed="$emit('back')" row="0" text="My Account"/>
-		<Label class="h2 text-center" text="My Posts"/>
-		<Label textWrap="true" class="body text-center side-padded" v-if="shifts.length == 0" row="1" text="You don't have any open shift posts" verticalAlignment="top"/>
-		<StackLayout row="1" class="side-padded">
+		<Label class="h2 text-center" text="My Posts" row="1"/>
+		<Label textWrap="true" class="body text-center side-padded" v-if="shifts.length == 0" row="2" text="You don't have any open shift posts" verticalAlignment="top"/>
+		<StackLayout row="2" class="side-padded">
 			<RadListView v-if="shifts" ref="list" for="shift in shifts" pullToRefresh="true" @pullToRefreshInitiated="getShifts" @itemTap="showShift($event.index)">
 				<v-template>
 					<ShiftListItem :shift="shift" :key="$index"></ShiftListItem>
 				</v-template>
 			</RadListView>
 		</StackLayout>
-		<Button class="button" text="Log Out" row="2" @tap="$emit('logout')" marginBottom="0"/>
+		<Button class="button" text="Log Out" row="3" @tap="$emit('logout')" marginBottom="0"/>
 	</GridLayout>
 </template>
 
