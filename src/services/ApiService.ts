@@ -5,7 +5,7 @@ import Shift from '../models/Shift';
 import ShiftFilterSet from '../models/ShiftFilterSet';
 import AuthChecker from './AuthChecker';
 import {dateFormat} from '@vuejs-community/vue-filter-date-format';
-import Qs from 'qs';
+import Qs from '../../node_modules/qs';
 
 let baseURL = process.env.VUE_APP_API_URL || 'https://emsa-shift-request-backend.herokuapp.com';
 
@@ -16,12 +16,11 @@ function serializeDate(d: Date) {
 }
 
 function paramsSerializer(params: object) {
-	const paramKeys = params ? Object.keys(params) : [];
 	return Qs.stringify(params, {
 		arrayFormat: 'brackets',
 		serializeDate,
 		encoder: (str, defaultEncoder, charset, type) => {
-			if (type == 'key' || (type === undefined && paramKeys.includes(str.replace('[]', '')))) {
+			if (type == 'key') {
 				str = camelToSnake(str);
 			}
 
