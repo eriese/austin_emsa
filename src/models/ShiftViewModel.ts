@@ -147,7 +147,7 @@ export default class ShiftViewModel{
 			case 'notes':
 				return 'Notes';
 			case 'shiftLetter':
-				return this.shift && this.shift.isOffering ? 'A, B, C, or D?' : undefined;
+				return !this.shift || this.shift.isOffering ? 'A, B, C, or D?' : undefined;
 			case 'timeFrame':
 				return '12, 24, or Other?';
 		}
