@@ -7,7 +7,6 @@ import * as ModalDialogs from 'vue-modal-dialogs';
 import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css'
 
-
 CommonSetup(Vue);
 Vue.use(VueRouter);
 Vue.use(ModalDialogs)
