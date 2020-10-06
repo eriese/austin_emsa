@@ -26,7 +26,7 @@
 			<p class="p">(you need one of these to download the iOS app)</p>
 			<ul v-if="appCodes.length" class="plain-list">
 				<li v-for="code in appCodes" :key="code.id">
-					<a class="link" :href="`https://apps.apple.com/WebObjects/MZFinance.woa/wa/freeProductCodeWizard?code=${code.code}`">{{code.code}}</a>
+					<a class="link" :href="`itms-apps://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/freeProductCodeWizard?code=${code.code}`">{{code.code}}</a>
 				</li>
 			</ul>
 			<p class="p text-center" v-else>You don't have any app store codes</p>
