@@ -104,7 +104,9 @@
 		},
 		mounted() {
 			this.getShifts();
-			ApiService.getUserCodes().then((response) => this.appCodes = response.data);
+			if (process.env.VUE_APP_MODE == 'web') {
+				ApiService.getUserCodes().then((response) => this.appCodes = response.data);
+			}
 		}
 	}
 </script>
