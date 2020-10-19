@@ -80,7 +80,7 @@ const ApiService = {
 		})
 	},
 	logout() {
-		return api.post('/oauth/revoke');
+		return api.post('/oauth/revoke', {headers: getAuthHeaders()});
 	},
 	getConfig() {
 		return api.get('/shifts/config', {headers: getAuthHeaders()});
