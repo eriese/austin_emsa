@@ -6,7 +6,7 @@
 			<FlexboxLayout class="emsa-menu" row="2">
 				<Button class="emsa-menu__item text-center" v-for="(tab, $index) in menuTabs" :text="tab.title" @tap="tab.action" :class="{'emsa-menu__item--is-selected': tab.isSelected}" :key="$index" flexGrow="1"/>
 			</FlexboxLayout>
-			<Label class="version-code text-right" :text="`${$root.versionCode}`" row="3"/>
+			<Label class="version-code text-right" :text="`${$root.versionName}`" row="3"/>
 		</GridLayout>
 	</Page>
 </template>

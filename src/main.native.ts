@@ -56,7 +56,7 @@ Vue.config.silent = isProduction;
 new Vue({
 	data() {
 		return {
-			versionCode: appversion.getVersionCodeSync(),
+			versionName: appversion.getVersionNameSync(),
 		}
 	},
 	methods: {
