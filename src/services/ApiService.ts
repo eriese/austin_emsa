@@ -82,6 +82,9 @@ const ApiService = {
 	logout() {
 		return api.post('/oauth/revoke');
 	},
+	getConfig() {
+		return api.get('/shifts/config', {headers: getAuthHeaders()});
+	},
 	getShifts(filters: ShiftFilterSet, callback?: Function, onError?: Function) {
 		return api.get('/shifts', {
 			params: filters,

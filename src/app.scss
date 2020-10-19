@@ -42,6 +42,11 @@ Page, .ns-modal, html {
 	color: var(--color);
 }
 
+.version-code {
+	font-size: 10;
+	margin-right: 10;
+}
+
 .emsa-root, .ns-modal {
 	.emsa-menu {
 		font-weight: bold;
@@ -49,7 +54,6 @@ Page, .ns-modal, html {
 		border-bottom: 5px solid;
 		border-color: var(--emsa-blue);
 		font-size: 12;
-		margin-top: 10;
 		display: flex;
 		width: 100%;
 		padding-inline-start: 0;

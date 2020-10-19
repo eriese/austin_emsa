@@ -7,6 +7,7 @@ export default class ShiftViewModel{
 		'isField',
 		'position',
 		'isOcp',
+		'unitNumber',
 		'shiftDate',
 		'shiftLetter',
 		'timeFrame',
@@ -36,6 +37,8 @@ export default class ShiftViewModel{
 				return 'time';
 			case 'notes':
 				return 'textarea';
+			case 'unitNumber':
+				return 'number';
 			default:
 				return 'text';
 		}
@@ -59,6 +62,9 @@ export default class ShiftViewModel{
 				break;
 			case 'isOcp':
 				label = isOffering ? 'What type of shift are you offering?' : 'What type of shift are you looking for?';
+				break;
+			case 'unitNumber':
+				label = isOffering ? 'What unit is the shift with? (optional)' : undefined;
 				break;
 			case 'tradePreference':
 				label = 'Do you want a trade for this shift?';
@@ -140,6 +146,8 @@ export default class ShiftViewModel{
 				return 'Position';
 			case 'isOcp':
 				return 'Shift Type';
+			case 'unitNumber':
+				return !this.shift || this.shift.isOffering ? 'Unit' : undefined;
 			case 'tradePreference':
 				return 'Trade Preference';
 			case 'tradeDates':

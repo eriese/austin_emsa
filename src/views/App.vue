@@ -1,9 +1,10 @@
 <template>
 	<Page class="emsa-root" actionBarHidden="true">
-		<GridLayout rows="auto,*, auto">
+		<GridLayout rows="auto,*,auto,auto">
 			<Label class="notification text-center" textWrap="true" :text="notification" row="0"/>
 			<component :is="views[currentRoute]" v-on="currentPageListeners" class="emsa-page" ref="page" row="1"/>
-			<FlexboxLayout class="emsa-menu" row="2">
+			<Label class="version-code text-right" :text="`${$root.versionCode}`" row="2"/>
+			<FlexboxLayout class="emsa-menu" row="3">
 				<Button class="emsa-menu__item text-center" v-for="(tab, $index) in menuTabs" :text="tab.title" @tap="tab.action" :class="{'emsa-menu__item--is-selected': tab.isSelected}" :key="$index" flexGrow="1"/>
 			</FlexboxLayout>
 		</GridLayout>
@@ -81,6 +82,7 @@ export default {
 							if (isAdmin) {
 								this.setCurrentPage('AdminApproval')
 							} else {
+								this.store.getConfig();
 								backToList();
 							}
 						}
@@ -234,18 +236,20 @@ export default {
 			setTimeout(() => {this.notification = ''}, 60000);
 		}
 	},
-	created() {
+	created: async function() {
 		this.store.onListError = this.logout;
 		this.store.saveStateMethod = this.saveState;
 
 		if (process.env.VUE_APP_MODE == 'native') {
-			this.store.testToken();
-
+			await this.store.testToken();
 			const state = AuthChecker.getState();
 			this.store.reviveState(state);
-			const currentPage = state.currentPage || (this.store.isAuthed ? 'ShiftList' : 'Login');
+
+			const currentPage = this.store.isAuthed ? (state.currentPage || 'ShiftList') : 'Login';
 			this.currentPage = this.views[currentPage];
 		}
+
+		this.store.getConfig();
 	}
 }
 </script>

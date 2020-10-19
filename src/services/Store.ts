@@ -46,7 +46,7 @@ class Store {
 	}
 
 	set selectedShift(selectedShift: Shift | null) {
-		this.state.selectedShift = selectedShift;
+		this.state.selectedShift = selectedShift ? new Shift(selectedShift) : null;
 		this.saveState();
 	}
 
@@ -124,11 +124,22 @@ class Store {
 		} else {
 			this.state.isAuthed = true;
 			this.state.isAdmin = tokenReponse.data.admin;
-			this.state.config = tokenReponse.data.config || {};
 			this.saveState();
 		}
 
 		return this.isAuthed;
+	}
+
+	async getConfig() {
+		try {
+			const configResponse : AxiosResponse = await ApiService.getConfig();
+			this.state.config = configResponse.data;
+			this.saveState();
+			return true;
+		} catch (e) {
+			console.log(e);
+			return false;
+		}
 	}
 
 	logout() {

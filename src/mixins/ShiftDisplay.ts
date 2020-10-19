@@ -10,7 +10,6 @@ export default Vue.extend({
 				'isOffering',
 				'position',
 				'isOcp',
-				'isOffering',
 				'isField',
 				'tradePreference',
 				'shiftLetter',
@@ -25,7 +24,7 @@ export default Vue.extend({
 		dateString() : string {
 			if (this.dateFormatFilter === undefined) { return ''; }
 
-			const shiftDate = new Date(this.displayedShift.shiftDate);
+			const shiftDate = this.displayedShift.shiftDate;
 			const isThisYear = shiftDate.getFullYear() == new Date().getFullYear();
 			const formatString = isThisYear ? 'dddd, M/DD' : 'dddd, M/DD/YY';
 			return this.dateFormatFilter(shiftDate, formatString);
@@ -51,12 +50,14 @@ export default Vue.extend({
 
 			return labels;
 		},
-		displayedShift(): Shift {
+		givenShift() {
 			if (process.env.NODE_ENV != 'production') {
 				console.warn(this.$options.name, 'does not override displayedShift, which means that it cannot display shift information')
 			}
-
-			return new Shift();
+			return undefined;
+		},
+		displayedShift(): Shift {
+			return new Shift(this.givenShift);
 		},
 		viewModel() : ShiftViewModel {
 			return new ShiftViewModel(this.displayedShift);

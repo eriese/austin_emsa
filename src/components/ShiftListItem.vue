@@ -6,7 +6,7 @@
 		mixins: [ShiftDisplay],
 		props: ['shift', 'isUser'],
 		computed: {
-			displayedShift() {
+			givenShift() {
 				return this.shift;
 			}
 		},

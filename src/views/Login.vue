@@ -7,6 +7,7 @@
 			<div class="form__error text-center">{{formError}}</div>
 			<div class="form-field">
 				<label class="form-field__label" for="email">Email</label>
+				<p class="form-field__description" v-if="!isLogin">Reminder: Use your first.last@austintexas.gov email format</p>
 				<p class="form-field__error">{{fieldErrors.email && `Email ${fieldErrors.email[0]}` }}</p>
 				<input class="form-field__input" v-model="user.email" type="email" id="email" autocomplete="email" />
 			</div>
@@ -38,17 +39,18 @@
 			<StackLayout v-if="store.loginIndex < 2">
 				<StackLayout class="form-field">
 					<Label text="Email" class="form-field__label"/>
-					<Label class="form-field__error" :text="fieldErrors.email" />
+					<Label v-if="!isLogin" textWrap="true" text="Reminder: Use your first.last@austintexas.gov email format)" class="form-field__description" />
+					<Label class="form-field__error" v-if="fieldErrors.email" :text="fieldErrors.email" />
 					<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input"/>
 				</StackLayout>
 				<StackLayout class="form-field">
 					<Label text="Password" class="form-field__label"/>
-					<Label class="form-field__error" :text="fieldErrors.password" />
+					<Label class="form-field__error" v-if="fieldErrors.password" :text="fieldErrors.password" />
 					<TextField v-model="user.password" :secure="!showPassword" :returnKeyType="isLogin ? 'go' : 'next'" autoCapitalizationType="none" class="form-field__input" @returnPress="passwordReturnPress" ref="password"/>
 				</StackLayout>
 				<StackLayout class="form-field" v-if="!isLogin">
 					<Label text="Confirm Password" class="form-field__label"/>
-					<Label class="form-field__error" :text="fieldErrors.password_confirmation" />
+					<Label class="form-field__error" v-if="fieldErrors.password_confirmation" :text="fieldErrors.password_confirmation" />
 					<TextField v-model="user.password_confirmation" :secure="!showPassword" returnKeyType="go" @returnPress="onSubmit" autoCapitalizationType="none" class="form-field__input" ref="password_confirmation"/>
 				</StackLayout>
 				<Button horizontalAlignment="right" :text="showPassword ? 'Hide Password' : 'Show Password'" @tap="showPassword = !showPassword" class="button"/>

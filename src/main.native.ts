@@ -12,6 +12,8 @@ import PickerField from 'nativescript-picker/vue';
 import {openUrl} from 'tns-core-modules/utils/utils';
 import {TNSFontIcon, fonticon} from 'nativescript-fonticon';
 
+import * as appversion from 'nativescript-appversion';
+
 
 // import VueDevtools from 'nativescript-vue-devtools';
 
@@ -52,6 +54,11 @@ Vue.config.silent = isProduction;
 // }
 
 new Vue({
+	data() {
+		return {
+			versionCode: appversion.getVersionCodeSync(),
+		}
+	},
 	methods: {
 		openUrl: openUrl
 	},

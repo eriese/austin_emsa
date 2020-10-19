@@ -5,6 +5,7 @@
 			<Stacklayout v-for="f in fields" :key="f.fieldName" class="form-field">
 				<Label :text="f.label" class="form-field__label" textWrap="true"/>
 				<TextField v-if="f.inputType == 'text' || f.inputType == 'textarea'" v-model="shift[f.fieldName]"  class="form-field__input"/>
+				<TextField v-else-if="f.inputType == 'number'" v-model="shift[f.fieldName]" keyboardType="number" class="form-field__input" />
 				<WrapLayout v-else-if="f.inputType == 'radio'" class="form-field__input">
 					<CheckboxField v-for="(v, i) in f.values" :key="v.label" :class="[i == f.value ? 'form-field__input--is-selected' : 'form-field__input--is-unselected']" @checkedChange="shift[f.fieldName] = v.value" :checked="v.value == shift[f.fieldName]" :text="v.label" boxType="circle" :radio="true"/>
 				</WrapLayout>

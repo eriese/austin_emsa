@@ -34,6 +34,7 @@
 		"express": "^4.17.1",
 		"gsap": "^3.5.1",
 		"luxon": "^1.25.0",
+		"nativescript-appversion": "^1.4.4",
 		"nativescript-datetimepicker": "^1.2.3",
 		"nativescript-fonticon": "^2.0.2",
 		"nativescript-picker": "^2.1.2",

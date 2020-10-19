@@ -3,7 +3,8 @@ export interface IShift {
 	isField?: boolean;
 	position?: number;
 	isOcp?: boolean;
-	shiftDate?: Date;
+	unitNumber?: number | undefined;
+	shiftDate?: Date | string;
 	shiftLetter?: string;
 	timeFrame?: number;
 	shiftStart?: Date;
@@ -20,6 +21,7 @@ export interface ShiftLabelSet {
 	isField?: string,
 	position?: string,
 	isOcp?: string,
+	unitNumber?: string,
 	shiftDate?: string,
 	shiftLetter?: string,
 	timeFrame?: string,
@@ -38,6 +40,7 @@ export default class Shift implements IShift {
 	isField = true;
 	position = 0;
 	isOcp = false;
+	unitNumber = undefined;
 	shiftDate = new Date();
 	shiftLetter = 'A';
 	timeFrame = 12;
@@ -51,10 +54,22 @@ export default class Shift implements IShift {
 
 	constructor(shiftProps?: IShift) {
 		Object.assign(this, shiftProps);
-		this.shiftDate = new Date(this.shiftDate);
+		this.shiftDate = parseDateString(this.shiftDate);
 		this.shiftStart = new Date(this.shiftStart);
 		this.shiftEnd = new Date(this.shiftEnd);
 	}
+}
+
+function parseDateString(dateString: Date | string | undefined) {
+	if (dateString instanceof Date) {return dateString;}
+
+	let parsed = new Date();
+	if (dateString) {
+		const dateParts = dateString.split('-').map((p: string) => parseInt(p));
+		parsed.setFullYear(dateParts[0], dateParts[1] - 1, dateParts[2]);
+	}
+
+	return parsed;
 }
 
 // function randBool() {

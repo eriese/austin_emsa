@@ -5,8 +5,8 @@
 			<Label :text="valueLabels.date" class="h2 text-center"/>
 			<Label :text="valueLabels.time" class="h2 text-center"/>
 			<GridLayout columns="*,auto" :rows="rowSpec" class="shift-view">
-				<Label v-for="(field, $index) in listedFields" :text="fieldLabels[field]" :row="$index" col="0" :key="`field_${field}`" class="shift-view__label"/>
-				<Label v-for="(field, $index) in listedFields" :text="valueLabels[field]" :row="$index" col="1" :key="`value_${field}`" class="shift-view__value"/>
+				<Label v-for="(field, $index) in listedFields" :text="fieldLabels[field]" :row="$index" col="0" :key="`field_${field}`" class="shift-view__label" textWrap="true"/>
+				<Label v-for="(field, $index) in listedFields" :text="valueLabels[field]" :row="$index" col="1" :key="`value_${field}`" class="shift-view__value" textWrap="true"/>
 			</GridLayout>
 			<Button v-if="displayedShift.isUser" text="Delete This Post" @tap="deletePost" class="button cta" horizontalAlignment="center" />
 			<Button v-else text="Email This Poster" @tap="openEmail" class="button cta" horizontalAlignment="center"/>
@@ -41,7 +41,6 @@ import EmsaPage from '../mixins/EmsaPage';
 import ApiService from '../services/ApiService';
 import Store from '../services/Store';
 
-
 const excludedFields = /(id|shiftDate|shiftStart|shiftEnd|email)/
 const displayFields = Object.getOwnPropertyNames(new Shift()).filter((p) => !p.match(excludedFields));
 
@@ -57,11 +56,13 @@ export default {
 		}
 	},
 	computed: {
-		displayedShift() {
+		givenShift() {
 			return this.store.selectedShift;
 		},
 		shiftEmail() {
-			return `mailto:${this.displayedShift.email}?subject=Your%20Shift%20App%20Post&body=%0A%0A${this.store.state.config.email_warning}`
+			if (this.displayedShift.isUser) {return '';}
+			const subject = `${this.valueLabels.position} ${this.valueLabels.isField} ${this.valueLabels.isOcp} on ${this.dateString.split(', ')[1]}`;
+			return `mailto:${this.displayedShift.email}?subject=${encodeURI(subject)}&body=%0A%0A${encodeURI(this.store.state.config.email_warning)}`
 		},
 		backPage() {
 			return {name: this.displayedShift.isUser ? 'UserView' : 'ShiftList'}
