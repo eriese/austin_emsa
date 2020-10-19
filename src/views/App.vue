@@ -3,10 +3,10 @@
 		<GridLayout rows="auto,*,auto,auto">
 			<Label class="notification text-center" textWrap="true" :text="notification" row="0"/>
 			<component :is="views[currentRoute]" v-on="currentPageListeners" class="emsa-page" ref="page" row="1"/>
-			<Label class="version-code text-right" :text="`${$root.versionCode}`" row="2"/>
-			<FlexboxLayout class="emsa-menu" row="3">
+			<FlexboxLayout class="emsa-menu" row="2">
 				<Button class="emsa-menu__item text-center" v-for="(tab, $index) in menuTabs" :text="tab.title" @tap="tab.action" :class="{'emsa-menu__item--is-selected': tab.isSelected}" :key="$index" flexGrow="1"/>
 			</FlexboxLayout>
+			<Label class="version-code text-right" :text="`${$root.versionCode}`" row="3"/>
 		</GridLayout>
 	</Page>
 </template>
