@@ -5,7 +5,7 @@ import Shift from '../models/Shift';
 import ShiftFilterSet from '../models/ShiftFilterSet';
 import AuthChecker from './AuthChecker';
 import {dateFormat} from '@vuejs-community/vue-filter-date-format';
-import Qs from '../../node_modules/qs';
+import Qs from 'qs';
 
 let baseURL = process.env.VUE_APP_API_URL || 'https://emsa-shift-request-backend.herokuapp.com';
 

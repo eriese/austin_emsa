@@ -1,6 +1,11 @@
+const path = require('path');
+
 module.exports = {
 	devServer: {
 		disableHostCheck: true
 	},
-	parallel: false
+	parallel: false,
+	configureWebpack: config => {
+		config.resolve.alias['qs'] = path.resolve(__dirname, 'node_modules/qs');
+	}
 };
