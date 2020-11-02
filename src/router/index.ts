@@ -66,6 +66,22 @@ const routes: Array<RouteConfig> = [
 		}
 	},
 	{
+		path: '/recover',
+		name: 'ForgotPassword',
+		component: Views.ForgotPassword,
+		meta: {skipAuth: true},
+	},
+	{
+		path: '/password/edit',
+		name: 'PasswordReset',
+		component: Views.Login,
+		meta: {skipAuth: true},
+		beforeEnter(toRoute, fromRoute, next) {
+			Store.loginIndex = 2;
+			next();
+		}
+	},
+	{
 		path: '/admin/login',
 		name: 'AdminLogin',
 		component: Views.Login,

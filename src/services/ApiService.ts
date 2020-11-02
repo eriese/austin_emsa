@@ -161,6 +161,16 @@ const ApiService = {
 	},
 	requestCode() {
 		return api.post('/codes');
+	},
+	requestReset(user: {email: string}) {
+		return api.post('/password', {user});
+	},
+	submitReset(user: {password: string, password_confirmation: string}) {
+		return new Promise((resolve, reject) => {
+			api.put('/password', { user })
+				.then(resolve)
+				.catch(handleError(reject))
+		});
 	}
 };
 

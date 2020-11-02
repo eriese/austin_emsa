@@ -76,6 +76,7 @@ export default {
 				case 'Login':
 				case 'AdminLogin':
 				case 'Signup':
+				case 'PasswordReset':
 					listeners = {
 						authSuccess: (isAdmin) => {
 							this.store.isAuthed = true;
@@ -95,6 +96,11 @@ export default {
 							this.setCurrentPage(listPage)
 						}
 					}
+					break;
+				case 'ForgotPassword':
+					listeners = {
+						back: () => this.setCurrentPage('Login')
+					};
 					break;
 				default:
 					listeners = {
