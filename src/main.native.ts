@@ -56,11 +56,14 @@ Vue.config.silent = isProduction;
 new Vue({
 	data() {
 		return {
-			versionName: appversion.getVersionNameSync(),
+			versionName: ''
 		}
 	},
 	methods: {
 		openUrl: openUrl
+	},
+	mounted() {
+		this.versionName = appversion.getVersionNameSync();
 	},
 	render: h => h('frame', [h(App)])
 }).$start()
