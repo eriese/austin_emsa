@@ -4,9 +4,11 @@ import { ios } from "tns-core-modules/application";
 
 declare const kSecAttrAccessibleWhenUnlockedThisDeviceOnly : string;
 const storage = new SecureStorage(ios ? kSecAttrAccessibleWhenUnlockedThisDeviceOnly : undefined);
-storage.clearAllOnFirstRunSync();
 
 const checker: AuthChecker = {
+	clearAllOnFirstRun() {
+		storage.clearAllOnFirstRun();
+	},
 	saveAuthToken(token: string) {
 		storage.set({key: authTokenName, value: token});
 	},
@@ -14,16 +16,16 @@ const checker: AuthChecker = {
 		return storage.getSync({key: authTokenName});
 	},
 	saveState(state: any) {
-		return storage.set({key: 'state', value: JSON.stringify(state)});
+		return storage.setSync({key: 'state', value: JSON.stringify(state)})
 	},
 	getState() {
-		return JSON.parse(storage.getSync({key: 'state'}) || '{"noState": true}');
+		const gotten = storage.getSync({key: 'state'})
+		return JSON.parse(gotten || '{"noState": true}');
 	},
 	logout() {
 		return storage.removeAllSync();
 	},
 	isAuthed() {
-		console.log(this.getAuthToken());
 		return this.getAuthToken() !== null;
 	}
 }

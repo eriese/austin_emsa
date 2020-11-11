@@ -1,14 +1,16 @@
 import AuthChecker from './AuthChecker.common';
 
 const checker: AuthChecker = {
+	clearAllOnFirstRun() {},
 	saveAuthToken() {},
 	getAuthToken() {
 		return 'token';
 	},
-	saveState() {},
-	getState() {},
+	saveState() {return true},
+	getState() {
+		return {};
+	},
 	logout() {
-		// TODO this needs to be real
 		return true;
 	},
 	isAuthed() {

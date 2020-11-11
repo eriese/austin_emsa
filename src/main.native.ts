@@ -47,7 +47,7 @@ Vue.filter('fonticon', fonticon);
 
 const isProduction = process.env.NODE_ENV == 'production';
 // Prints Vue logs when --env.production is *NOT* set while building
-Vue.config.silent = isProduction;
+Vue.config.silent = process.env.VUE_APP_SILENT == 'true' || isProduction;
 // Vue.config.silent = true;
 // if(!isProduction) {
 	// Vue.use(VueDevtools, {host: '192.168.1.9'});

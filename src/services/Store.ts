@@ -157,11 +157,11 @@ class Store {
 	}
 
 	saveState() {
-		this.saveStateMethod && this.saveStateMethod();
+		return this.saveStateMethod && this.saveStateMethod();
 	}
 
 	reviveState(state: any) {
-		if (!state || state.noState) { return; }
+		if (!state || state.noState) { state = {}; }
 		Object.assign(this.state, state);
 		this.state.currentFilters = new ShiftFilterSet(state.currentFilters);
 	}
