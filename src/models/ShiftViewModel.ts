@@ -1,130 +1,94 @@
 import {BooleanValueConverter, IndexValueConverter, IntegerValueConverter, SimpleConverter} from '../services/ValueConverters';
 import Shift, {IShift} from './Shift';
 
+let fieldConfig : {[key: string]: FieldConfig} = {};
+
 export default class ShiftViewModel{
-	readonly annotatedFields = [
-		'isOffering',
-		'isField',
-		'position',
-		'isOcp',
-		'unitNumber',
-		'shiftDate',
-		'shiftLetter',
-		'timeFrame',
-		'shiftStart',
-		'shiftEnd',
-		'tradePreference',
-		'tradeDates',
-		'notes'
-	]
+	static setFieldConfig(newConfig: {[key: string]: FieldConfig}) {
+		fieldConfig = newConfig;
+	}
+
+	static get annotatedFields() {
+		return Object.keys(fieldConfig);
+	}
 
 	constructor(public shift: Shift) {}
 
-	getFieldInputType(field: string) {
-		switch (field) {
-			case 'isField':
-			case 'position':
-			case 'isOffering':
-			case 'isOcp':
-			case 'tradePreference':
-			case 'shiftLetter':
-			case 'timeFrame':
-				return 'radio';
-			case 'shiftDate':
-				return 'date';
-			case 'shiftStart':
-			case 'shiftEnd':
-				return 'time';
-			case 'notes':
-				return 'textarea';
-			case 'unitNumber':
-				return 'number';
-			default:
-				return 'text';
-		}
+	getFieldInputType(field: string) : string {
+		return fieldConfig[field].input_type || 'text';
 	}
 
-	getFieldLabel(field: string) {
-		let label : string | undefined = undefined;
-		const isOffering = this.shift.isOffering;
-		switch (field) {
-			case 'isField':
-				label = 'Is this shift Comm or Field?';
-				break;
-			case 'position':
-				label = isOffering ? 'What position is the shift for?' : 'What\'s your position?';
-				break;
-			case 'isOffering':
-				label = 'Are you offering a shift or picking up a shift?';
-				break;
-			case 'shiftDate':
-				label = isOffering ? 'What date is the shift you\'re offering?' : 'What date are you looking for a shift on?';
-				break;
-			case 'isOcp':
-				label = isOffering ? 'What type of shift are you offering?' : 'What type of shift are you looking for?';
-				break;
-			case 'unitNumber':
-				label = isOffering ? 'What unit is the shift with? (optional)' : undefined;
-				break;
-			case 'tradePreference':
-				label = 'Do you want a trade for this shift?';
-				break;
-			case 'shiftStart':
-				label = isOffering ? 'When does the shift start?' : 'When should the shift start?';
-				break;
-			case 'shiftEnd':
-				label = isOffering ? 'When does the shift end?' : 'When should the shift start?';
-				break;
-			case 'tradeDates':
-				label = this.shift.tradePreference < 0 ? undefined : 'What dates would you be open to trading for?';
-				break;
-			case 'notes':
-				label = 'Any notes about the shift?'
-				break;
-			case 'shiftLetter':
-				label = this.shift.isOffering ? 'Which shift?' : undefined;
-				break;
-			case 'timeFrame':
-				label = (isOffering ? 'Is this shift a' : 'Should this shift be') + ' 12, a 24, or something else? (explain something else in the notes)';
-				break;
+	getFieldLabelForContext(field: string, isInput: boolean) : string | undefined {
+		const fieldData = fieldConfig[field];
+		if (!fieldData) {return;}
+		const conditions = isInput ? fieldData.alt_input_label_conditions : fieldData.alt_filter_label_conditions;
+		let useAlt = false;
+		if (conditions) {
+			for (var i = 0; i < conditions.length; i++) {
+				var cond = conditions[i];
+				var condResult = this.testFieldCondition(cond);
+				if (cond.logic == 'OR' || i == 0) {
+					useAlt = useAlt || condResult;
+				} else if (cond.logic == 'AND') {
+					useAlt = useAlt && condResult;
+				}
+			}
 		}
 
-		return label;
+		if (useAlt) {
+			return isInput ? fieldData.alt_input_label : fieldData.alt_filter_label;
+		}
+		return isInput ? fieldData.input_label : fieldData.filter_label;
 	}
 
-	getFieldValueLabels(field: string, forList: boolean = false) {
-		switch (field) {
-			case 'isField':
-				return ['Field', 'Comm'];
-			case 'position':
-				return ['Medic', 'CS', 'Captain', 'Commander'];
-			case 'isOffering':
-				return forList ? ['Offering', 'Seeking'] : ['Offering', 'Picking Up'];
-			case 'isOcp':
-				return ['OCP', 'Shift'];
-			case 'tradePreference':
-				return forList ? ['No Trade', 'Open to Trade', 'Trade Only'] : ['No Thanks', "I'm Open", 'Trade Required'];
-			case 'shiftLetter':
-				return ['A', 'B', 'C', 'D'];
-			case 'timeFrame':
-				return ['12', '24', 'Other'];
+	getFieldLabel(field: string) : string | undefined {
+		return this.getFieldLabelForContext(field, true);
+	}
+
+	getFieldFilterName(field: string) : string | undefined {
+		return this.getFieldLabelForContext(field, false);
+	}
+
+	testFieldCondition(condition: LabelCondition) : boolean {
+		if (condition.exists !== undefined) {
+			const exists = this.shift != undefined;
+			return exists === condition.exists;
 		}
+
+		if (condition.field) {
+			const fieldVal = this.shift[condition.field];
+
+			if (!condition.value.length) {
+				return fieldVal == condition.value;
+			}
+
+			for (var i = 0; i < condition.value.length; i++) {
+				if (condition.value[i] == fieldVal) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	getFieldValueLabels(field: string, forList: boolean = false) : string[] | undefined {
+		const fieldData = fieldConfig[field];
+		if (!forList && fieldData.input_value_labels) {
+			return fieldData.input_value_labels;
+		}
+		return fieldData.value_labels
 	}
 
 	getFieldValueConverter(field: string, forList: boolean = false) {
 		const fieldValues: string[] | undefined = this.getFieldValueLabels(field, forList);
 		if (!fieldValues) { return; }
-		switch (field) {
-			case 'isField':
-			case 'isOffering':
-			case 'isOcp':
+
+		switch (fieldConfig[field].field_type) {
+			case 'boolean':
 				return new BooleanValueConverter(fieldValues);
-			case 'position':
+			case 'integer':
 				return new IndexValueConverter(fieldValues);
-			case 'tradePreference':
-				return new IndexValueConverter(fieldValues, -1);
-			case 'timeFrame':
-				return new IntegerValueConverter('Other');
 			default:
 				return new SimpleConverter();
 		}
@@ -135,31 +99,27 @@ export default class ShiftViewModel{
 		const converter = this.getFieldValueConverter(field, forList);
 		return converter ? converter.convertFrom(fieldVal) : fieldVal;
 	}
+}
 
-	getFieldFilterName(field: string) {
-		switch (field) {
-			case 'isOffering':
-				return 'Post Type';
-			case 'isField':
-				return 'Comm or Field';
-			case 'position':
-				return 'Position';
-			case 'isOcp':
-				return 'Shift Type';
-			case 'unitNumber':
-				return !this.shift || this.shift.isOffering ? 'Unit' : undefined;
-			case 'tradePreference':
-				return 'Trade Preference';
-			case 'tradeDates':
-				return this.shift && this.shift.tradePreference < 0 ? undefined : 'Trade Dates';
-			case 'notes':
-				return 'Notes';
-			case 'shiftLetter':
-				return !this.shift || this.shift.isOffering ? 'A, B, C, or D?' : undefined;
-			case 'timeFrame':
-				return '12, 24, or Other?';
-		}
+interface LabelCondition {
+	field?: string,
+	value?: any,
+	logic?: string,
+	exists?: boolean
+}
 
-		return field;
-	}
+interface FieldConfig {
+	internal_name: string,
+	field_type: string,
+	is_visible: boolean,
+	filter_label?: string,
+	alt_filter_label?: string,
+	alt_filter_label_conditions?: LabelCondition[],
+	input_label?: string,
+	alt_input_label?: string,
+	alt_input_label_conditions?: LabelCondition[],
+	input_type: string,
+	value_labels?: string[],
+	input_value_labels?: string[],
+	position: number
 }

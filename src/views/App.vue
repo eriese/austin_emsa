@@ -256,7 +256,7 @@ export default {
 			this.currentPage = this.views[currentPage];
 		}
 
-		this.store.getConfig();
+		await this.store.getConfig();
 	}
 }
 </script>

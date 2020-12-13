@@ -31,6 +31,7 @@
 				</div>
 				<div v-else>
 					<date-input v-model="shift[f.fieldName]" :type="f.inputType" v-if="f.inputType == 'date' || f.inputType == 'time'"/>
+					<textarea v-model="shift[f.fieldName]" v-else-if="f.inputType == 'textarea'"></textarea>
 					<input v-else :type="f.inputType" :id="f.fieldName" v-model="shift[f.fieldName]">
 				</div>
 			</div>
@@ -56,7 +57,7 @@
 			const valueManager = {};
 			const viewModel = new ShiftViewModel(shift);
 
-			viewModel.annotatedFields.forEach((f) => {
+			ShiftViewModel.annotatedFields.forEach((f) => {
 				const inputType = viewModel.getFieldInputType(f)
 				valueManager[f] = {inputType};
 
@@ -69,6 +70,8 @@
 							value: converter ? converter.convertTo(v) : v
 						}
 					})
+
+					shift[f] = valueManager[f].values[0].value;
 				}
 			});
 
@@ -81,10 +84,10 @@
 		computed: {
 			fields() {
 				const fields = []
-				for (var f in this.shift) {
+				ShiftViewModel.annotatedFields.forEach((f) => {
 					let label =  this.viewModel.getFieldLabel(f);
 
-					if (!label) { continue; }
+					if (!label) { return; }
 
 					let fieldManager = this.valueManager[f] || {};
 
@@ -94,7 +97,7 @@
 						values: fieldManager.values,
 						fieldName: f,
 					});
-				}
+				});
 				return fields;
 			},
 		},

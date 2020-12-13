@@ -3,6 +3,7 @@ import ShiftFilterSet from '../models/ShiftFilterSet';
 import ApiService from './ApiService';
 import AuthChecker from './AuthChecker';
 import {AxiosError, AxiosResponse} from 'axios';
+import ShiftViewModel from '../models/ShiftViewModel';
 
 class Store {
 	state: {
@@ -133,7 +134,8 @@ class Store {
 	async getConfig() {
 		try {
 			const configResponse : AxiosResponse = await ApiService.getConfig();
-			this.state.config = configResponse.data;
+			this.state.config = configResponse.data.config;
+			ShiftViewModel.setFieldConfig(configResponse.data.fields);
 			this.saveState();
 			return true;
 		} catch (e) {
