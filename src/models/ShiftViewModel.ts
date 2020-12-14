@@ -12,6 +12,10 @@ export default class ShiftViewModel{
 		return Object.keys(fieldConfig);
 	}
 
+	static get fieldConfigs() {
+		return fieldConfig;
+	}
+
 	constructor(public shift: Shift) {}
 
 	getFieldInputType(field: string) : string {
@@ -26,11 +30,10 @@ export default class ShiftViewModel{
 		if (conditions) {
 			for (var i = 0; i < conditions.length; i++) {
 				var cond = conditions[i];
-				var condResult = this.testFieldCondition(cond);
 				if (cond.logic == 'OR' || i == 0) {
-					useAlt = useAlt || condResult;
+					useAlt = useAlt || this.testFieldCondition(cond);
 				} else if (cond.logic == 'AND') {
-					useAlt = useAlt && condResult;
+					useAlt = useAlt && this.testFieldCondition(cond);
 				}
 			}
 		}
@@ -95,6 +98,7 @@ export default class ShiftViewModel{
 	}
 
 	getFieldValueName(field: string, forList: boolean = false) {
+		if (!this.getFieldFilterName(field)) {return;}
 		const fieldVal: any = this.shift[field];
 		const converter = this.getFieldValueConverter(field, forList);
 		return converter ? converter.convertFrom(fieldVal) : fieldVal;
@@ -121,5 +125,7 @@ interface FieldConfig {
 	input_type: string,
 	value_labels?: string[],
 	input_value_labels?: string[],
-	position: number
+	position: number,
+	display_in_list: boolean,
+	locked: boolean
 }

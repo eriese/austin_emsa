@@ -12,26 +12,11 @@ export interface IShift {
 	trade_preference?: number;
 	trade_dates?: string;
 	notes?: string;
-	id?: string;
+	Id?: string;
 	email?: string;
 }
 
 export interface ShiftLabelSet {
-	is_offering?: string,
-	is_field?: string,
-	position?: string,
-	is_ocp?: string,
-	unit_number?: string,
-	shift_date?: string,
-	shift_letter?: string,
-	timeframe?: string,
-	trade_preference?: string,
-	shift_start?: string,
-	shift_end?: string,
-	trade_dates?: string,
-	notes?: string,
-	date?: string,
-	time?: string,
 	[key: string]: string | undefined;
 }
 

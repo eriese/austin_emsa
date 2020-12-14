@@ -245,7 +245,9 @@ export default {
 	created: async function() {
 		this.store.onListError = this.logout;
 		this.store.saveStateMethod = this.saveState;
-		AuthChecker.clearAllOnFirstRun();
+		if (process.env.NODE_ENV == 'production') {
+			AuthChecker.clearAllOnFirstRun();
+		}
 
 		if (process.env.VUE_APP_MODE == 'native') {
 			await this.store.testToken();

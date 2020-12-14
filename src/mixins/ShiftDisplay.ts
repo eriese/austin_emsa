@@ -6,15 +6,7 @@ export default Vue.extend({
 	data() {
 		return {
 			forList: true,
-			displayFields: [
-				'isOffering',
-				'position',
-				'isOcp',
-				'isField',
-				'tradePreference',
-				'shiftLetter',
-				'timeFrame',
-			]
+			displayFields: ShiftViewModel.annotatedFields.filter((f) => ShiftViewModel.fieldConfigs[f].display_in_list)
 		}
 	},
 	computed: {
@@ -24,7 +16,7 @@ export default Vue.extend({
 		dateString() : string {
 			if (this.dateFormatFilter === undefined) { return ''; }
 
-			const shiftDate = this.displayedShift.shiftDate;
+			const shiftDate = this.displayedShift.shift_date;
 			const isThisYear = shiftDate.getFullYear() == new Date().getFullYear();
 			const formatString = isThisYear ? 'dddd, M/DD' : 'dddd, M/DD/YY';
 			return this.dateFormatFilter(shiftDate, formatString);
@@ -32,14 +24,15 @@ export default Vue.extend({
 		timeString() : string {
 			if (this.dateFormatFilter === undefined) { return ''; }
 
-			const startString = this.dateFormatFilter(new Date(this.displayedShift.shiftStart), 'h:mm a');
-			const endString = this.dateFormatFilter(new Date(this.displayedShift.shiftEnd), 'h:mm a');
+			const startString = this.dateFormatFilter(new Date(this.displayedShift.shift_start), 'h:mm a');
+			const endString = this.dateFormatFilter(new Date(this.displayedShift.shift_end), 'h:mm a');
 			return `${startString}-${endString}` ;
 		},
 		valueLabels() : ShiftLabelSet {
 			let labels: ShiftLabelSet = {
 				date: this.dateString,
-				time: this.timeString
+				time: this.timeString,
+				dateTime: `${this.dateString} ${this.timeString}`
 			}
 
 			const vm = this;
@@ -52,7 +45,7 @@ export default Vue.extend({
 		},
 		givenShift() {
 			if (process.env.NODE_ENV != 'production') {
-				console.warn(this.$options.name, 'does not override displayedShift, which means that it cannot display shift information')
+				console.warn(this.$options.name, 'does not override givenShift, which means that it cannot display shift information')
 			}
 			return undefined;
 		},
