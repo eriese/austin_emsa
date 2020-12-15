@@ -6,7 +6,7 @@ export interface IShift {
 	unit_number?: number | undefined;
 	shift_date?: Date | string;
 	shift_letter?: string;
-	timeframe?: number;
+	time_frame?: number;
 	shift_start?: Date;
 	shift_end?: Date;
 	trade_preference?: number;
@@ -28,7 +28,7 @@ export default class Shift implements IShift {
 	unit_number = undefined;
 	shift_date = new Date();
 	shift_letter = 'A';
-	timeframe = 12;
+	time_frame = 12;
 	shift_start = new Date(new Date().setHours(10, 0, 0, 0));
 	shift_end = new Date(new Date().setHours(22, 0, 0, 0));
 	trade_preference = 0;

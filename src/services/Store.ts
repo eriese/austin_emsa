@@ -67,9 +67,9 @@ class Store {
 	set currentList(list: Shift[]) {
 		list = list.map((s: IShift) => new Shift(s));
 		this.state.currentList = list.sort((a: Shift, b: Shift) => {
-			let diff = a.shiftDate.valueOf() - b.shiftDate.valueOf();
+			let diff = a.shift_date.valueOf() - b.shift_date.valueOf();
 			if (diff == 0) {
-				diff = a.shiftStart.valueOf() - b.shiftStart.valueOf();
+				diff = a.shift_start.valueOf() - b.shift_start.valueOf();
 			}
 
 			return diff;

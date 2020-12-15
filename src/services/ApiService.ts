@@ -29,6 +29,8 @@ const api = axios.create({
 	paramsSerializer
 });
 
+api.defaults.headers['Api-Version'] = 'v2';
+
 let access_token: string;
 // let refresh_token: string;
 
