@@ -28,7 +28,7 @@
 		"@nstudio/nativescript-checkbox": "^1.0.0",
 		"@types/vue-datetime": "^1.0.0",
 		"@vuejs-community/vue-filter-date-format": "^1.6.2",
-		"axios": "^0.19.2",
+		"axios": "^0.21.1",
 		"clean": "^4.0.2",
 		"core-js": "^3.6.5",
 		"express": "^4.17.1",
