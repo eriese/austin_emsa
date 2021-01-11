@@ -18,9 +18,9 @@
 					</button>
 				</th>
 			</tr>
-			<tr v-for="user in sortedUsers" :key="user.id" class="users-table__user">
+			<tr v-for="user in sortedUsers" :key="user._id" class="users-table__user">
 				<td class="user__email">{{user.email}}</td>
-				<td class="users-table__input"><input type="checkbox" :value="user.id" v-model="selectedUsers"/></td>
+				<td class="users-table__input"><input type="checkbox" :value="user._id" v-model="selectedUsers"/></td>
 			</tr>
 		</table>
 
@@ -66,7 +66,7 @@ export default {
 			},
 			set(setVal) {
 				if (setVal) {
-					this.selectedUsers = this.users.map((u) => u.id);
+					this.selectedUsers = this.users.map((u) => u._id);
 				} else {
 					this.selectedUsers = [];
 				}
@@ -130,7 +130,7 @@ export default {
 				this.selectedUsers = [];
 				this.users.forEach((u) => {
 					if (u[this.propName]) {
-						this.selectedUsers.push(u.id);
+						this.selectedUsers.push(u._id);
 					}
 				})
 			}).catch((err) => {
