@@ -18,14 +18,7 @@ function serializeDate(d: Date) {
 function paramsSerializer(params: object) {
 	return Qs.stringify(params, {
 		arrayFormat: 'brackets',
-		serializeDate,
-		encoder: (str, defaultEncoder, charset, type) => {
-			if (type == 'key') {
-				str = camelToSnake(str);
-			}
-
-			return defaultEncoder(str, defaultEncoder, charset);
-		}
+		serializeDate
 	})
 }
 
@@ -35,6 +28,8 @@ const api = axios.create({
 	transformRequest:[paramsSerializer],
 	paramsSerializer
 });
+
+api.defaults.headers['Api-Version'] = 'v2';
 
 let access_token: string;
 // let refresh_token: string;
@@ -51,7 +46,7 @@ function getAuthHeaders(token?: string) {
 
 function handleError(rejector?: Function) {
 	return (error: AxiosError) => {
-		console.log(error);
+		console.log(JSON.stringify(error));
 		if (typeof rejector == 'function') {
 			rejector(error)
 		}
@@ -90,10 +85,10 @@ const ApiService = {
 			params: filters,
 			headers: getAuthHeaders(),
 		}).then((response) => {
-			const convertedList = JsonSnakeToCamel(response.data).sort((a: Shift, b: Shift) => {
-				let diff: number = new Date(a.shiftDate).getTime() - new Date(b.shiftDate).getTime();
+			const convertedList = response.data.sort((a: Shift, b: Shift) => {
+				let diff: number = new Date(a.shift_date).getTime() - new Date(b.shift_date).getTime();
 				if (diff == 0) {
-					diff = new Date(a.shiftStart).getTime() - new Date(b.shiftStart).getTime();
+					diff = new Date(a.shift_start).getTime() - new Date(b.shift_start).getTime();
 				}
 
 				return diff;

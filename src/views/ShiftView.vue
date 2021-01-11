@@ -1,7 +1,7 @@
 <template native>
 	<ScrollView>
 		<StackLayout>
-			<TitleAndBackButton @backPressed="goBack" :text="`${valueLabels.isOffering} Shift`"/>
+			<TitleAndBackButton @backPressed="goBack" :text="`${valueLabels.is_offering} Shift`"/>
 			<Label :text="valueLabels.date" class="h2 text-center"/>
 			<Label :text="valueLabels.time" class="h2 text-center"/>
 			<GridLayout columns="*,auto" :rows="rowSpec" class="shift-view">
@@ -17,7 +17,7 @@
 <template web>
 	<div class="side-padded">
 		<back-button :to="backPage" />
-		<h1 class="h1 text-center">{{valueLabels.isOffering}} Shift</h1>
+		<h1 class="h1 text-center">{{valueLabels.is_offering}} Shift</h1>
 		<h2 class="h2 text-center">{{valueLabels.date}}</h2>
 		<h2 class="h2 text-center">{{valueLabels.time}}</h2>
 		<table class="shift-view">
@@ -40,16 +40,16 @@ import Shift from '../models/Shift';
 import EmsaPage from '../mixins/EmsaPage';
 import ApiService from '../services/ApiService';
 import Store from '../services/Store';
+import ShiftViewModel from '../models/ShiftViewModel';
 
-const excludedFields = /(id|shiftDate|shiftStart|shiftEnd|email)/
-const displayFields = Object.getOwnPropertyNames(new Shift()).filter((p) => !p.match(excludedFields));
+const excludedFields = /(shift_date|shift_start|shift_end)/
 
 export default {
 	name: 'ShiftView',
 	mixins: [ShiftDisplay, EmsaPage],
 	data() {
 		return {
-			displayFields,
+			displayFields: ShiftViewModel.annotatedFields.filter((p) => !p.match(excludedFields)),
 			listedFields: [],
 			rowSpec: [],
 			fieldLabels: {},
@@ -61,7 +61,7 @@ export default {
 		},
 		shiftEmail() {
 			if (this.displayedShift.isUser) {return '';}
-			const subject = `${this.valueLabels.position} ${this.valueLabels.isField} ${this.valueLabels.isOcp} on ${this.dateString.split(', ')[1]}`;
+			const subject = `${this.valueLabels.position} ${this.valueLabels.is_field} ${this.valueLabels.is_ocp} on ${this.dateString.split(', ')[1]}`;
 			return `mailto:${this.displayedShift.email}?subject=${encodeURI(subject)}&body=%0A%0A${encodeURI(this.store.state.config.email_warning)}`
 		},
 		backPage() {
@@ -117,9 +117,9 @@ export default {
 		next();
 	},
 	created() {
-		for (var i = 0; i < displayFields.length; i++) {
-			let field = displayFields[i];
-			if (field == 'isOffering') { continue; }
+		for (var i = 0; i < this.displayFields.length; i++) {
+			let field = this.displayFields[i];
+			if (field == 'is_offering') { continue; }
 
 			let fieldLabel = this.viewModel.getFieldFilterName(field);
 			if (!fieldLabel) {continue;}

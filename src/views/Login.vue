@@ -154,7 +154,9 @@ export default {
 		onSubmitError(e) {
 			this.isSubmitting = false;
 			const data = e.response.data;
-			if (data.error_description) {
+			if (data.message) {
+				this.formError = data.message;
+			} else if (data.error_description) {
 				this.formError = data.error_description;
 			} else {
 				this.fieldErrors = data.errors;

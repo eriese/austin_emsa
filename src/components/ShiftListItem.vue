@@ -1,44 +1,79 @@
 <script>
 	import ShiftDisplay from '../mixins/ShiftDisplay';
+	import ShiftViewModel from '../models/ShiftViewModel';
 
 	export default {
 		name: 'ShiftListItem',
 		mixins: [ShiftDisplay],
 		props: ['shift', 'isUser'],
+		data() {
+			return {
+				rows: []
+			}
+		},
 		computed: {
 			givenShift() {
 				return this.shift;
-			}
+			},
 		},
-		render() {
-			const itemClass = `shift-item shift-item--is-${this.valueLabels.isOffering.toLowerCase()}`;
-			if (process.env.VUE_APP_MODE == 'native') {
-				return <GridLayout iosOverflowSafeArea="false" class={itemClass} columns="75,*,*,130" rows="auto, auto, auto">
-					<Label text={this.valueLabels.isOffering} row="0" col="0" class="shift-item__is-offering"/>
-					<Label text={this.valueLabels.isOcp} row="0" col="1" colSpan="2" class="shift-item__is-ocp text-center"/>
-					<Label text={this.valueLabels.position} row="0" col="3" class="shift-item__position text-right"/>
-					<Label text={`${this.valueLabels.date} ${this.valueLabels.time}` } row="1" col="0" colSpan="4" class="shift-item__dates text-center"/>
-					<Label text={this.valueLabels.isField} row="2" col="0" class="shift-item__is-field"/>
-					<Label text={this.displayedShift.isOffering ? this.valueLabels.shiftLetter : ''} row="2" col="1" class="shift-item__shift-letter text-center"/>
-					<Label text={this.valueLabels.timeFrame} row="2" col="2" class="shift-item__time-frame text-center"/>
-					<Label text={this.valueLabels.tradePreference} row="2" col="3" class="shift-item__trade-preference text-right"/>
-				</GridLayout>
+		created() {
+			const rows = [];
+
+			const fieldConfigs = ShiftViewModel.fieldConfigs;
+			this.displayFields.forEach(f => {
+				const field = fieldConfigs[f];
+				if (!field.display_in_list) {return;}
+
+				let row = rows[field.list_row] || []
+				row[field.list_column] = f;
+				rows[field.list_row] = row;
+			});
+
+			for (var r = 0; r < rows.length; r++) {
+				if (rows[r] === undefined) {
+					rows[r] = ['dateTime'];
+					break;
+				}
 			}
 
-			return <li class={itemClass}>
-				<router-link to={{name: this.isUser ? 'UserShiftView' : 'ShiftView', params: { id: this.displayedShift.id }}}>
-					<span class="shift-item__is-offering">{this.valueLabels.isOffering}</span>
-					<span class="shift-item__is-ocp">{this.valueLabels.isOcp}</span>
-					<span class="shift-item__position">{this.valueLabels.position}</span>
-					<div class="shift-item__dates">{`${this.valueLabels.date} ${this.valueLabels.time}`}</div>
-					<div class="shift-item__bottom-row">
-						<span class="shift-item__is-field">{this.valueLabels.isField}</span>
-						<span className="shift-item__shift-letter">{this.displayedShift.isOffering ? this.valueLabels.shiftLetter : ''}</span>
-						<span className="shift-item__time-frame">{this.valueLabels.timeFrame}</span>
-						<span class="shift-item__trade-preference">{this.valueLabels.tradePreference}</span>
-					</div>
-				</router-link>
-			</li>
+			this.rows = rows;
+		},
+		render() {
+			const itemClass = `shift-item shift-item--is-${this.valueLabels.is_offering.toLowerCase()}`;
+			const isNative = process.env.VUE_APP_MODE == 'native';
+			const rows = this.rows.map((row, rowIndex) => {
+				const items = row.map((item, colIndex) => {
+					const label = this.valueLabels[item];
+					let labelClass = `shift-item__${item.replace('_','-')}`
+					if (row.length > 1) {
+						if (colIndex == 0 ) {labelClass += ' shift-item--is-first-in-row';}
+						if (colIndex == row.length - 1) {labelClass += ' shift-item--is-last-in-row'}
+					}
+
+					if (isNative) {
+						return <Label text={label} class={labelClass} flexGrow="1"/>
+					} else {
+						return <span class={labelClass}>{label}</span>
+					}
+				})
+
+				const rowClass = `shift-item__row-${rowIndex} shift-item__row`;
+				if (isNative) {
+					return <FlexboxLayout flexWrap="noWrap" justifyContent="space-between" class={rowClass}> {items} </FlexboxLayout>
+				} else {
+					return <div class={rowClass}> {items} </div>
+				}
+			})
+
+			if (isNative) {
+				return <StackLayout class={itemClass}>{rows}</StackLayout>
+			} else {
+				return <li class={itemClass}>
+					<router-link to={{name: this.isUser ? 'UserShiftView' : 'ShiftView', params: { id: this.displayedShift.id }}}>
+						{rows}
+					</router-link>
+				</li>
+			}
 		}
 	}
 </script>
@@ -66,7 +101,7 @@
 	&--is-offering {
 		border-color: var(--emsa-yellow);
 
-		.shift-item__is-offering {
+		.shift-item__row-0 > .shift-item--is-first-in-row {
 			background-color: var(--emsa-yellow);
 			color: var(--emsa-black);
 		}
@@ -74,7 +109,7 @@
 
 	&--is-seeking {
 		border-color: var(--emsa-blue);
-		.shift-item__is-offering {
+		.shift-item__row-0 >.shift-item--is-first-in-row {
 			background-color: var(--emsa-blue);
 			color: var(--emsa-white);
 		}
@@ -83,18 +118,52 @@
 	label {
 		padding: 3;
 	}
+	&__row {
+		clear: both;
+		padding: 0.25rem 0.5rem;
+		padding: 5 10;
+		display: flex;
+		margin: 0;
 
-	&__position {
+		> * {
+			flex-grow: 1;
+			text-align: center;
+
+			&.shift-item--is-last-in-row {
+				text-align: right;
+			}
+
+			&.shift-item--is-first-in-row {
+				text-align: left;
+			}
+
+			&.shift-item__dateTime {
+				clear: both;
+				text-align: center;
+				font-size: 20px;
+				font-size: 20;
+			}
+		}
+	}
+
+	&__row-0 > *.shift-item--is-last-in-row {
 		font-weight: bold;
+		font-size: 18px;
 		font-size: 18;
 	}
 
-	&__is-offering {
+	&__row-0 > *.shift-item--is-first-in-row {
 		border-bottom-right-radius: 5px;
 		border-bottom-right-radius: 5;
+		margin-top: -5px;
 		margin-top: -5;
+		margin-left: -0.5rem;
+		margin-left: -10;
+		padding: 5px 0 5px 0.5rem;
+		padding: 5 0 5 10;
 		display: inline-block;
 	}
+
 }
 </style>
 
@@ -114,47 +183,5 @@
 		background-color: var(--emsa-yellow);
 		color: var(--emsa-black);
 	}
-
-	&__is-offering {
-		float: left;
-		padding: 0.25rem 0.5rem;
-	}
-	&__position {
-		float: right;
-		margin-right: 0.5rem;
-		margin-top: 0.25rem;
-	}
-
-	&__dates {
-		clear: both;
-		text-align: center;
-	}
-
-	&__bottom-row {
-		padding: 0.25rem 0.5rem;
-		display: flex;
-
-		> * {
-			flex-grow: 1;
-		}
-	}
-	&__is-ocp {
-		display: inline-block;
-		clear: none;
-		width: 50%;
-		text-align: center;
-	}
-
-	&__is-field {
-		float: left;
-		width: 25%;
-	}
-
-	&__trade-preference {
-		float: right;
-		width: 25%;
-		text-align: right;
-	}
-
 }
 </style>

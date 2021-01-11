@@ -3,6 +3,7 @@ import ShiftFilterSet from '../models/ShiftFilterSet';
 import ApiService from './ApiService';
 import AuthChecker from './AuthChecker';
 import {AxiosError, AxiosResponse} from 'axios';
+import ShiftViewModel from '../models/ShiftViewModel';
 
 class Store {
 	state: {
@@ -66,9 +67,9 @@ class Store {
 	set currentList(list: Shift[]) {
 		list = list.map((s: IShift) => new Shift(s));
 		this.state.currentList = list.sort((a: Shift, b: Shift) => {
-			let diff = a.shiftDate.valueOf() - b.shiftDate.valueOf();
+			let diff = a.shift_date.valueOf() - b.shift_date.valueOf();
 			if (diff == 0) {
-				diff = a.shiftStart.valueOf() - b.shiftStart.valueOf();
+				diff = a.shift_start.valueOf() - b.shift_start.valueOf();
 			}
 
 			return diff;
@@ -133,7 +134,8 @@ class Store {
 	async getConfig() {
 		try {
 			const configResponse : AxiosResponse = await ApiService.getConfig();
-			this.state.config = configResponse.data;
+			this.state.config = configResponse.data.config;
+			ShiftViewModel.setFieldConfig(configResponse.data.fields);
 			this.saveState();
 			return true;
 		} catch (e) {

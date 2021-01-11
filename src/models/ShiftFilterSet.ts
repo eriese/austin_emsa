@@ -1,3 +1,5 @@
+import ShiftViewModel from './ShiftViewModel';
+
 function copyOrNew(ary: Array<any> | undefined, parser: Function = (ary: any) => ary) {
 	if (!ary) {return [];}
 	if (!(ary instanceof Array)) {
@@ -26,29 +28,35 @@ function parseDate(dateValue: any) {
 }
 
 export default class ShiftFilterSet {
-	public static checkboxFields = ['isOffering', 'isField', 'position', 'isOcp', 'shiftLetter', 'timeFrame', 'tradePreference'];
+	public static get checkboxFields() {
+		const fieldConfigs = ShiftViewModel.fieldConfigs
+		return ShiftViewModel.annotatedFields.filter((f) => fieldConfigs[f] && fieldConfigs[f].value_labels)
+	}
 
-	isOffering: boolean[];
-	isField: boolean[];
-	position: number[];
-	isOcp: boolean[];
-	shiftLetter: string[];
-	timeFrame: number[];
-	tradePreference: number[];
 	date: Date[];
-	dateType: string;
+	date_type: string;
 	[key: string]: Array<any> | string | Function
 
 	constructor(fromfilters: ShiftFilterSet | {[key: string]: any} = {}) {
-		this.isField = copyOrNew(fromfilters.isField, parseBool);
-		this.position = copyOrNew(fromfilters.position, parseInt);
-		this.isOffering = copyOrNew(fromfilters.isOffering, parseBool);
-		this.isOcp = copyOrNew(fromfilters.isOcp, parseBool);
-		this.shiftLetter = copyOrNew(fromfilters.shiftLetter);
-		this.timeFrame = copyOrNew(fromfilters.timeFrame, parseInt);
-		this.tradePreference = copyOrNew(fromfilters.tradePreference, parseInt);
+		const fieldConfigs = ShiftViewModel.fieldConfigs;
+		this.date_type = fromfilters.date_type || 'After';
 		this.date = copyOrNew(fromfilters.date || [new Date()], parseDate);
-		this.dateType = fromfilters.dateType || 'After';
+		if (this.date_type != 'Before' && this.date[0] < new Date()) {
+			this.date[0] = new Date();
+		}
+
+		ShiftFilterSet.checkboxFields.forEach((f) => {
+			let parser;
+			switch (fieldConfigs[f].field_type) {
+				case "integer":
+					parser = parseInt;
+					break;
+				case "boolean":
+					parser = parseBool;
+					break;
+			}
+			this[f] = copyOrNew(fromfilters[f], parser);
+		})
 	}
 
 	get sortedKeys() : string[] {
@@ -60,7 +68,7 @@ export default class ShiftFilterSet {
 		this.sortedKeys.forEach((k: string) => {
 			if (k == 'date') {
 				queryDict[k] = this[k].map((d : Date) => d.getTime().toString());
-			} else if (k == 'dateType') {
+			} else if (k == 'date_type') {
 				queryDict[k] = this[k];
 			} else {
 				const kArray = this[k];
