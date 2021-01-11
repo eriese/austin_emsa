@@ -61,7 +61,7 @@ export default {
 		},
 		shiftEmail() {
 			if (this.displayedShift.isUser) {return '';}
-			const subject = `${this.valueLabels.position} ${this.valueLabels.isField} ${this.valueLabels.isOcp} on ${this.dateString.split(', ')[1]}`;
+			const subject = `${this.valueLabels.position} ${this.valueLabels.is_field} ${this.valueLabels.is_ocp} on ${this.dateString.split(', ')[1]}`;
 			return `mailto:${this.displayedShift.email}?subject=${encodeURI(subject)}&body=%0A%0A${encodeURI(this.store.state.config.email_warning)}`
 		},
 		backPage() {

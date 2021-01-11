@@ -46,7 +46,7 @@ function getAuthHeaders(token?: string) {
 
 function handleError(rejector?: Function) {
 	return (error: AxiosError) => {
-		console.log(error);
+		console.log(JSON.stringify(error));
 		if (typeof rejector == 'function') {
 			rejector(error)
 		}

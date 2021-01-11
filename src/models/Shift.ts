@@ -1,18 +1,10 @@
 export interface IShift {
-	is_offering?: boolean;
-	is_field?: boolean;
-	position?: number;
-	is_ocp?: boolean;
-	unit_number?: number | undefined;
-	shift_date?: Date | string;
-	shift_letter?: string;
-	time_frame?: number;
-	shift_start?: Date;
-	shift_end?: Date;
-	trade_preference?: number;
-	trade_dates?: string;
-	notes?: string;
-	Id?: string;
+	is_offering: boolean;
+
+	shift_date: Date | string;
+	shift_start: Date;
+	shift_end: Date;
+	id?: string;
 	email?: string;
 }
 
@@ -21,20 +13,10 @@ export interface ShiftLabelSet {
 }
 
 export default class Shift implements IShift {
-	is_offering = true;
-	is_field = true;
-	position = 0;
-	is_ocp = false;
-	unit_number = undefined;
 	shift_date = new Date();
-	shift_letter = 'A';
-	time_frame = 12;
 	shift_start = new Date(new Date().setHours(10, 0, 0, 0));
 	shift_end = new Date(new Date().setHours(22, 0, 0, 0));
-	trade_preference = 0;
-	trade_dates = '';
-	notes = '';
-	email = '';
+	is_offering = true;
 	[key: string]: any;
 
 	constructor(shiftProps?: IShift) {
@@ -56,27 +38,3 @@ function parseDateString(dateString: Date | string | undefined) {
 
 	return parsed;
 }
-
-// function randBool() {
-// 	const num = Math.random();
-// 	return num > 0.5
-// }
-
-// const randInt = (lessThan: number) => Math.floor(Math.random() * lessThan);
-// const randMember = (ary: Array<any>) => ary[randInt(ary.length)];
-
-// export function getDummyShift(filters: any = {}) {
-// 	let isField = filters.isField && filters.isField.length ? randMember(filters.isField) : randBool();
-// 	let position = filters.position && filters.position.length ? randMember(filters.position) : randInt(4);
-// 	let isOffering = filters.isOffering && filters.isOffering.length ? randMember(filters.isOffering) : randBool();
-// 	let isOcp = filters.isOcp && filters.isOcp.length ? randMember(filters.isOcp) : randBool();
-// 	let trade_preference = filters.trade_preference &&filters.trade_preference.length ? randMember(filters.trade_preference) : (randInt(3) - 1);
-
-// 	return new Shift({
-// 		isField,
-// 		position,
-// 		isOffering,
-// 		isOcp,
-// 		trade_preference
-// 	})
-// }
