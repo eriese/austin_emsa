@@ -46,6 +46,11 @@ const routes: Array<RouteConfig> = [
 
 	},
 	{
+		path: '/stationcodes',
+		name: 'StationCodes',
+		component: Views.StationCodes
+	},
+	{
 		path: '/login',
 		name: 'Login',
 		component: Views.Login,

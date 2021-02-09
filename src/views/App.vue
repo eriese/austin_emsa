@@ -3,9 +3,7 @@
 		<GridLayout rows="auto,*,auto,auto">
 			<Label class="notification text-center" textWrap="true" :text="notification" row="0"/>
 			<component :is="views[currentRoute]" v-on="currentPageListeners" class="emsa-page" ref="page" row="1"/>
-			<FlexboxLayout class="emsa-menu" row="2">
-				<Button class="emsa-menu__item text-center" v-for="(tab, $index) in menuTabs" :text="tab.title" @tap="tab.action" :class="{'emsa-menu__item--is-selected': tab.isSelected}" :key="$index" flexGrow="1"/>
-			</FlexboxLayout>
+			<TabMenu :current-route="currentRoute" @route="setCurrentPage" row="2"></TabMenu>
 			<Label class="version-code text-right" :text="`${$root.versionName}`" row="3"/>
 		</GridLayout>
 	</Page>
@@ -14,13 +12,7 @@
 <template web>
 	<div class="emsa-root">
 		<header>
-			<nav>
-				<ul class="emsa-menu">
-					<li v-for="(tab, $index) in menuTabs" :key="$index" class="emsa-menu__item" :class="{'emsa-menu__item--is-selected': tab.isSelected}">
-						<router-link :to="tab.route">{{tab.title}}</router-link>
-					</li>
-				</ul>
-			</nav>
+			<TabMenu :current-route="currentRoute" @route="setCurrentPage"></TabMenu>
 		</header>
 		<main>
 			<div class="notification text-center">{{notification}}</div>
@@ -33,10 +25,14 @@
 <script>
 import Views from './Views';
 import AuthChecker from '../services/AuthChecker';
+import TabMenu from '../components/TabMenu';
 // import gsap from 'gsap';
 import Store from '../services/Store';
 
 export default {
+	components: {
+		TabMenu
+	},
 	data() {
 		const data = {
 			store: Store,
@@ -110,62 +106,6 @@ export default {
 			}
 
 			return listeners;
-		},
-		menuTabs() {
-			if (this.currentRoute && this.currentRoute.includes('Admin')) {
-
-				if (this.currentRoute == 'AdminLogin') {
-					return [];
-				}
-
-				return [{
-					title: 'Manage Admins',
-					route: {name: 'AdminManagement'},
-					isSelected: this.currentRoute == 'AdminManagement'
-				},
-				{
-					title: 'Approve Users',
-					route: {name: 'AdminApproval'},
-					isSelected: this.currentRoute == 'AdminApproval'
-				},
-				{
-					title: 'App Codes',
-					route: {name: 'AdminCodes'},
-					isSelected: this.currentRoute == 'AdminCodes'
-				}];
-			}
-
-			if (this.store.isAuthed) {
-				const curShift = this.store.selectedShift;
-				return [{
-					title: 'Post a Shift',
-					action: () => this.setCurrentPage('ShiftForm'),
-					isSelected: this.currentRoute == 'ShiftForm',
-					route: {name: 'ShiftForm'}
-				}, {
-					title: 'Find a Shift',
-					action: () => this.setCurrentPage('ShiftList'),
-					isSelected: this.currentRoute == 'ShiftList' || (curShift && !curShift.isUser),
-					route: {name: 'ShiftList'}
-				}, {
-					title: 'My Account',
-					action: () => this.setCurrentPage('UserView'),
-					isSelected: this.currentRoute == 'UserView' || (curShift && curShift.isUser),
-					route: {name: 'UserView'}
-				}]
-			}
-
-			return [{
-				title: 'Returning User',
-				action: () => this.store.loginIndex = 0,
-				isSelected: this.store.loginIndex == 0,
-				route: {name: 'Login'}
-			}, {
-				title: 'New User',
-				action: () => this.store.loginIndex = 1,
-				isSelected: this.store.loginIndex > 0,
-				route: {name: 'Signup'}
-			}];
 		},
 	},
 	methods: {

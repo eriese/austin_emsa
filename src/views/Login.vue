@@ -154,12 +154,13 @@ export default {
 		onSubmitError(e) {
 			this.isSubmitting = false;
 			const data = e.response.data;
+			console.log(data);
 			if (data.message) {
 				this.formError = data.message;
 			} else if (data.error_description) {
 				this.formError = data.error_description;
 			} else {
-				this.fieldErrors = data.errors;
+				this.fieldErrors = data.errors || {};
 			}
 		}
 	}

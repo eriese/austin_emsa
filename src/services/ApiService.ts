@@ -61,6 +61,7 @@ const ApiService = {
 		})
 	},
 	login(user : {email: string, password: string}) {
+		console.log(baseURL);
 		return new Promise((resolve, reject) => {
 			api.post('/oauth/token', {
 				...user,
@@ -117,6 +118,13 @@ const ApiService = {
 	deleteShift(shift: Shift) {
 		return api.delete(`/shifts/${shift.id}`, {
 			headers: getAuthHeaders()
+		})
+	},
+	getSpreadsheet(sheetName: string) {
+		return new Promise((resolve, reject) => {
+			api.get(`/${sheetName}`, {
+				headers: getAuthHeaders()
+			}).then((response) => resolve(response.data));
 		})
 	},
 	testToken(): Promise<false|AxiosResponse> {

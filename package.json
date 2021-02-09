@@ -85,7 +85,7 @@
 		"node-sass": "^4.14.1",
 		"rimraf": "^2.6.3",
 		"string-replace-loader": "^2.2.0",
-		"tns-ios": "6.5.2",
+		"tns-ios": "6.5.4",
 		"tns-platform-declarations": "^6.5.15",
 		"typescript": "^3.9.7",
 		"vue-cli-plugin-nativescript-vue": "~0.3.1",

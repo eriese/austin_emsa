@@ -39,6 +39,7 @@
 			this.rows = rows;
 		},
 		render() {
+			if (!this.valueLabels.is_offering) {return '';}
 			const itemClass = `shift-item shift-item--is-${this.valueLabels.is_offering.toLowerCase()}`;
 			const isNative = process.env.VUE_APP_MODE == 'native';
 			const rows = this.rows.map((row, rowIndex) => {
