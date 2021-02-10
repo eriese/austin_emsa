@@ -5,6 +5,7 @@ import Login from './Login.vue';
 import UserView from './UserView.vue';
 import ForgotPassword from './ForgotPassword.vue';
 import Spreadsheet from './Spreadsheet.vue';
+import Interstitial from './Interstitial.vue';
 
 export default {
 	ShiftForm,
@@ -13,5 +14,7 @@ export default {
 	Login,
 	UserView,
 	ForgotPassword,
-	StationCodes: {...Spreadsheet, name: 'StationCodes'}
+	ConfirmEmail: {...ForgotPassword, name: 'ConfirmEmail'},
+	StationCodes: {...Spreadsheet, name: 'StationCodes'},
+	Interstitial,
 }

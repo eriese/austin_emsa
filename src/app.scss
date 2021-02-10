@@ -78,6 +78,8 @@ Page, .ns-modal, html {
 		color: var(--emsa-red);
 		text-decoration: underline;
 		cursor: pointer;
+		height: auto;
+		padding: 0;
 
 		&:hover {
 			font-weight: bold;

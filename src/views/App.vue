@@ -2,7 +2,7 @@
 	<Page class="emsa-root" actionBarHidden="true">
 		<GridLayout rows="auto,*,auto,auto">
 			<Label class="notification text-center" textWrap="true" :text="notification" row="0"/>
-			<component :is="views[currentRoute]" v-on="currentPageListeners" class="emsa-page" ref="page" row="1"/>
+			<component :is="views[currentRoute]" v-on="currentPageListeners" class="emsa-page" ref="page" row="1" v-bind="currentPageProps"/>
 			<TabMenu :current-route="currentRoute" @route="setCurrentPage" row="2"></TabMenu>
 			<Label class="version-code text-right" :text="`${$root.versionName}`" row="3"/>
 		</GridLayout>
@@ -43,6 +43,7 @@ export default {
 			data.currentPage = null;
 			data.prevPage = null;
 			data.views = Views;
+			data.currentPageProps = {};
 		}
 
 		return data;
@@ -73,6 +74,7 @@ export default {
 				case 'AdminLogin':
 				case 'Signup':
 				case 'PasswordReset':
+				case 'SubmitConfirmation':
 					listeners = {
 						authSuccess: (isAdmin) => {
 							this.store.isAuthed = true;
@@ -82,6 +84,9 @@ export default {
 								this.store.getConfig();
 								backToList();
 							}
+						},
+						authFailure: () => {
+							this.setCurrentPage('Login');
 						}
 					};
 					break;
@@ -94,6 +99,7 @@ export default {
 					}
 					break;
 				case 'ForgotPassword':
+				case 'ConfirmEmail':
 					listeners = {
 						back: () => this.setCurrentPage('Login')
 					};
@@ -105,7 +111,7 @@ export default {
 					break;
 			}
 
-			return listeners;
+			return {...listeners, navigate: this.setCurrentPage};
 		},
 	},
 	methods: {
@@ -114,6 +120,7 @@ export default {
 
 			const state = {
 				currentPage: this.currentRoute,
+				currentPageProps: this.currentPageProps,
 				selectedShift: this.store.selectedShift,
 				prevPage: this.prevPage && this.prevPage.name,
 				currentFilters: this.store.currentFilters,
@@ -122,7 +129,7 @@ export default {
 
 			AuthChecker.saveState(state);
 		},
-		setCurrentPage(pageName) {
+		setCurrentPage(pageName, currentPageProps = {}) {
 			if (process.env.VUE_APP_MODE == 'web') {
 				let query = pageName == 'ShiftList' ? this.store.currentFilters : {}
 				return this.$router.push({name: pageName, query});
@@ -139,6 +146,7 @@ export default {
 
 				const onComplete = () => {
 					this.currentPage = page;
+					this.currentPageProps = currentPageProps;
 					if (page != this.views.ShiftView) {
 						this.store.selectedShift = null;
 					}

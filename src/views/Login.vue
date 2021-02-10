@@ -4,7 +4,7 @@
 		<h1 class="h1">Shift Request {{isAdmin ? 'Admin Panel' : ''}}</h1>
 		<h2 class="h2">{{titleText}}</h2>
 		<div class="form__message text-center">{{formMessage}}</div>
-		<div v-if="store.loginIndex < 3">
+		<div v-if="store.loginIndex < 4">
 			<div class="form__error text-center">{{formError}}</div>
 			<div class="form-field" v-if="store.loginIndex < 2">
 				<label class="form-field__label" for="email">Email</label>
@@ -24,11 +24,12 @@
 			</div>
 
 			<button class="button cta--is-close" @click="showPassword = !showPassword" type="button"> {{showPassword ? 'Hide Password' : 'Show Password'}} </button>
-			<div style="clear: both" class="text-right">
-				<router-link v-if="isLogin" :to="{name: 'ForgotPassword'}" class="link">Forgot your password?</router-link>
-			</div>
 			<div class="form__submit">
 				<input type="submit" class="button" :value="submitText">
+			</div>
+			<div class="text-center additional" v-if="isLogin">
+				<router-link :to="{name: 'ForgotPassword'}" class="link">Forgot your password?</router-link>
+				<router-link :to="{name: 'ConfirmEmail'}" class="link">Need to confirm your email?</router-link>
 			</div>
 		</div>
 	</form>
@@ -41,26 +42,30 @@
 			<Label text="Shift Request" textWrap="true" class="h1 text-center"/>
 			<Label :text="formError" textWrap="true" class="text-center form__error"/>
 			<Label :text="formMessage" textWrap="true" class="text-center form__message" />
-			<StackLayout v-if="store.loginIndex < 3">
+			<StackLayout v-if="store.loginIndex < 4">
 				<StackLayout class="form-field" v-if="store.loginIndex < 2">
-					<Label text="Email" class="form-field__label"/>
+					<Label text="Email*" class="form-field__label"/>
 					<Label v-if="!isLogin" textWrap="true" text="Reminder: Use your first.last@austintexas.gov email format)" class="form-field__description" />
 					<Label class="form-field__error" v-if="fieldErrors.email" :text="fieldErrors.email" />
 					<TextField v-model="user.email" returnKeyType="next" autoCapitalizationType="none" keyboardType="email" class="form-field__input"/>
 				</StackLayout>
 				<StackLayout class="form-field">
-					<Label text="Password" class="form-field__label"/>
+					<Label text="Password*" class="form-field__label"/>
 					<Label class="form-field__error" v-if="fieldErrors.password" :text="fieldErrors.password" />
 					<TextField v-model="user.password" :secure="!showPassword" :returnKeyType="isLogin ? 'go' : 'next'" autoCapitalizationType="none" class="form-field__input" @returnPress="passwordReturnPress" ref="password"/>
 				</StackLayout>
 				<StackLayout class="form-field" v-if="!isLogin">
-					<Label text="Confirm Password" class="form-field__label"/>
+					<Label text="Confirm Password*" class="form-field__label"/>
 					<Label class="form-field__error" v-if="fieldErrors.password_confirmation" :text="fieldErrors.password_confirmation" />
 					<TextField v-model="user.password_confirmation" :secure="!showPassword" returnKeyType="go" @returnPress="onSubmit" autoCapitalizationType="none" class="form-field__input" ref="password_confirmation"/>
 				</StackLayout>
 				<Button horizontalAlignment="right" :text="showPassword ? 'Hide Password' : 'Show Password'" @tap="showPassword = !showPassword" class="button"/>
 				<Button :text="submitText" @tap="onSubmit" class="button"/>
 				<ActivityIndicator :busy="isSubmitting" />
+				<StackLayout class="text-center additional">
+					<Button text="Forgot your password?" class="link" @tap="$emit('navigate', 'ForgotPassword', {formType: 'reset'})"/>
+					<Button text="Need to confirm your email?" class="link" @tap="$emit('navigate', 'ConfirmEmail', {formType: 'confirmation'})"/>
+				</StackLayout>
 			</StackLayout>
 		</StackLayout>
 	</ScrollView>
@@ -143,7 +148,7 @@ export default {
 			submitCall(this.user).then(onSuccess).catch(this.onSubmitError);
 		},
 		showLoginCaveat(caveat) {
-			this.store.loginIndex = 3;
+			this.store.loginIndex = 4;
 			this.formMessage = caveat;
 		},
 		loginOrCaveat(caveat) {
@@ -167,9 +172,18 @@ export default {
 }
 </script>
 
-<style web>
+<style web scoped lang="scss">
 	.login-form {
 		margin-top: 2rem;
+	}
+
+	.additional {
+		margin-top: 15px;
+
+		.link {
+			display: block;
+			margin-bottom: 10px
+		}
 	}
 </style>
 

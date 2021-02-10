@@ -43,7 +43,6 @@ const routes: Array<RouteConfig> = [
 		path: '/shifts/new',
 		name: 'ShiftForm',
 		component: Views.ShiftForm,
-
 	},
 	{
 		path: '/stationcodes',
@@ -74,6 +73,7 @@ const routes: Array<RouteConfig> = [
 		path: '/recover',
 		name: 'ForgotPassword',
 		component: Views.ForgotPassword,
+		props: {formType: 'reset'},
 		meta: {skipAuth: true},
 	},
 	{
@@ -84,6 +84,31 @@ const routes: Array<RouteConfig> = [
 		beforeEnter(toRoute, fromRoute, next) {
 			Store.loginIndex = 2;
 			next();
+		}
+	},{
+		path: '/confirm',
+		name: 'ConfirmEmail',
+		component: Views.ConfirmEmail,
+		meta: {skipAuth: true},
+		props: {formType: 'confirmation'}
+	},
+	{
+		path: '/confirmation',
+		component: Views.Interstitial,
+		name: 'SubmitConfirmation',
+		meta: {skipAuth: true},
+		props: {
+			onCreate(vm: Vue) {
+				ApiService.submitConfirmation(<string>vm.$route.query['confirmation_token'])
+					.then(() => {
+						vm.$emit('authSuccess');
+						alert('Email successfully confirmed');
+					})
+					.catch(() => {
+						vm.$emit('authFailure');
+						alert('Something went wrong. Failed to confirm email address. Try logging and follow any instructions given.')
+					})
+			}
 		}
 	},
 	{

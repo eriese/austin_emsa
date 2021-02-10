@@ -61,19 +61,21 @@ const ApiService = {
 		})
 	},
 	login(user : {email: string, password: string}) {
-		console.log(baseURL);
 		return new Promise((resolve, reject) => {
 			api.post('/oauth/token', {
 				...user,
 				grant_type: 'password',
 				scope: process.env.VUE_APP_MODE
-			}).then(response => {
-				access_token = response.data.access_token;
-				// refresh_token = response.data.refresh_token;
-				AuthChecker.saveAuthToken(access_token);
-				resolve();
-			}).catch(handleError(reject))
+			}).then(ApiService.onLogin(resolve)).catch(handleError(reject))
 		})
+	},
+	onLogin(resolve: Function) {
+		return (response: AxiosResponse) => {
+			access_token = response.data.access_token;
+			// refresh_token = response.data.refresh_token;
+			AuthChecker.saveAuthToken(access_token);
+			resolve();
+		}
 	},
 	logout() {
 		return api.post('/oauth/revoke');
@@ -174,6 +176,16 @@ const ApiService = {
 				.then(resolve)
 				.catch(handleError(reject))
 		});
+	},
+	requestConfirmation(user: {email: string}) {
+		return api.post('/confirmation', {user});
+	},
+	submitConfirmation(code : string) {
+		return new Promise((resolve, reject) => {
+			api.get(`/confirmation?confirmation_token=${code}&scope=${process.env.VUE_APP_MODE}`)
+				.then(ApiService.onLogin(resolve))
+				.catch(handleError(reject))
+		})
 	}
 };
 
