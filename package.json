@@ -1,6 +1,6 @@
 {
 	"name": "austin_emsa",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"description": "An application to help EMTs swap shifts",
 	"author": "Enoch Riese <enoch.riese@gmail.com>",
 	"scripts": {
