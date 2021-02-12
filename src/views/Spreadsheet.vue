@@ -79,10 +79,10 @@
 				return <ScrollView>
 					<StackLayout>
 						<TitleAndBackButton text="Station Codes" onBackPressed={() => this.$emit('back')}/>
-							<GridLayout columns="*,auto">
-								<TextField text={this.search} colSpan="2" col="0" onTextChange={(e) => this.search = e.value} class="search-field"></TextField>
-								<Label text={'\uf002'} class="fas cta--is-round" col="1"/>
-							</GridLayout>
+						<GridLayout columns="*,auto">
+							<TextField text={this.search} colSpan="2" col="0" onTextChange={(e) => this.search = e.value} class="search-field"></TextField>
+							<Label text={'\uf002'} class="fas cta--is-round" col="1"/>
+						</GridLayout>
 						<GridLayout columns={this.cols} rows={this.rows} class="sheet">
 							{cells}
 						</GridLayout>
