@@ -7,5 +7,8 @@ module.exports = {
 	parallel: false,
 	configureWebpack: config => {
 		config.resolve.alias['qs'] = path.resolve(__dirname, 'node_modules/qs');
+	},
+	chainWebpack: (config) => {
+		config.resolve.symlinks(false)
 	}
 };
