@@ -170,7 +170,7 @@ const ApiService = {
 	requestReset(user: {email: string}) {
 		return api.post('/password', {user});
 	},
-	submitReset(user: {password: string, password_confirmation: string}) {
+	submitReset(user: {password: string, password_confirmation: string, reset_password_token: string}) {
 		return new Promise((resolve, reject) => {
 			api.put('/password', { user })
 				.then(resolve)

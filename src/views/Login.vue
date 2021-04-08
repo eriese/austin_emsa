@@ -91,7 +91,7 @@ export default {
 				email: '',
 				password: '',
 				password_confirmation: '',
-				resetPasswordToken: this.$route && this.$route.query['reset_password_token'],
+				reset_password_token: this.$route && this.$route.query['reset_password_token'],
 			},
 			showPassword: false
 		}
