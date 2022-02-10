@@ -82,7 +82,7 @@
 		"nativescript-dev-webpack": "^1.5.1",
 		"nativescript-vue-devtools": "^1.4.0",
 		"nativescript-vue-template-compiler": "^2.7.0",
-		"node-sass": "^4.14.1",
+		"node-sass": "^7.0.0",
 		"rimraf": "^2.6.3",
 		"string-replace-loader": "^2.2.0",
 		"tns-ios": "6.5.4",
